@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1023370575686",
+    "project_id": "cards-app-5bc7c",
+    "storage_bucket": "cards-app-5bc7c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1023370575686:android:41197e11ed4e5b77572f47",
+        "android_client_info": {
+          "package_name": "com.khaled.cardsapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1023370575686-isbni3mojrjdhteush7qnd3h8t1al7eg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAe3sGeCSLsaXZYBgEyOYf8i64vB6HvNo8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1023370575686-isbni3mojrjdhteush7qnd3h8t1al7eg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
