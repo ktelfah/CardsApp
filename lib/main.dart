@@ -2,7 +2,6 @@ import 'package:cards_app/bloc/cards_bloc.dart';
 import 'package:cards_app/bloc/cards_state.dart';
 import 'package:cards_app/repository/cards_api.dart';
 import 'package:cards_app/repository/cards_repository.dart';
-import 'package:cards_app/screens/add_admin.dart';
 import 'package:cards_app/screens/add_admin_customer_cards.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -11,9 +10,11 @@ import 'package:http/http.dart' as http;
 import 'bloc/cards_event.dart';
 import 'helper/custom_text_form_field.dart';
 
+var getAdminIdUser;
+
 class CardsBlocObserer extends BlocObserver {
   @override
-  void onEvent(Bloc bloc, Object? event) {
+  void onEvent(Bloc bloc, Object event) {
     print(event);
     super.onEvent(bloc, event);
   }
@@ -53,7 +54,7 @@ void main() async {
 class MyApp extends StatefulWidget {
   final FirebaseRepository repository;
 
-  const MyApp({Key? key, required this.repository}) : super(key: key);
+  const MyApp({Key key, this.repository}) : super(key: key);
 
   @override
   _MyAppState createState() => _MyAppState();
@@ -66,13 +67,12 @@ class _MyAppState extends State<MyApp> {
         home: BlocProvider(
       create: (context) => FirebaseBloc(repository: widget.repository),
       child: HomePage(),
-    )
-    );
+    ));
   }
 }
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({Key key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -100,7 +100,7 @@ class _HomePageState extends State<HomePage> {
         }
 
         if (state is LoginError) {
-          WidgetsBinding.instance!.addPostFrameCallback((_) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text(
                 "Invalid User",
@@ -119,15 +119,13 @@ class _HomePageState extends State<HomePage> {
         }
 
         if (state is LoginLoaded) {
-          WidgetsBinding.instance!.addPostFrameCallback((_) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            getAdminIdUser = state.admin.adminId;
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (_) => BlocProvider.value(
                     value: BlocProvider.of<FirebaseBloc>(context),
-                    child: AddAdmin(
-                    )))
-            );
-          }
-          );
+                    child: AddAdminCustomerCards())));
+          });
         }
 
         return Center(
@@ -199,8 +197,8 @@ class _HomePageState extends State<HomePage> {
             focusNode: userNameNode,
             nextNode: passwordNode,
             textInputAction: TextInputAction.next,
-            validator: (String? value) {
-              if (value!.isEmpty) {
+            validator: (String value) {
+              if (value.isEmpty) {
                 return 'Please Enter your username';
               }
             },
@@ -217,15 +215,13 @@ class _HomePageState extends State<HomePage> {
               password = value;
             },
             cursorColor: Color(0xFFFF2562),
-            onChanged: (String value) {
-
-            },
+            onChanged: (String value) {},
             keyboardType: TextInputType.text,
             focusNode: passwordNode,
             nextNode: passwordNode,
             textInputAction: TextInputAction.done,
-            validator: (String? value) {
-              if (value!.isEmpty) {
+            validator: (String value) {
+              if (value.isEmpty) {
                 return 'Please Enter your Password.';
               }
             },
@@ -244,14 +240,13 @@ class _HomePageState extends State<HomePage> {
 
   Widget signInButton(BuildContext context) {
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
         print("Press Login");
-        Navigator.of(context).push(MaterialPageRoute(
-            builder: (_) => BlocProvider.value(
-                value: BlocProvider.of<FirebaseBloc>(context),
-                child: AddAdminCustomerCards(
-                )))
-        );
+        if (formKey.currentState.validate()) {
+          formKey.currentState.save();
+          BlocProvider.of<FirebaseBloc>(context)
+              .add(FetchLogin(email, password));
+        }
       },
       child: Container(
         height: 50,

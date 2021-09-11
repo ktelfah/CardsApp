@@ -7,30 +7,24 @@ import 'package:cards_app/screens/add_admin_customer_cards.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class AddCard extends StatefulWidget {
-  final adminIdget;
-
-  const AddCard({Key key, this.adminIdget}) : super(key: key);
+class AddCustomer extends StatefulWidget {
+  const AddCustomer({Key key}) : super(key: key);
 
   @override
-  _AddCardState createState() => _AddCardState(adminIdget);
+  _AddCustomerState createState() => _AddCustomerState();
 }
 
-class _AddCardState extends State<AddCard> {
-  final adminIdget;
+class _AddCustomerState extends State<AddCustomer> {
   final formKey = GlobalKey<FormState>();
   final nameNode = FocusNode();
   final emailNode = FocusNode();
   final passwordNode = FocusNode();
   final phoneNode = FocusNode();
-  String amount = "", cardNumber = "", cardVender = "", status = "NEW";
-  var getAdminId;
-
-  _AddCardState(this.adminIdget);
+  String name = "", balance = "", password = "";
 
   @override
   void initState() {
-    BlocProvider.of<FirebaseBloc>(context).add(ResetAddCard());
+    BlocProvider.of<FirebaseBloc>(context).add(ResetAddCustomer());
     super.initState();
   }
 
@@ -39,18 +33,18 @@ class _AddCardState extends State<AddCard> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFFFF2562),
-        title: Text("Add Card"),
+        title: Text("Add Customer"),
       ),
       //body: body(context)
       body: BlocBuilder<FirebaseBloc, FirebaseState>(builder: (context, state) {
         print("STATE:$state");
-        if (state is AddCardEmpty) {
+        if (state is AddCustomerEmpty) {
           return Container(
             child: body(context),
           );
         }
 
-        if (state is AddCardError) {
+        if (state is AddCustomerError) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text(
@@ -69,11 +63,8 @@ class _AddCardState extends State<AddCard> {
           );
         }
 
-        if (state is AddCardLoaded) {
+        if (state is AddCustomerLoaded) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            //getAdminId = state.card.adminId;
-            print("££££££££££££££££££**************${getAdminIdUser}");
-
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (_) => BlocProvider.value(
                     value: BlocProvider.of<FirebaseBloc>(context),
@@ -99,7 +90,7 @@ class _AddCardState extends State<AddCard> {
             children: [
               const SizedBox(height: 40.0),
               Text(
-                "Add Card",
+                "Add Customer",
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
               ),
               const SizedBox(height: 20.0),
@@ -123,12 +114,12 @@ class _AddCardState extends State<AddCard> {
           CustomTextFormField(
             obscureText: false,
             textEditingController: TextEditingController(),
-            hintText: 'Amount',
-            icon: Icons.monetization_on,
+            hintText: 'Name',
+            icon: Icons.person,
             onFieldSubmitted: (String value) {},
             cursorColor: Color(0xFFFF2562),
             onChanged: (String value) {
-              amount = value;
+              name = value;
             },
             keyboardType: TextInputType.name,
             focusNode: emailNode,
@@ -136,7 +127,7 @@ class _AddCardState extends State<AddCard> {
             textInputAction: TextInputAction.next,
             validator: (String value) {
               if (value.isEmpty) {
-                return 'Please Enter your amount';
+                return 'Please Enter customer name';
               }
             },
           ),
@@ -146,12 +137,12 @@ class _AddCardState extends State<AddCard> {
           CustomTextFormField(
             obscureText: false,
             textEditingController: TextEditingController(),
-            hintText: 'CardNumber',
-            icon: Icons.person,
+            hintText: 'Balance',
+            icon: Icons.wallet_giftcard,
             onFieldSubmitted: (String value) {},
             cursorColor: Color(0xFFFF2562),
             onChanged: (String value) {
-              cardNumber = value;
+              balance = value;
             },
             keyboardType: TextInputType.name,
             focusNode: nameNode,
@@ -159,7 +150,7 @@ class _AddCardState extends State<AddCard> {
             textInputAction: TextInputAction.next,
             validator: (String value) {
               if (value.isEmpty) {
-                return 'Please Enter your CardNumber';
+                return 'Please Enter Balance';
               }
             },
           ),
@@ -169,12 +160,12 @@ class _AddCardState extends State<AddCard> {
           CustomTextFormField(
             obscureText: false,
             textEditingController: TextEditingController(),
-            hintText: 'CardVender',
-            icon: Icons.person,
+            hintText: 'Password',
+            icon: Icons.lock,
             onFieldSubmitted: (String value) {},
             cursorColor: Color(0xFFFF2562),
             onChanged: (String value) {
-              cardVender = value;
+              password = value;
             },
             keyboardType: TextInputType.text,
             focusNode: passwordNode,
@@ -182,14 +173,14 @@ class _AddCardState extends State<AddCard> {
             textInputAction: TextInputAction.done,
             validator: (String value) {
               if (value.isEmpty) {
-                return 'Please Enter your CardVender.';
+                return 'Please Enter Password.';
               }
             },
           ),
           SizedBox(
             height: 70,
           ),
-          addAdminButton(context),
+          addCustomerButton(context),
           SizedBox(
             height: 20,
           ),
@@ -198,13 +189,13 @@ class _AddCardState extends State<AddCard> {
     );
   }
 
-  Widget addAdminButton(BuildContext context) {
+  Widget addCustomerButton(BuildContext context) {
     return GestureDetector(
       onTap: () {
         if (formKey.currentState.validate()) {
           formKey.currentState.save();
-          BlocProvider.of<FirebaseBloc>(context).add(FetchAddCard(
-              getAdminIdUser, '', amount, cardNumber, cardVender, 'NEW'));
+          BlocProvider.of<FirebaseBloc>(context).add(
+              FetchAddCustomer('', getAdminIdUser, balance, name, password));
         }
       },
       child: Container(
@@ -214,7 +205,7 @@ class _AddCardState extends State<AddCard> {
             borderRadius: BorderRadius.all(Radius.circular(4))),
         child: Center(
           child: Text(
-            'ADD CARD',
+            'ADD CUSTOMER',
             style: TextStyle(
                 color: Colors.white, fontWeight: FontWeight.w600, fontSize: 15),
           ),

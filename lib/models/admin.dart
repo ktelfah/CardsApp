@@ -5,27 +5,32 @@ class Admin {
   String phoneNo;
   String email;
   String password;
+  String isSuperAdmin;
 
-  Admin(
-      {required this.adminId,
-      required this.adminName,
-      required this.phoneNo,
-      required this.email,
-      required this.password});
+  Admin({
+    this.adminId,
+    this.adminName,
+    this.phoneNo,
+    this.email,
+    this.password,
+    this.isSuperAdmin,
+  });
 
   factory Admin.fromJson(Map<dynamic, dynamic> json) => new Admin(
-       adminId: json["adminId"],
-        adminName: json["name"],
-        phoneNo: json["phoneNo"],
-        email: json["email"],
-        password: json["password"],
+        adminId: json["adminID"] ?? "",
+        adminName: json["name"] ?? "",
+        phoneNo: json["phoneNo"] ?? "",
+        email: json["email"] ?? "",
+        password: json["password"] ?? "",
+        isSuperAdmin: json["isSuperAdmin"] ?? "",
       );
 
   Map<dynamic, dynamic> toJson() => {
-        "adminId": adminId,
+        "adminID": adminId,
         "name": adminName,
         "phoneNo": phoneNo,
         "email": email,
-        "password": password
+        "password": password,
+        "isSuperAdmin": isSuperAdmin,
       };
 }

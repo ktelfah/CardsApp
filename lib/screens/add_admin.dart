@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AddAdmin extends StatefulWidget {
-  const AddAdmin({Key? key}) : super(key: key);
+  const AddAdmin({Key key}) : super(key: key);
 
   @override
   _AddAdminState createState() => _AddAdminState();
@@ -23,10 +23,10 @@ class _AddAdminState extends State<AddAdmin> {
 
   @override
   void initState() {
-      BlocProvider.of<FirebaseBloc>(context)
-          .add(ResetAddAdmin());
+    BlocProvider.of<FirebaseBloc>(context).add(ResetAddAdmin());
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,7 +44,7 @@ class _AddAdminState extends State<AddAdmin> {
         }
 
         if (state is AddAdminError) {
-          WidgetsBinding.instance!.addPostFrameCallback((_) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text(
                 "Invalid User",
@@ -63,13 +63,11 @@ class _AddAdminState extends State<AddAdmin> {
         }
 
         if (state is AddAdminLoaded) {
-          WidgetsBinding.instance!.addPostFrameCallback((_) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (_) => BlocProvider.value(
                     value: BlocProvider.of<FirebaseBloc>(context),
-                    child: AddAdminCustomerCards(
-                    )))
-            );
+                    child: AddAdminCustomerCards())));
           });
         }
 
@@ -126,8 +124,8 @@ class _AddAdminState extends State<AddAdmin> {
             focusNode: emailNode,
             nextNode: nameNode,
             textInputAction: TextInputAction.next,
-            validator: (String? value) {
-              if (value!.isEmpty) {
+            validator: (String value) {
+              if (value.isEmpty) {
                 return 'Please Enter your usermail';
               }
             },
@@ -149,8 +147,8 @@ class _AddAdminState extends State<AddAdmin> {
             focusNode: nameNode,
             nextNode: passwordNode,
             textInputAction: TextInputAction.next,
-            validator: (String? value) {
-              if (value!.isEmpty) {
+            validator: (String value) {
+              if (value.isEmpty) {
                 return 'Please Enter your username';
               }
             },
@@ -163,9 +161,7 @@ class _AddAdminState extends State<AddAdmin> {
             textEditingController: TextEditingController(),
             hintText: 'Password',
             icon: Icons.lock,
-            onFieldSubmitted: (String value) {
-
-            },
+            onFieldSubmitted: (String value) {},
             cursorColor: Color(0xFFFF2562),
             onChanged: (String value) {
               password = value;
@@ -174,8 +170,8 @@ class _AddAdminState extends State<AddAdmin> {
             focusNode: passwordNode,
             nextNode: phoneNode,
             textInputAction: TextInputAction.done,
-            validator: (String? value) {
-              if (value!.isEmpty) {
+            validator: (String value) {
+              if (value.isEmpty) {
                 return 'Please Enter your Password.';
               }
             },
@@ -197,8 +193,8 @@ class _AddAdminState extends State<AddAdmin> {
             focusNode: phoneNode,
             nextNode: phoneNode,
             textInputAction: TextInputAction.done,
-            validator: (String? value) {
-              if (value!.isEmpty) {
+            validator: (String value) {
+              if (value.isEmpty) {
                 return 'Please Enter your PhoneNo.';
               }
             },
@@ -218,13 +214,12 @@ class _AddAdminState extends State<AddAdmin> {
   Widget addAdminButton(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (formKey.currentState!.validate()) {
-          formKey.currentState!.save();
+        if (formKey.currentState.validate()) {
+          formKey.currentState.save();
           BlocProvider.of<FirebaseBloc>(context)
-              .add(FetchAddAdmin(email, name, password, phoneNo));
+              .add(FetchAddAdmin(email, name, password, phoneNo, 'false'));
         }
       },
-
       child: Container(
         height: 50,
         decoration: BoxDecoration(

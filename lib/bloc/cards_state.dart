@@ -1,9 +1,10 @@
 import 'package:cards_app/models/admin.dart';
 import 'package:cards_app/models/cards.dart';
+import 'package:cards_app/models/customers.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-abstract class FirebaseState extends Equatable{
+abstract class FirebaseState extends Equatable {
   const FirebaseState();
 
   @override
@@ -16,11 +17,10 @@ class LoginEmpty extends FirebaseState {}
 class LoginLoading extends FirebaseState {}
 
 class LoginLoaded extends FirebaseState {
-  final Admin? admin;
+  final Admin admin;
 
-  const LoginLoaded({required this.admin});
-  //: assert(login != null);
-  // : assert(login != null);
+  const LoginLoaded({this.admin});
+
 
   @override
   List<Object> get props => [];
@@ -28,18 +28,15 @@ class LoginLoaded extends FirebaseState {
 
 class LoginError extends FirebaseState {}
 
-
 //Add Admin
 class AddAdminEmpty extends FirebaseState {}
 
 class AddAdminLoading extends FirebaseState {}
 
 class AddAdminLoaded extends FirebaseState {
-  final Admin? admin;
+  final Admin admin;
 
-  const AddAdminLoaded({required this.admin});
-  //: assert(login != null);
-  // : assert(login != null);
+  const AddAdminLoaded({this.admin});
 
   @override
   List<Object> get props => [];
@@ -47,18 +44,15 @@ class AddAdminLoaded extends FirebaseState {
 
 class AddAdminError extends FirebaseState {}
 
-
 //Add Card
 class AddCardEmpty extends FirebaseState {}
 
 class AddCardLoading extends FirebaseState {}
 
 class AddCardLoaded extends FirebaseState {
-  final Cards? card;
+  final Cards card;
 
-  const AddCardLoaded({required this.card});
-  //: assert(login != null);
-  // : assert(login != null);
+  const AddCardLoaded({this.card});
 
   @override
   List<Object> get props => [];
@@ -66,18 +60,18 @@ class AddCardLoaded extends FirebaseState {
 
 class AddCardError extends FirebaseState {}
 
+//Add Customer
+class AddCustomerEmpty extends FirebaseState {}
 
+class AddCustomerLoading extends FirebaseState {}
 
+class AddCustomerLoaded extends FirebaseState {
+  final Customer customer;
 
+  const AddCustomerLoaded({this.customer});
 
+  @override
+  List<Object> get props => [];
+}
 
-
-
-
-
-
-
-
-
-
-
+class AddCustomerError extends FirebaseState {}

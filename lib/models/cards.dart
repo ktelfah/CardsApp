@@ -7,29 +7,30 @@ class Cards {
   String cardVender;
   String status;
 
-  Cards(
-      {required this.adminId,
-        required this.cardId,
-        required this.amount,
-        required this.cardNumber,
-        required this.cardVender,
-        required this.status,});
+  Cards({
+    this.adminId,
+    this.cardId,
+    this.amount,
+    this.cardNumber,
+    this.cardVender,
+    this.status,
+  });
 
   factory Cards.fromJson(Map<dynamic, dynamic> json) => new Cards(
-    adminId: json["adminId"],
-    cardId: json["cardId"],
-    amount: json["amount"],
-    cardNumber: json["cardNumber"],
-    cardVender: json["cardVender"],
-    status: json["status"],
-  );
+        adminId: json["adminId"],
+        cardId: json["cardId"],
+        amount: json["amount"],
+        cardNumber: json["cardNumber"],
+        cardVender: json["cardVender"],
+        status: json["status"],
+      );
 
   Map<dynamic, dynamic> toJson() => {
-    "adminId": adminId,
-    "cardId": cardId,
-    "amount": amount,
-    "cardNumber": cardNumber,
-    "cardVender": cardVender,
-    "status": status,
-  };
+        "adminId": adminId,
+        "cardId": cardId,
+        "amount": amount,
+        "cardNumber": cardNumber,
+        "cardVender": cardVender,
+        "status": status,
+      };
 }
