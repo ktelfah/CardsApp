@@ -74,6 +74,19 @@ class _AddCardState extends State<AddCard> {
             //getAdminId = state.card.adminId;
             print("££££££££££££££££££**************${getAdminIdUser}");
 
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              behavior: SnackBarBehavior.floating,
+              content: Text(
+                "Card Added Successfully",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Colors.white,
+                ),
+              ),
+              backgroundColor: Colors.black,
+            ));
+
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (_) => BlocProvider.value(
                     value: BlocProvider.of<FirebaseBloc>(context),

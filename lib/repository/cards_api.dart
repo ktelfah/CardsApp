@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 
 var adminIdget;
-
+bool isCard = false;
 class FirebaseApiClient {
   final http.Client httpClient;
 
@@ -29,12 +29,29 @@ class FirebaseApiClient {
   Future<Admin> fetchLogin(String email, String password) async {
     print("EMAIL:${email}");
     print("PASSWORD:${password}");
+    var data;
     var res = await admin
         .where("email", isEqualTo: email)
         .where("password", isEqualTo: password)
         .get();
-    var data = res.docs[0];
-    adminIdget = res.docs[0].id;
+    print("DATAAAAAA:${res.docs}");
+    if (res.docs.length<=0) {
+
+      var resCustomer = await customer
+          .where("name", isEqualTo: email)
+          .where("password", isEqualTo: password)
+          .get();
+      //print("DATAAAAAA:${resCustomer.docs[0].id}");
+      data = resCustomer.docs[0];
+      isCard = true;
+      adminIdget = resCustomer.docs[0].id;
+    } else {
+     // print("DATAAAAAA:${res.docs[0].id}");
+      data = res.docs[0];
+      isCard = false;
+      adminIdget = res.docs[0].id;
+    }
+
     //print(data.data());
     // final json = jsonDecode();
     return Admin.fromJson(data.data());

@@ -3,6 +3,7 @@ import 'package:cards_app/bloc/cards_state.dart';
 import 'package:cards_app/repository/cards_api.dart';
 import 'package:cards_app/repository/cards_repository.dart';
 import 'package:cards_app/screens/add_admin_customer_cards.dart';
+import 'package:cards_app/screens/card_list.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -82,7 +83,8 @@ class _HomePageState extends State<HomePage> {
   final formKey = GlobalKey<FormState>();
   final userNameNode = FocusNode();
   final passwordNode = FocusNode();
-  String email = "", password = "";
+  //String email = "kt\$@sss.com", password = "123";
+  String email = "Zimba", password = "12345";
 
   @override
   Widget build(BuildContext context) {
@@ -121,10 +123,17 @@ class _HomePageState extends State<HomePage> {
         if (state is LoginLoaded) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             getAdminIdUser = state.admin.adminId;
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (_) => BlocProvider.value(
-                    value: BlocProvider.of<FirebaseBloc>(context),
-                    child: AddAdminCustomerCards())));
+            if(isCard == false){
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => BlocProvider.value(
+                      value: BlocProvider.of<FirebaseBloc>(context),
+                      child: AddAdminCustomerCards())));
+            }else{
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => BlocProvider.value(
+                      value: BlocProvider.of<FirebaseBloc>(context),
+                      child: CardList())));
+            }
           });
         }
 
@@ -185,7 +194,7 @@ class _HomePageState extends State<HomePage> {
         children: [
           CustomTextFormField(
             obscureText: false,
-            textEditingController: TextEditingController(),
+            textEditingController: TextEditingController(text: email),
             hintText: 'Username',
             icon: Icons.person,
             onFieldSubmitted: (String value) {},
@@ -208,14 +217,14 @@ class _HomePageState extends State<HomePage> {
           ),
           CustomTextFormField(
             obscureText: true,
-            textEditingController: TextEditingController(),
+            textEditingController: TextEditingController(text: password),
             hintText: 'Password',
             icon: Icons.lock,
-            onFieldSubmitted: (String value) {
+            onFieldSubmitted: (String value) {},
+            cursorColor: Color(0xFFFF2562),
+            onChanged: (String value) {
               password = value;
             },
-            cursorColor: Color(0xFFFF2562),
-            onChanged: (String value) {},
             keyboardType: TextInputType.text,
             focusNode: passwordNode,
             nextNode: passwordNode,
