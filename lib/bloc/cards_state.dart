@@ -75,3 +75,20 @@ class AddCustomerLoaded extends FirebaseState {
 }
 
 class AddCustomerError extends FirebaseState {}
+
+//Fetch Cards
+class FetchCardEmpty extends FirebaseState {}
+
+class FetchCardLoading extends FirebaseState {}
+
+class FetchCardLoaded extends FirebaseState {
+  final List<Cards> cards;
+
+  const FetchCardLoaded({this.cards});
+
+
+  @override
+  List<Object> get props => [];
+}
+
+class FetchCardError extends FirebaseState {}

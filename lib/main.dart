@@ -84,7 +84,8 @@ class _HomePageState extends State<HomePage> {
   final userNameNode = FocusNode();
   final passwordNode = FocusNode();
   //String email = "kt\$@sss.com", password = "123";
-  String email = "Zimba", password = "12345";
+  //String email = "Zimba", password = "12345";
+  String email = "", password = "";
 
   @override
   Widget build(BuildContext context) {
@@ -95,6 +96,7 @@ class _HomePageState extends State<HomePage> {
       ),
       // body: body(context)
       body: BlocBuilder<FirebaseBloc, FirebaseState>(builder: (context, state) {
+        print("STATE:$state");
         if (state is LoginEmpty) {
           return Container(
             child: body(context),
@@ -122,6 +124,7 @@ class _HomePageState extends State<HomePage> {
 
         if (state is LoginLoaded) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
+            print("BOOLEAN VALUE:${isCard}");
             getAdminIdUser = state.admin.adminId;
             if(isCard == false){
               Navigator.of(context).push(MaterialPageRoute(

@@ -2,6 +2,7 @@ import 'package:cards_app/models/admin.dart';
 import 'package:cards_app/models/cards.dart';
 import 'package:cards_app/models/customers.dart';
 import 'package:cards_app/repository/cards_api.dart';
+import 'package:flutter/material.dart';
 
 class FirebaseRepository {
   final FirebaseApiClient firebaseApiClient;
@@ -33,5 +34,10 @@ class FirebaseRepository {
       String balance, String name, String password) async {
     return await firebaseApiClient.addCustomer(
         customerId, adminId, balance, name, password);
+  }
+
+  //Fetch Cards
+  Future<List<Cards>> fetchCards() async {
+    return await firebaseApiClient.fetchCards();
   }
 }

@@ -87,3 +87,18 @@ class ResetAddCustomer extends FirebaseEvent {
   @override
   List<Object> get props => [];
 }
+
+//Fetch Cards
+class FetchCards extends FirebaseEvent {
+  FetchCards();
+
+  @override
+  List<Object> get props => [];
+}
+
+class ResetFetchCards extends FirebaseEvent {
+  const ResetFetchCards();
+
+  @override
+  List<Object> get props => [];
+}

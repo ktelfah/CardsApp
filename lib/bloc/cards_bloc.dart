@@ -88,5 +88,22 @@ class FirebaseBloc extends Bloc<FirebaseEvent, FirebaseState> {
         yield AddCustomerError();
       }
     }
+
+    //Fetch Cards
+    if (event is ResetFetchCards) {
+      yield FetchCardEmpty();
+    }
+
+    if (event is FetchCards) {
+      yield FetchCardLoading();
+
+      try {
+        final List<Cards> cards = await repository.fetchCards();
+        yield FetchCardLoaded(cards: cards);
+      } catch (e) {
+        print(e);
+        yield FetchCardError();
+      }
+    }
   }
 }

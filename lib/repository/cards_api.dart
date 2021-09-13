@@ -34,25 +34,23 @@ class FirebaseApiClient {
         .where("email", isEqualTo: email)
         .where("password", isEqualTo: password)
         .get();
-    print("DATAAAAAA:${res.docs}");
     if (res.docs.length<=0) {
-
       var resCustomer = await customer
           .where("name", isEqualTo: email)
           .where("password", isEqualTo: password)
           .get();
-      //print("DATAAAAAA:${resCustomer.docs[0].id}");
+      print("DATAAAAAA:${resCustomer.docs[0].id}");
       data = resCustomer.docs[0];
       isCard = true;
       adminIdget = resCustomer.docs[0].id;
     } else {
-     // print("DATAAAAAA:${res.docs[0].id}");
+      print("DATAAAAAA:${res.docs[0].id}");
       data = res.docs[0];
       isCard = false;
       adminIdget = res.docs[0].id;
     }
 
-    //print(data.data());
+    print(data.data());
     // final json = jsonDecode();
     return Admin.fromJson(data.data());
   }
@@ -122,5 +120,17 @@ class FirebaseApiClient {
         balance: balance,
         name: name,
         password: password);
+  }
+
+  Future<List<Cards>> fetchCards()async{
+    List<Cards> cardData=[];
+    var res = await cards
+        .where("status", isEqualTo: "NEW")
+        .get();
+    res.docs.forEach((element) {
+      cardData.add(Cards.fromJson(element.data()));
+    });
+   // print("DATTTTAAA:${data.data()}");
+    return cardData;
   }
 }
