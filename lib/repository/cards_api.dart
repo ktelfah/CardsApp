@@ -1,10 +1,13 @@
 import 'package:cards_app/models/admin.dart';
 import 'package:cards_app/models/cards.dart';
 import 'package:cards_app/models/customers.dart';
+import 'package:cards_app/models/orders.dart';
+import 'package:cards_app/screens/card_list.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 
 var adminIdget;
+int customerAmountget;
 bool isCard = false;
 class FirebaseApiClient {
   final http.Client httpClient;
@@ -25,6 +28,9 @@ class FirebaseApiClient {
   CollectionReference customer =
       FirebaseFirestore.instance.collection('customers');
 
+  //ORDERS
+  CollectionReference orders = FirebaseFirestore.instance.collection('orders');
+
   //LOGIN
   Future<Admin> fetchLogin(String email, String password) async {
     print("EMAIL:${email}");
@@ -39,12 +45,13 @@ class FirebaseApiClient {
           .where("name", isEqualTo: email)
           .where("password", isEqualTo: password)
           .get();
-      print("DATAAAAAA:${resCustomer.docs[0].id}");
+      print("DATA:${resCustomer.docs[0].id}");
       data = resCustomer.docs[0];
       isCard = true;
       adminIdget = resCustomer.docs[0].id;
+      customerAmountget = resCustomer.docs[0].get('balance');
     } else {
-      print("DATAAAAAA:${res.docs[0].id}");
+      print("DATA:${res.docs[0].id}");
       data = res.docs[0];
       isCard = false;
       adminIdget = res.docs[0].id;
@@ -78,7 +85,7 @@ class FirebaseApiClient {
   }
 
   //Add Card
-  Future<Cards> addCard(String adminId, String cardId, String amount,
+  Future<Cards> addCard(String adminId, String cardId, int amount,
       String cardNumber, String cardVender, String status) async {
     var res = await cards.add({
       "amount": amount,
@@ -113,7 +120,7 @@ class FirebaseApiClient {
     customer.doc(res.id).update({"customerId": res.id});
     customer.doc(res.id).update({"adminId": adminId});
 
-    print("card ID:::::${res.id}");
+    print("Customer ID:::::${res.id}");
     return Customer(
         customerId: customerId,
         adminId: adminId,
@@ -122,15 +129,44 @@ class FirebaseApiClient {
         password: password);
   }
 
-  Future<List<Cards>> fetchCards()async{
-    List<Cards> cardData=[];
+  //Fetch Cards
+  Future<List<Cards>> fetchCards() async {
+    List<Cards> cardData =[];
     var res = await cards
         .where("status", isEqualTo: "NEW")
         .get();
     res.docs.forEach((element) {
+     // cards.doc(fetchCardId).update({"status": "USED"});
       cardData.add(Cards.fromJson(element.data()));
     });
+
    // print("DATTTTAAA:${data.data()}");
     return cardData;
   }
+
+  //Add Orders
+  Future<Orders> addOrders(String cardId, String customerId,
+      String orderId, String transactionDate) async {
+    var res = await orders.add({
+      "cardId": cardId,
+      "customerId": customerId,
+      "orderId": orderId,
+      "transactionDate": transactionDate
+    });
+    await res.get();
+    orders.doc(res.id).update({"orderId": res.id});
+    orders.doc(res.id).update({"customerId": adminIdget});
+    orders.doc(res.id).update({"cardId": fetchCardId});
+    cards.doc(fetchCardId).update({"status": "USED"});
+    customer.doc(adminIdget).update({"balance": minusCustomerBalance});
+    print("Fetch Card ID:::::${fetchCardId}");
+    print("Order ID:::::${res.id}");
+    return Orders(
+        cardId: cardId,
+        customerId: customerId,
+        orderId: orderId,
+        transactionDate: transactionDate
+    );
+  }
+
 }

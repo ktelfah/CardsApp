@@ -1,6 +1,7 @@
 import 'package:cards_app/models/admin.dart';
 import 'package:cards_app/models/cards.dart';
 import 'package:cards_app/models/customers.dart';
+import 'package:cards_app/models/orders.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
@@ -92,3 +93,21 @@ class FetchCardLoaded extends FirebaseState {
 }
 
 class FetchCardError extends FirebaseState {}
+
+
+//Add Orders
+class AddOrdersEmpty extends FirebaseState {}
+
+class AddOrdersLoading extends FirebaseState {}
+
+class AddOrdersLoaded extends FirebaseState {
+  final Orders orders;
+
+  const AddOrdersLoaded({this.orders});
+
+  @override
+  List<Object> get props => [];
+}
+
+class AddOrdersError extends FirebaseState {}
+

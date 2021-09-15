@@ -1,20 +1,20 @@
 class Cards {
-  //static var shared = Admin;
   String adminId;
   String cardId;
-  String amount;
+  int amount;
   String cardNumber;
   String cardVender;
   String status;
+  bool isChecked = false;
 
-  Cards({
-    this.adminId,
-    this.cardId,
-    this.amount,
-    this.cardNumber,
-    this.cardVender,
-    this.status,
-  });
+  Cards(
+      {this.adminId,
+      this.cardId,
+      this.amount,
+      this.cardNumber,
+      this.cardVender,
+      this.status,
+      this.isChecked});
 
   factory Cards.fromJson(Map<dynamic, dynamic> json) => new Cards(
         adminId: json["adminId"],
@@ -23,6 +23,7 @@ class Cards {
         cardNumber: json["cardNumber"],
         cardVender: json["cardVender"],
         status: json["status"],
+        isChecked: false,
       );
 
   Map<dynamic, dynamic> toJson() => {
@@ -32,5 +33,6 @@ class Cards {
         "cardNumber": cardNumber,
         "cardVender": cardVender,
         "status": status,
+        "isChecked": isChecked,
       };
 }

@@ -84,8 +84,8 @@ class _HomePageState extends State<HomePage> {
   final userNameNode = FocusNode();
   final passwordNode = FocusNode();
   //String email = "kt\$@sss.com", password = "123";
-  //String email = "Zimba", password = "12345";
-  String email = "", password = "";
+  String email = "Zimba", password = "12345";
+  //String email = "", password = "";
 
   @override
   Widget build(BuildContext context) {

@@ -3,6 +3,7 @@ import 'package:cards_app/bloc/cards_state.dart';
 import 'package:cards_app/models/admin.dart';
 import 'package:cards_app/models/cards.dart';
 import 'package:cards_app/models/customers.dart';
+import 'package:cards_app/models/orders.dart';
 import 'package:cards_app/repository/cards_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -103,6 +104,26 @@ class FirebaseBloc extends Bloc<FirebaseEvent, FirebaseState> {
       } catch (e) {
         print(e);
         yield FetchCardError();
+      }
+    }
+
+    //Add Oredrs
+    if (event is ResetAddOrders) {
+      yield AddOrdersEmpty();
+    }
+
+    if (event is FetchAddOrders) {
+      yield AddOrdersLoading();
+
+      try {
+        final Orders orders = await repository.addOrders(event.cardId,
+            event.customerId,
+            event.orderId,
+            event.transactionDate);
+        yield AddOrdersLoaded(orders: orders);
+      } catch (e) {
+        print(e);
+        yield AddOrdersError();
       }
     }
   }
