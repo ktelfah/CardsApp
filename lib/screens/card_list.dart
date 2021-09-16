@@ -3,16 +3,16 @@ import 'package:cards_app/bloc/cards_event.dart';
 import 'package:cards_app/bloc/cards_state.dart';
 import 'package:cards_app/main.dart';
 import 'package:cards_app/models/cards.dart';
-import 'package:cards_app/models/orders.dart';
 import 'package:cards_app/repository/cards_api.dart';
 import 'package:cards_app/repository/cards_repository.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 
-var fetchCardId;
 var minusCustomerBalance;
+String addCardIds;
+List<String> arrayCardIDs;
 
 class CardList extends StatefulWidget {
   const CardList({Key key}) : super(key: key);
@@ -25,7 +25,9 @@ class _CardListState extends State<CardList> {
   int count = 0;
   int checkedAmount = 0;
   int checkCardAmount;
-  List<Orders> arrayBuyCards = [];
+  String cardSelectedId;
+  List<String> buyCardsArray = [];
+  Timestamp now = Timestamp.now();
 
   @override
   void initState() {
@@ -52,40 +54,16 @@ class _CardListState extends State<CardList> {
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: Colors.pinkAccent,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bookmark_border, color: Color(0xFFFF2562)),
-            label: "OrdersList",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.card_travel_sharp, color: Color(0xFFFF2562)),
-            label: "CardsList",
-          ),
-        ],
-      ),
       // body: body(),
       body: BlocBuilder<FirebaseBloc, FirebaseState>(builder: (context, state) {
-        print("STATE:${state}");
         if (state is FetchCardEmpty) {
           BlocProvider.of<FirebaseBloc>(context).add(FetchCards());
         }
 
         if (state is FetchCardError) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text(
-                "Invalid Data",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                    height: 3.0,
-                    fontSize: 20),
-              ),
-              backgroundColor: Colors.red,
-            ));
-          });
+          return Center(
+            child: Text("Failed to fetch data"),
+          );
         }
 
         if (state is FetchCardLoaded) {
@@ -103,8 +81,7 @@ class _CardListState extends State<CardList> {
   Widget body(List<Cards> cardList) {
     return Stack(
       children: [
-        Container(
-            child: Column(
+        Column(
           children: [
             Flexible(
               child: ListView.builder(
@@ -143,48 +120,17 @@ class _CardListState extends State<CardList> {
                                     ),
                                     Divider(
                                       thickness: 7,
+                                      color: Colors.black,
                                     )
                                   ],
                                 ),
                                 Spacer(),
                                 GestureDetector(
                                   onTap: () {
-                                    print(
-                                        "Card Amount:::${cardList[index].amount}");
-                                    print(
-                                        "CUSTOMER TOTAL BALANCES:::${customerAmountget}");
-                                    if (customerAmountget >=
-                                        cardList[index].amount) {
-                                      minusCustomerBalance = customerAmountget -
-                                          cardList[index].amount;
-                                      print(
-                                          "MINUS***********${minusCustomerBalance}");
-                                      print("*******BOTH ARE SAME******");
-                                      fetchCardId = cardList[index].cardId;
-                                      BlocProvider.of<FirebaseBloc>(context)
-                                          .add(FetchAddOrders(
-                                        fetchCardId,
-                                        adminIdget,
-                                        '',
-                                        DateFormat("dd-MM-yyyy hh:mm a")
-                                            .format(DateTime.now()),
-                                      ));
-                                    } else {
-                                      print("*********NOT SAME********");
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(SnackBar(
-                                        behavior: SnackBarBehavior.floating,
-                                        content: Text(
-                                          "Your Balance is less than card amount",
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            fontSize: 15,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                        backgroundColor: Colors.black,
-                                      ));
-                                    }
+                                    cardSelectedId = cardList[index].cardId;
+                                    buyCardsArray.add(cardSelectedId);
+                                    checkCardAmount = cardList[index].amount;
+                                    buyCard();
                                   },
                                   child: Container(
                                     height: 25,
@@ -204,26 +150,22 @@ class _CardListState extends State<CardList> {
                                   activeColor: Colors.pink,
                                   value: cardList[index].isChecked,
                                   onChanged: (value) {
+                                    cardSelectedId = cardList[index].cardId;
                                     checkCardAmount = cardList[index].amount;
-                                    print("Selected value:************${value}");
-                                    print("Card Amount:::${cardList[index].amount}");
-                                    print("CUSTOMER TOTAL BALANCES:::${customerAmountget}");
-                                    print("Customer ID:::${adminIdget}");
                                     if (value == true) {
                                       count = count + 1;
-                                      checkedAmount  = checkedAmount + cardList[index].amount;
-                                      print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^${checkedAmount}");
+                                      buyCardsArray.add(cardSelectedId);
+                                      checkedAmount =
+                                          checkedAmount + checkCardAmount;
 
-                                      if (count >= 2) {
-                                        print("true*********");
-                                      }
+                                      if (count >= 2) {}
                                     } else {
                                       count = count - 1;
-                                      checkedAmount  = checkedAmount - cardList[index].amount;
-                                      print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^${checkedAmount}");
-                                      if (count >= 2) {
-                                        print("true*********");
-                                      }
+                                      buyCardsArray.remove(cardSelectedId);
+                                      checkedAmount =
+                                          checkedAmount - checkCardAmount;
+
+                                      if (count >= 2) {}
                                     }
                                     setState(() {
                                       cardList[index].isChecked = value;
@@ -240,70 +182,106 @@ class _CardListState extends State<CardList> {
               height: 40,
             ),
           ],
-        )),
-        if (count >= 2)
-          Positioned(
-            bottom: 48.0,
-            left: 10.0,
-            right: 10.0,
-            child: Card(
-              elevation: 8.0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              child: GestureDetector(
-                onTap: () {
-                  print("Buy All Checked Amount${checkedAmount}");
-                  print("Buy All Checked  Card Amount${customerAmountget}");
-                  if (checkedAmount <= customerAmountget) {
-                    print("Both  are same");
-
-                    // BlocProvider.of<FirebaseBloc>(context)
-                    //     .add(FetchAddOrders(
-                    //   fetchCardId,
-                    //   adminIdget,
-                    //   '',
-                    //   DateFormat("dd-MM-yyyy hh:mm a")
-                    //       .format(DateTime.now()),
-                    // ));
-                  } else {
-                    ScaffoldMessenger.of(context)
-                        .showSnackBar(SnackBar(
-                      behavior: SnackBarBehavior.floating,
-                      content: Text(
-                        "Your Balance is less than card amount",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.white,
+        ),
+        count >= 2
+            ? Positioned(
+                bottom: 48.0,
+                left: 10.0,
+                right: 10.0,
+                child: Card(
+                  elevation: 8.0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: GestureDetector(
+                    onTap: () {
+                      buyAllCards();
+                    },
+                    child: Column(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(
+                            "Buy All",
+                            style: TextStyle(
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFFFF2562),
+                            ),
+                          ),
                         ),
-                      ),
-                      backgroundColor: Colors.black,
-                    ));
-                    print("Both not same");
-                  }
-                } ,
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                        "Buy All",
-                        style: TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
+              )
+            : SizedBox(
+                height: 0.1,
+                width: 0.1,
               ),
-            ),
-          ),
       ],
     );
   }
 
+  ///Buy Only One Cards
+  void buyCard() {
+    addCardIds = buyCardsArray.join(', ');
+    arrayCardIDs = addCardIds.split(",");
+    if (customerAmountGet >= checkCardAmount) {
+      minusCustomerBalance = customerAmountGet - checkCardAmount;
+      BlocProvider.of<FirebaseBloc>(context).add(FetchAddOrders(
+        addCardIds,
+        adminIdGet,
+        '',
+        now,
+      ));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        behavior: SnackBarBehavior.floating,
+        content: Text(
+          "Your Balance is less than card amount",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 15,
+            color: Colors.white,
+          ),
+        ),
+        backgroundColor: Colors.black,
+      ));
+    }
+  }
+
+  ///Buy More than One Cards
+  void buyAllCards() {
+    addCardIds = buyCardsArray.join(',');
+    arrayCardIDs = addCardIds.split(",");
+    if (checkedAmount <= customerAmountGet) {
+      minusCustomerBalance = customerAmountGet - checkedAmount;
+      print("Both  are same");
+      BlocProvider.of<FirebaseBloc>(context).add(FetchAddOrders(
+        addCardIds,
+        adminIdGet,
+        '',
+        now,
+      ));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        behavior: SnackBarBehavior.floating,
+        content: Text(
+          "Your Balance is less than card amount",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 15,
+            color: Colors.white,
+          ),
+        ),
+        backgroundColor: Colors.black,
+      ));
+      print("Both not same");
+    }
+  }
+
+  ///Show Alert for LogOut
   void showAlert(BuildContext context) {
     showDialog(
       context: context,
@@ -325,10 +303,6 @@ class _CardListState extends State<CardList> {
                     builder: (_) => MyApp(
                           repository: repository,
                         )));
-                // Navigator.of(context).push(MaterialPageRoute(
-                //     builder: (_) => BlocProvider.value(
-                //         value: BlocProvider.of<FirebaseBloc>(context),
-                //         child: HomePage())));
               },
             ),
             FlatButton(

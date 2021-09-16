@@ -1,5 +1,6 @@
 import 'package:cards_app/bloc/cards_bloc.dart';
 import 'package:cards_app/bloc/cards_state.dart';
+import 'package:cards_app/helper/pages.dart';
 import 'package:cards_app/repository/cards_api.dart';
 import 'package:cards_app/repository/cards_repository.dart';
 import 'package:cards_app/screens/add_admin_customer_cards.dart';
@@ -83,9 +84,10 @@ class _HomePageState extends State<HomePage> {
   final formKey = GlobalKey<FormState>();
   final userNameNode = FocusNode();
   final passwordNode = FocusNode();
+  ///Test User Credentials
   //String email = "kt\$@sss.com", password = "123";
-  String email = "Zimba", password = "12345";
-  //String email = "", password = "";
+  //String email = "Zimba", password = "12345";
+  String email = "", password = "";
 
   @override
   Widget build(BuildContext context) {
@@ -124,18 +126,17 @@ class _HomePageState extends State<HomePage> {
 
         if (state is LoginLoaded) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            print("BOOLEAN VALUE:${isCard}");
             getAdminIdUser = state.admin.adminId;
             if(isCard == false){
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (_) => BlocProvider.value(
                       value: BlocProvider.of<FirebaseBloc>(context),
                       child: AddAdminCustomerCards())));
-            }else{
+            } else {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (_) => BlocProvider.value(
                       value: BlocProvider.of<FirebaseBloc>(context),
-                      child: CardList())));
+                      child: Pages())));
             }
           });
         }

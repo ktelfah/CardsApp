@@ -22,7 +22,6 @@ class LoginLoaded extends FirebaseState {
 
   const LoginLoaded({this.admin});
 
-
   @override
   List<Object> get props => [];
 }
@@ -87,13 +86,11 @@ class FetchCardLoaded extends FirebaseState {
 
   const FetchCardLoaded({this.cards});
 
-
   @override
   List<Object> get props => [];
 }
 
 class FetchCardError extends FirebaseState {}
-
 
 //Add Orders
 class AddOrdersEmpty extends FirebaseState {}
@@ -111,3 +108,34 @@ class AddOrdersLoaded extends FirebaseState {
 
 class AddOrdersError extends FirebaseState {}
 
+//Fetch Orders
+class FetchOrdersListEmpty extends FirebaseState {}
+
+class FetchOrdersListLoading extends FirebaseState {}
+
+class FetchOrdersListLoaded extends FirebaseState {
+  final List<Cards> cards;
+
+  const FetchOrdersListLoaded({this.cards});
+
+  @override
+  List<Object> get props => [];
+}
+
+class FetchOrdersListError extends FirebaseState {}
+
+//Fetch Orders By OrderList
+class FetchOrdersListByOrdersEmpty extends FirebaseState {}
+
+class FetchOrdersListByOrdersLoading extends FirebaseState {}
+
+class FetchOrdersListByOrdersLoaded extends FirebaseState {
+  final List<Orders> orders;
+
+  const FetchOrdersListByOrdersLoaded({this.orders});
+
+  @override
+  List<Object> get props => [];
+}
+
+class FetchOrdersListByOrdersError extends FirebaseState {}

@@ -6,9 +6,10 @@ import 'package:cards_app/screens/card_list.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 
-var adminIdget;
-int customerAmountget;
+var adminIdGet;
+int customerAmountGet;
 bool isCard = false;
+
 class FirebaseApiClient {
   final http.Client httpClient;
 
@@ -33,32 +34,27 @@ class FirebaseApiClient {
 
   //LOGIN
   Future<Admin> fetchLogin(String email, String password) async {
-    print("EMAIL:${email}");
-    print("PASSWORD:${password}");
     var data;
     var res = await admin
         .where("email", isEqualTo: email)
         .where("password", isEqualTo: password)
         .get();
-    if (res.docs.length<=0) {
+    if (res.docs.length <= 0) {
       var resCustomer = await customer
           .where("name", isEqualTo: email)
           .where("password", isEqualTo: password)
           .get();
-      print("DATA:${resCustomer.docs[0].id}");
+
       data = resCustomer.docs[0];
       isCard = true;
-      adminIdget = resCustomer.docs[0].id;
-      customerAmountget = resCustomer.docs[0].get('balance');
+      adminIdGet = resCustomer.docs[0].id;
+      customerAmountGet = resCustomer.docs[0].get('balance');
     } else {
-      print("DATA:${res.docs[0].id}");
       data = res.docs[0];
       isCard = false;
-      adminIdget = res.docs[0].id;
+      adminIdGet = res.docs[0].id;
     }
 
-    print(data.data());
-    // final json = jsonDecode();
     return Admin.fromJson(data.data());
   }
 
@@ -72,9 +68,10 @@ class FirebaseApiClient {
       "phoneNo": phno,
       "isSuperAdmin": isSuperAdmin
     });
+
     await res.get();
     admin.doc(res.id).update({"adminID": res.id});
-    print("admin ID:::::${res.id}");
+
     return Admin(
         adminId: res.id,
         adminName: name,
@@ -93,10 +90,11 @@ class FirebaseApiClient {
       "cardVender": cardVender,
       "status": status,
     });
+
     await res.get();
     cards.doc(res.id).update({"adminId": adminId});
     cards.doc(res.id).update({"cardId": res.id});
-    print("card ID:::::${res.id}");
+
     return Cards(
         adminId: adminId,
         cardId: res.id,
@@ -116,11 +114,11 @@ class FirebaseApiClient {
       "name": name,
       "password": password,
     });
+
     await res.get();
     customer.doc(res.id).update({"customerId": res.id});
     customer.doc(res.id).update({"adminId": adminId});
 
-    print("Customer ID:::::${res.id}");
     return Customer(
         customerId: customerId,
         adminId: adminId,
@@ -131,42 +129,63 @@ class FirebaseApiClient {
 
   //Fetch Cards
   Future<List<Cards>> fetchCards() async {
-    List<Cards> cardData =[];
-    var res = await cards
-        .where("status", isEqualTo: "NEW")
-        .get();
+    List<Cards> cardData = [];
+    var res = await cards.where("status", isEqualTo: "NEW").get();
+
     res.docs.forEach((element) {
-     // cards.doc(fetchCardId).update({"status": "USED"});
       cardData.add(Cards.fromJson(element.data()));
     });
 
-   // print("DATTTTAAA:${data.data()}");
     return cardData;
   }
 
   //Add Orders
-  Future<Orders> addOrders(String cardId, String customerId,
-      String orderId, String transactionDate) async {
+  Future<Orders> addOrders(String cardId, String customerId, String orderId,
+      Timestamp transactionDate) async {
     var res = await orders.add({
       "cardId": cardId,
       "customerId": customerId,
       "orderId": orderId,
       "transactionDate": transactionDate
     });
+
     await res.get();
     orders.doc(res.id).update({"orderId": res.id});
-    orders.doc(res.id).update({"customerId": adminIdget});
-    orders.doc(res.id).update({"cardId": fetchCardId});
-    cards.doc(fetchCardId).update({"status": "USED"});
-    customer.doc(adminIdget).update({"balance": minusCustomerBalance});
-    print("Fetch Card ID:::::${fetchCardId}");
-    print("Order ID:::::${res.id}");
+    orders.doc(res.id).update({"customerId": adminIdGet});
+    orders.doc(res.id).update({"cardId": addCardIds});
+    arrayCardIDs.forEach((element) {
+      cards.doc(element).update({"status": "USED"});
+    });
+    customer.doc(adminIdGet).update({"balance": minusCustomerBalance});
+
     return Orders(
         cardId: cardId,
         customerId: customerId,
         orderId: orderId,
-        transactionDate: transactionDate
-    );
+        transactionDate: transactionDate);
   }
 
+  //Fetch OrdersList
+  Future<List<Cards>> fetchOrdersList() async {
+    List<Cards> cardData = [];
+    var res = await cards.where("status", isEqualTo: "USED").get();
+
+    res.docs.forEach((element) {
+      cardData.add(Cards.fromJson(element.data()));
+    });
+
+    return cardData;
+  }
+
+  //Fetch OrdersList By OrderTable
+  Future<List<Orders>> fetchOrdersListByOrder() async {
+    List<Orders> ordersData = [];
+    var res = await orders.where("customerId", isEqualTo: adminIdGet).get();
+
+    res.docs.forEach((element) {
+      ordersData.add(Orders.fromJson(element.data()));
+    });
+
+    return ordersData;
+  }
 }

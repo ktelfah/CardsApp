@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Orders {
   String cardId;
   String customerId;
   String orderId;
-  String transactionDate;
+  Timestamp transactionDate;
 
   Orders({this.cardId, this.customerId, this.orderId, this.transactionDate});
 

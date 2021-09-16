@@ -3,6 +3,7 @@ import 'package:cards_app/models/cards.dart';
 import 'package:cards_app/models/customers.dart';
 import 'package:cards_app/models/orders.dart';
 import 'package:cards_app/repository/cards_api.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class FirebaseRepository {
@@ -44,7 +45,19 @@ class FirebaseRepository {
 
   //AddOrders
   Future<Orders> addOrders(String cardId, String customerId,
-      String orderId, String transactionDate) async {
+      String orderId, Timestamp transactionDate) async {
     return await firebaseApiClient.addOrders(cardId, customerId, orderId, transactionDate);
+  }
+
+
+  //Fetch Orders List
+  Future<List<Cards>> fetchOrdersList() async {
+    return await firebaseApiClient.fetchOrdersList();
+  }
+
+
+  //Fetch Orders List By OrderList
+  Future<List<Orders>> fetchOrdersListByOrder() async {
+    return await firebaseApiClient.fetchOrdersListByOrder();
   }
 }

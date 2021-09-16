@@ -103,7 +103,6 @@ class ResetFetchCards extends FirebaseEvent {
   List<Object> get props => [];
 }
 
-
 //Add Orders
 class FetchAddOrders extends FirebaseEvent {
   final cardId;
@@ -111,15 +110,44 @@ class FetchAddOrders extends FirebaseEvent {
   final orderId;
   final transactionDate;
 
-  FetchAddOrders(this.cardId, this.customerId, this.orderId, this.transactionDate);
-
-
+  FetchAddOrders(
+      this.cardId, this.customerId, this.orderId, this.transactionDate);
 
   List<Object> get props => [];
 }
 
 class ResetAddOrders extends FirebaseEvent {
   const ResetAddOrders();
+
+  @override
+  List<Object> get props => [];
+}
+
+//Fetch OrderList
+class FetchOrdersList extends FirebaseEvent {
+  FetchOrdersList();
+
+  @override
+  List<Object> get props => [];
+}
+
+class ResetFetchOrdersList extends FirebaseEvent {
+  const ResetFetchOrdersList();
+
+  @override
+  List<Object> get props => [];
+}
+
+//Fetch OrderList By OrderList
+class FetchOrdersListByOrders extends FirebaseEvent {
+  FetchOrdersListByOrders();
+
+  @override
+  List<Object> get props => [];
+}
+
+class ResetFetchOrdersListByOrders extends FirebaseEvent {
+  const ResetFetchOrdersListByOrders();
 
   @override
   List<Object> get props => [];

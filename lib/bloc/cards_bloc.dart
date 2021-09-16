@@ -117,13 +117,45 @@ class FirebaseBloc extends Bloc<FirebaseEvent, FirebaseState> {
 
       try {
         final Orders orders = await repository.addOrders(event.cardId,
-            event.customerId,
-            event.orderId,
-            event.transactionDate);
+            event.customerId, event.orderId, event.transactionDate);
         yield AddOrdersLoaded(orders: orders);
       } catch (e) {
         print(e);
         yield AddOrdersError();
+      }
+    }
+
+    //Fetch OrdersList
+    if (event is ResetFetchOrdersList) {
+      yield FetchOrdersListEmpty();
+    }
+
+    if (event is FetchOrdersList) {
+      yield FetchOrdersListLoading();
+
+      try {
+        final List<Cards> cards = await repository.fetchOrdersList();
+        yield FetchOrdersListLoaded(cards: cards);
+      } catch (e) {
+        print(e);
+        yield FetchOrdersListError();
+      }
+    }
+
+    //Fetch OrdersList By Orders
+    if (event is ResetFetchOrdersListByOrders) {
+      yield FetchOrdersListByOrdersEmpty();
+    }
+
+    if (event is FetchOrdersListByOrders) {
+      yield FetchOrdersListByOrdersLoading();
+
+      try {
+        final List<Orders> orders = await repository.fetchOrdersListByOrder();
+        yield FetchOrdersListByOrdersLoaded(orders: orders);
+      } catch (e) {
+        print(e);
+        yield FetchOrdersListByOrdersError();
       }
     }
   }
