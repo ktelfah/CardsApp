@@ -295,7 +295,7 @@ class _CardListState extends State<CardList> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Logout'),
-          content: Text("Are You Sure You Want To Logout?"),
+          content: Text("Are you sure you want to logout?"),
           actions: <Widget>[
             FlatButton(
               child: Text("YES"),

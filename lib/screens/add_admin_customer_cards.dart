@@ -100,7 +100,7 @@ class _AddAdminCustomerCardsState extends State<AddAdminCustomerCards> {
             Spacer(),
             GestureDetector(
               onTap: () {
-               showAlert(context);
+                showAlert(context);
               },
               child: Container(
                 height: 40,
@@ -131,7 +131,7 @@ class _AddAdminCustomerCardsState extends State<AddAdminCustomerCards> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Logout'),
-          content: Text("Are You Sure You Want To Logout?"),
+          content: Text("Are you sure you want to logout?"),
           actions: <Widget>[
             FlatButton(
               child: Text("YES"),
@@ -142,7 +142,10 @@ class _AddAdminCustomerCardsState extends State<AddAdminCustomerCards> {
                     httpClient: http.Client(),
                   ),
                 );
-                Navigator.of(context).push(MaterialPageRoute(builder: (_)=>MyApp(repository: repository,)));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => MyApp(
+                          repository: repository,
+                        )));
               },
             ),
             FlatButton(

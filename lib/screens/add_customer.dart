@@ -149,7 +149,8 @@ class _AddCustomerState extends State<AddCustomer> {
           ),
           CustomTextFormField(
             obscureText: false,
-            textEditingController: TextEditingController(text: balance.toString()),
+            textEditingController:
+                TextEditingController(text: balance.toString()),
             hintText: 'Balance',
             icon: Icons.wallet_giftcard,
             onFieldSubmitted: (String value) {},
@@ -171,7 +172,7 @@ class _AddCustomerState extends State<AddCustomer> {
             height: 20,
           ),
           CustomTextFormField(
-            obscureText: false,
+            obscureText: true,
             textEditingController: TextEditingController(text: password),
             hintText: 'Password',
             icon: Icons.lock,

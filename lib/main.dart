@@ -61,11 +61,10 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: BlocProvider(
-      create: (context) => FirebaseBloc(repository: widget.repository),
-      child: HomePage(),
-    ));
+          create: (context) => FirebaseBloc(repository: widget.repository),
+          child: HomePage(),
+        ));
   }
 }
-
-
