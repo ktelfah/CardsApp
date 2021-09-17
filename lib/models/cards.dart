@@ -1,7 +1,7 @@
 class Cards {
   String adminId;
   String cardId;
-  int amount;
+  num amount;
   String cardNumber;
   String cardVender;
   String status;

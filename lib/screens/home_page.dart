@@ -2,60 +2,49 @@ import 'package:cards_app/bloc/cards_bloc.dart';
 import 'package:cards_app/bloc/cards_event.dart';
 import 'package:cards_app/bloc/cards_state.dart';
 import 'package:cards_app/helper/custom_text_form_field.dart';
+import 'package:cards_app/helper/pages.dart';
 import 'package:cards_app/main.dart';
+import 'package:cards_app/repository/cards_api.dart';
 import 'package:cards_app/screens/add_admin_customer_cards.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-class AddCard extends StatefulWidget {
-  final adminIdget;
-
-  const AddCard({Key key, this.adminIdget}) : super(key: key);
+class HomePage extends StatefulWidget {
+  const HomePage({Key key}) : super(key: key);
 
   @override
-  _AddCardState createState() => _AddCardState(adminIdget);
+  _HomePageState createState() => _HomePageState();
 }
 
-class _AddCardState extends State<AddCard> {
-  final adminIdget;
+class _HomePageState extends State<HomePage> {
   final formKey = GlobalKey<FormState>();
-  final nameNode = FocusNode();
-  final emailNode = FocusNode();
+  final userNameNode = FocusNode();
   final passwordNode = FocusNode();
-  final phoneNode = FocusNode();
-  num amount = 0;
-  String  cardNumber = "", cardVender = "", status = "NEW";
-  var getAdminId;
-
-  _AddCardState(this.adminIdget);
-
-  @override
-  void initState() {
-    BlocProvider.of<FirebaseBloc>(context).add(ResetAddCard());
-    super.initState();
-  }
+  ///Test User Credentials
+  //String email = "kt\$@sss.com", password = "123";
+  // String email = "Zimba", password = "12345";
+ String email = "", password = "";
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFFFF2562),
-        title: Text("Add Card"),
+        title: Center(child: Text("Cards App")),
       ),
-      //body: body(context)
+      // body: body(context)
       body: BlocBuilder<FirebaseBloc, FirebaseState>(builder: (context, state) {
         print("STATE:$state");
-        if (state is AddCardEmpty) {
+        if (state is LoginEmpty) {
           return Container(
             child: body(context),
           );
         }
 
-        if (state is AddCardError) {
+        if (state is LoginError) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text(
-                "Invalid Data",
+                "Invalid User",
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
@@ -70,25 +59,20 @@ class _AddCardState extends State<AddCard> {
           );
         }
 
-        if (state is AddCardLoaded) {
+        if (state is LoginLoaded) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              behavior: SnackBarBehavior.floating,
-              content: Text(
-                "Card Added Successfully",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 15,
-                  color: Colors.white,
-                ),
-              ),
-              backgroundColor: Colors.black,
-            ));
-
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (_) => BlocProvider.value(
-                    value: BlocProvider.of<FirebaseBloc>(context),
-                    child: AddAdminCustomerCards())));
+            getAdminIdUser = state.admin.adminId;
+            if(isCard == false){
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => BlocProvider.value(
+                      value: BlocProvider.of<FirebaseBloc>(context),
+                      child: AddAdminCustomerCards())));
+            } else {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => BlocProvider.value(
+                      value: BlocProvider.of<FirebaseBloc>(context),
+                      child: Pages())));
+            }
           });
         }
 
@@ -109,8 +93,10 @@ class _AddCardState extends State<AddCard> {
           child: Column(
             children: [
               const SizedBox(height: 40.0),
+              logo(),
+              const SizedBox(height: 80.0),
               Text(
-                "Add Card",
+                "Sign In",
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
               ),
               const SizedBox(height: 20.0),
@@ -125,6 +111,20 @@ class _AddCardState extends State<AddCard> {
     );
   }
 
+  Row logo() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        const SizedBox(height: 40.0),
+        Container(
+            height: 100.0,
+            child: Image.asset(
+              'assets/demo_logo.png',
+            )),
+      ],
+    );
+  }
+
   Form form(BuildContext context) {
     return Form(
       key: formKey,
@@ -133,44 +133,21 @@ class _AddCardState extends State<AddCard> {
         children: [
           CustomTextFormField(
             obscureText: false,
-            textEditingController: TextEditingController(text: amount.toString()),
-            hintText: 'Amount',
-            icon: Icons.monetization_on,
-            onFieldSubmitted: (String value) {},
-            cursorColor: Color(0xFFFF2562),
-            onChanged: (value) {
-              amount = num.parse(value);
-            },
-            keyboardType: TextInputType.name,
-            focusNode: emailNode,
-            nextNode: nameNode,
-            textInputAction: TextInputAction.next,
-            validator: (String value) {
-              if (value.isEmpty) {
-                return 'Please Enter your amount';
-              }
-            },
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          CustomTextFormField(
-            obscureText: false,
-            textEditingController: TextEditingController(text: cardNumber),
-            hintText: 'CardNumber',
+            textEditingController: TextEditingController(text: email),
+            hintText: 'Username',
             icon: Icons.person,
             onFieldSubmitted: (String value) {},
             cursorColor: Color(0xFFFF2562),
             onChanged: (String value) {
-              cardNumber = value;
+              email = value;
             },
             keyboardType: TextInputType.name,
-            focusNode: nameNode,
+            focusNode: userNameNode,
             nextNode: passwordNode,
             textInputAction: TextInputAction.next,
             validator: (String value) {
               if (value.isEmpty) {
-                return 'Please Enter your CardNumber';
+                return 'Please Enter your username';
               }
             },
           ),
@@ -178,29 +155,29 @@ class _AddCardState extends State<AddCard> {
             height: 20,
           ),
           CustomTextFormField(
-            obscureText: false,
-            textEditingController: TextEditingController(text: cardVender),
-            hintText: 'CardVender',
-            icon: Icons.person,
+            obscureText: true,
+            textEditingController: TextEditingController(text: password),
+            hintText: 'Password',
+            icon: Icons.lock,
             onFieldSubmitted: (String value) {},
             cursorColor: Color(0xFFFF2562),
             onChanged: (String value) {
-              cardVender = value;
+              password = value;
             },
             keyboardType: TextInputType.text,
             focusNode: passwordNode,
-            nextNode: phoneNode,
+            nextNode: passwordNode,
             textInputAction: TextInputAction.done,
             validator: (String value) {
               if (value.isEmpty) {
-                return 'Please Enter your CardVender.';
+                return 'Please Enter your Password.';
               }
             },
           ),
           SizedBox(
             height: 70,
           ),
-          addAdminButton(context),
+          signInButton(context),
           SizedBox(
             height: 20,
           ),
@@ -209,13 +186,14 @@ class _AddCardState extends State<AddCard> {
     );
   }
 
-  Widget addAdminButton(BuildContext context) {
+  Widget signInButton(BuildContext context) {
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
+        print("Press Login");
         if (formKey.currentState.validate()) {
           formKey.currentState.save();
-          BlocProvider.of<FirebaseBloc>(context).add(FetchAddCard(
-              getAdminIdUser, '', amount, cardNumber, cardVender, 'NEW'));
+          BlocProvider.of<FirebaseBloc>(context)
+              .add(FetchLogin(email, password));
         }
       },
       child: Container(
@@ -225,7 +203,7 @@ class _AddCardState extends State<AddCard> {
             borderRadius: BorderRadius.all(Radius.circular(4))),
         child: Center(
           child: Text(
-            'ADD CARD',
+            'SIGN IN',
             style: TextStyle(
                 color: Colors.white, fontWeight: FontWeight.w600, fontSize: 15),
           ),

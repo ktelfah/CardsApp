@@ -2,7 +2,7 @@ class Customer {
   //static var shared = Admin;
   String customerId;
   String adminId;
-  String balance;
+  num balance;
   String name;
   String password;
 

@@ -47,7 +47,7 @@ class _AddAdminState extends State<AddAdmin> {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text(
-                "Invalid User",
+                "Invalid Data",
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
@@ -124,7 +124,7 @@ class _AddAdminState extends State<AddAdmin> {
         children: [
           CustomTextFormField(
             obscureText: false,
-            textEditingController: TextEditingController(),
+            textEditingController: TextEditingController(text: email),
             hintText: 'Useremail',
             icon: Icons.mail,
             onFieldSubmitted: (String value) {},
@@ -147,7 +147,7 @@ class _AddAdminState extends State<AddAdmin> {
           ),
           CustomTextFormField(
             obscureText: false,
-            textEditingController: TextEditingController(),
+            textEditingController: TextEditingController(text: name),
             hintText: 'Username',
             icon: Icons.person,
             onFieldSubmitted: (String value) {},
@@ -170,7 +170,7 @@ class _AddAdminState extends State<AddAdmin> {
           ),
           CustomTextFormField(
             obscureText: true,
-            textEditingController: TextEditingController(),
+            textEditingController: TextEditingController(text: password),
             hintText: 'Password',
             icon: Icons.lock,
             onFieldSubmitted: (String value) {},
@@ -193,7 +193,7 @@ class _AddAdminState extends State<AddAdmin> {
           ),
           CustomTextFormField(
             obscureText: true,
-            textEditingController: TextEditingController(),
+            textEditingController: TextEditingController(text: phoneNo),
             hintText: 'PhoneNo',
             icon: Icons.phone,
             onFieldSubmitted: (String value) {},

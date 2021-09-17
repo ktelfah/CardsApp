@@ -48,7 +48,10 @@ class _AddAdminCustomerCardsState extends State<AddAdminCustomerCards> {
                   child: Container(
                     height: 40,
                     width: 130,
-                    color: Color(0xFFFF2562),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Color(0xFFFF2562),
+                    ),
                     child: Center(child: Text("ADD ADMIN")),
                   ),
                 ),
@@ -67,7 +70,10 @@ class _AddAdminCustomerCardsState extends State<AddAdminCustomerCards> {
               child: Container(
                 height: 40,
                 width: 130,
-                color: Color(0xFFFF2562),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Color(0xFFFF2562),
+                ),
                 child: Center(child: Text("ADD CARD")),
               ),
             ),
@@ -84,7 +90,10 @@ class _AddAdminCustomerCardsState extends State<AddAdminCustomerCards> {
               child: Container(
                 height: 40,
                 width: 130,
-                color: Color(0xFFFF2562),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Color(0xFFFF2562),
+                ),
                 child: Center(child: Text("ADD CUSTOMER")),
               ),
             ),
@@ -96,7 +105,10 @@ class _AddAdminCustomerCardsState extends State<AddAdminCustomerCards> {
               child: Container(
                 height: 40,
                 width: MediaQuery.of(context).size.width - 20,
-                color: Color(0xFFFF2562),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Color(0xFFFF2562),
+                ),
                 child: Center(
                     child: Text(
                   "Logout",
@@ -124,7 +136,6 @@ class _AddAdminCustomerCardsState extends State<AddAdminCustomerCards> {
             FlatButton(
               child: Text("YES"),
               onPressed: () {
-
                 Navigator.of(context).pop();
                 final FirebaseRepository repository = FirebaseRepository(
                   firebaseApiClient: FirebaseApiClient(
@@ -132,10 +143,6 @@ class _AddAdminCustomerCardsState extends State<AddAdminCustomerCards> {
                   ),
                 );
                 Navigator.of(context).push(MaterialPageRoute(builder: (_)=>MyApp(repository: repository,)));
-                // Navigator.of(context).push(MaterialPageRoute(
-                //     builder: (_) => BlocProvider.value(
-                //         value: BlocProvider.of<FirebaseBloc>(context),
-                //         child: HomePage())));
               },
             ),
             FlatButton(

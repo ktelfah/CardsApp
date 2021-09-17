@@ -29,6 +29,13 @@
             {
               "client_id": "1023370575686-isbni3mojrjdhteush7qnd3h8t1al7eg.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "1023370575686-e36502tjjprerrs4dlacdl8imorf31o2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.khaled.cardsapp"
+              }
             }
           ]
         }

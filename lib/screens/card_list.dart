@@ -1,6 +1,7 @@
 import 'package:cards_app/bloc/cards_bloc.dart';
 import 'package:cards_app/bloc/cards_event.dart';
 import 'package:cards_app/bloc/cards_state.dart';
+import 'package:cards_app/helper/pages.dart';
 import 'package:cards_app/main.dart';
 import 'package:cards_app/models/cards.dart';
 import 'package:cards_app/repository/cards_api.dart';
@@ -119,7 +120,7 @@ class _CardListState extends State<CardList> {
                                       height: 5,
                                     ),
                                     Divider(
-                                      thickness: 7,
+                                      thickness: 1,
                                       color: Colors.black,
                                     )
                                   ],
@@ -235,6 +236,9 @@ class _CardListState extends State<CardList> {
         '',
         now,
       ));
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (_) => BlocProvider.value(
+              value: BlocProvider.of<FirebaseBloc>(context), child: Pages())));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         behavior: SnackBarBehavior.floating,
@@ -264,6 +268,9 @@ class _CardListState extends State<CardList> {
         '',
         now,
       ));
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (_) => BlocProvider.value(
+              value: BlocProvider.of<FirebaseBloc>(context), child: Pages())));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         behavior: SnackBarBehavior.floating,

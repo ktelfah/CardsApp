@@ -5,6 +5,7 @@ import 'package:cards_app/models/cards.dart';
 import 'package:cards_app/models/orders.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 class OrderList extends StatefulWidget {
   const OrderList({Key key}) : super(key: key);
@@ -14,6 +15,8 @@ class OrderList extends StatefulWidget {
 }
 
 class _OrderListState extends State<OrderList> {
+  var format = new DateFormat('yyyy-MM-dd HH:mm a');
+
   @override
   void initState() {
     super.initState();
@@ -98,9 +101,8 @@ class _OrderListState extends State<OrderList> {
                                     SizedBox(
                                       width: 7,
                                     ),
-                                    Flexible(child:
-                                    Text(orderList[index].cardId)
-                                    ),
+                                    Flexible(
+                                        child: Text(orderList[index].cardId)),
                                   ],
                                 ),
                                 SizedBox(
@@ -116,11 +118,9 @@ class _OrderListState extends State<OrderList> {
                                     SizedBox(
                                       width: 7,
                                     ),
-
-                                    Text(orderList[index]
+                                    Text(format.format(orderList[index]
                                         .transactionDate
-                                        .toDate()
-                                        .toString()),
+                                        .toDate())),
                                   ],
                                 ),
                                 SizedBox(

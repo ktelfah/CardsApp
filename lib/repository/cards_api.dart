@@ -82,7 +82,7 @@ class FirebaseApiClient {
   }
 
   //Add Card
-  Future<Cards> addCard(String adminId, String cardId, int amount,
+  Future<Cards> addCard(String adminId, String cardId, num amount,
       String cardNumber, String cardVender, String status) async {
     var res = await cards.add({
       "amount": amount,
@@ -106,7 +106,7 @@ class FirebaseApiClient {
 
   //Add Customer
   Future<Customer> addCustomer(String customerId, String adminId,
-      String balance, String name, String password) async {
+      num balance, String name, String password) async {
     var res = await customer.add({
       "customerId": customerId,
       "adminId": adminId,

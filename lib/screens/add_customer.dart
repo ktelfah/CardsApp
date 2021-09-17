@@ -20,7 +20,8 @@ class _AddCustomerState extends State<AddCustomer> {
   final emailNode = FocusNode();
   final passwordNode = FocusNode();
   final phoneNode = FocusNode();
-  String name = "", balance = "", password = "";
+  num balance = 0;
+  String name = "", password = "";
 
   @override
   void initState() {
@@ -48,7 +49,7 @@ class _AddCustomerState extends State<AddCustomer> {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text(
-                "Invalid User",
+                "Invalid Data",
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
@@ -125,7 +126,7 @@ class _AddCustomerState extends State<AddCustomer> {
         children: [
           CustomTextFormField(
             obscureText: false,
-            textEditingController: TextEditingController(),
+            textEditingController: TextEditingController(text: name),
             hintText: 'Name',
             icon: Icons.person,
             onFieldSubmitted: (String value) {},
@@ -148,13 +149,13 @@ class _AddCustomerState extends State<AddCustomer> {
           ),
           CustomTextFormField(
             obscureText: false,
-            textEditingController: TextEditingController(),
+            textEditingController: TextEditingController(text: balance.toString()),
             hintText: 'Balance',
             icon: Icons.wallet_giftcard,
             onFieldSubmitted: (String value) {},
             cursorColor: Color(0xFFFF2562),
             onChanged: (String value) {
-              balance = value;
+              balance = num.parse(value);
             },
             keyboardType: TextInputType.name,
             focusNode: nameNode,
@@ -171,7 +172,7 @@ class _AddCustomerState extends State<AddCustomer> {
           ),
           CustomTextFormField(
             obscureText: false,
-            textEditingController: TextEditingController(),
+            textEditingController: TextEditingController(text: password),
             hintText: 'Password',
             icon: Icons.lock,
             onFieldSubmitted: (String value) {},
