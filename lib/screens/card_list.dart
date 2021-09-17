@@ -85,99 +85,110 @@ class _CardListState extends State<CardList> {
         Column(
           children: [
             Flexible(
-              child: ListView.builder(
-                  itemCount: cardList.length <= 0 ? 0 : cardList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Padding(
-                      padding: const EdgeInsets.only(top: 8),
-                      child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: cardList.length > 0
+                  ? ListView.builder(
+                      itemCount: cardList.length <= 0 ? 0 : cardList.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 8),
                           child: Container(
-                            child: Row(
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8),
+                              child: Container(
+                                child: Row(
                                   children: [
-                                    Text(
-                                      "Card Number: ${cardList[index].cardNumber}",
-                                      style: TextStyle(fontSize: 15),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Card Number: ${cardList[index].cardNumber}",
+                                          style: TextStyle(fontSize: 15),
+                                        ),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        Text(
+                                          "Card Vender: ${cardList[index].cardVender}",
+                                          style: TextStyle(fontSize: 15),
+                                        ),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        Text(
+                                          "Amount: ${cardList[index].amount}",
+                                          style: TextStyle(fontSize: 15),
+                                        ),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        Divider(
+                                          thickness: 1,
+                                          color: Colors.black,
+                                        )
+                                      ],
+                                    ),
+                                    Spacer(),
+                                    GestureDetector(
+                                      onTap: () {
+                                        cardSelectedId = cardList[index].cardId;
+                                        buyCardsArray.add(cardSelectedId);
+                                        checkCardAmount =
+                                            cardList[index].amount;
+                                        buyCard();
+                                      },
+                                      child: Container(
+                                        height: 25,
+                                        width: 40,
+                                        child: Center(child: Text("Buy")),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          color: Color(0xFFFF2562),
+                                        ),
+                                      ),
                                     ),
                                     SizedBox(
-                                      height: 5,
+                                      width: 15,
                                     ),
-                                    Text(
-                                      "Card Vender: ${cardList[index].cardVender}",
-                                      style: TextStyle(fontSize: 15),
-                                    ),
-                                    SizedBox(
-                                      height: 5,
-                                    ),
-                                    Text(
-                                      "Amount: ${cardList[index].amount}",
-                                      style: TextStyle(fontSize: 15),
-                                    ),
-                                    SizedBox(
-                                      height: 5,
-                                    ),
-                                    Divider(
-                                      thickness: 1,
-                                      color: Colors.black,
+                                    Checkbox(
+                                      checkColor: Colors.black,
+                                      activeColor: Colors.pink,
+                                      value: cardList[index].isChecked,
+                                      onChanged: (value) {
+                                        cardSelectedId = cardList[index].cardId;
+                                        checkCardAmount =
+                                            cardList[index].amount;
+                                        if (value == true) {
+                                          count = count + 1;
+                                          buyCardsArray.add(cardSelectedId);
+                                          checkedAmount =
+                                              checkedAmount + checkCardAmount;
+
+                                          if (count >= 2) {}
+                                        } else {
+                                          count = count - 1;
+                                          buyCardsArray.remove(cardSelectedId);
+                                          checkedAmount =
+                                              checkedAmount - checkCardAmount;
+
+                                          if (count >= 2) {}
+                                        }
+                                        setState(() {
+                                          cardList[index].isChecked = value;
+                                        });
+                                      },
                                     )
                                   ],
                                 ),
-                                Spacer(),
-                                GestureDetector(
-                                  onTap: () {
-                                    cardSelectedId = cardList[index].cardId;
-                                    buyCardsArray.add(cardSelectedId);
-                                    checkCardAmount = cardList[index].amount;
-                                    buyCard();
-                                  },
-                                  child: Container(
-                                    height: 25,
-                                    width: 40,
-                                    child: Center(child: Text("Buy")),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Color(0xFFFF2562),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 15,
-                                ),
-                                Checkbox(
-                                  checkColor: Colors.black,
-                                  activeColor: Colors.pink,
-                                  value: cardList[index].isChecked,
-                                  onChanged: (value) {
-                                    cardSelectedId = cardList[index].cardId;
-                                    checkCardAmount = cardList[index].amount;
-                                    if (value == true) {
-                                      count = count + 1;
-                                      buyCardsArray.add(cardSelectedId);
-                                      checkedAmount =
-                                          checkedAmount + checkCardAmount;
-
-                                      if (count >= 2) {}
-                                    } else {
-                                      count = count - 1;
-                                      buyCardsArray.remove(cardSelectedId);
-                                      checkedAmount =
-                                          checkedAmount - checkCardAmount;
-
-                                      if (count >= 2) {}
-                                    }
-                                    setState(() {
-                                      cardList[index].isChecked = value;
-                                    });
-                                  },
-                                )
-                              ],
-                            ),
-                          )),
-                    );
-                  }),
+                              )),
+                        );
+                      })
+                  : Container(
+                      child: Center(
+                        child: Text('No card found'),
+                      ),
+                    ),
             ),
             SizedBox(
               height: 40,
@@ -236,6 +247,18 @@ class _CardListState extends State<CardList> {
         '',
         now,
       ));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        behavior: SnackBarBehavior.floating,
+        content: Text(
+          "Card buy successfully",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 15,
+            color: Colors.white,
+          ),
+        ),
+        backgroundColor: Colors.black,
+      ));
       Navigator.of(context).push(MaterialPageRoute(
           builder: (_) => BlocProvider.value(
               value: BlocProvider.of<FirebaseBloc>(context), child: Pages())));
@@ -261,12 +284,23 @@ class _CardListState extends State<CardList> {
     arrayCardIDs = addCardIds.split(",");
     if (checkedAmount <= customerAmountGet) {
       minusCustomerBalance = customerAmountGet - checkedAmount;
-      print("Both  are same");
       BlocProvider.of<FirebaseBloc>(context).add(FetchAddOrders(
         addCardIds,
         adminIdGet,
         '',
         now,
+      ));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        behavior: SnackBarBehavior.floating,
+        content: Text(
+          "Card buy successfully",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 15,
+            color: Colors.white,
+          ),
+        ),
+        backgroundColor: Colors.black,
       ));
       Navigator.of(context).push(MaterialPageRoute(
           builder: (_) => BlocProvider.value(
@@ -284,7 +318,6 @@ class _CardListState extends State<CardList> {
         ),
         backgroundColor: Colors.black,
       ));
-      print("Both not same");
     }
   }
 

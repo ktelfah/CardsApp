@@ -64,77 +64,85 @@ class _OrderListState extends State<OrderList> {
             child: Column(
           children: [
             Flexible(
-              child: ListView.builder(
-                  itemCount: orderList.length <= 0 ? 0 : orderList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Padding(
-                      padding: const EdgeInsets.only(top: 8),
-                      child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: orderList.length > 0
+                  ? ListView.builder(
+                      itemCount: orderList.length <= 0 ? 0 : orderList.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 8),
                           child: Container(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8),
+                              child: Container(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      "Order Id:",
-                                      style:
-                                          TextStyle(color: Colors.pinkAccent),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "Order Id:",
+                                          style: TextStyle(
+                                              color: Colors.pinkAccent),
+                                        ),
+                                        SizedBox(
+                                          width: 7,
+                                        ),
+                                        Text(orderList[index].orderId),
+                                      ],
                                     ),
                                     SizedBox(
-                                      width: 7,
+                                      height: 5,
                                     ),
-                                    Text(orderList[index].orderId),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      "Card Id:",
-                                      style:
-                                          TextStyle(color: Colors.pinkAccent),
-                                    ),
-                                    SizedBox(
-                                      width: 7,
-                                    ),
-                                    Flexible(
-                                        child: Text(orderList[index].cardId)),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      "Transaction Date:",
-                                      style:
-                                          TextStyle(color: Colors.pinkAccent),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "Card Id:",
+                                          style: TextStyle(
+                                              color: Colors.pinkAccent),
+                                        ),
+                                        SizedBox(
+                                          width: 7,
+                                        ),
+                                        Flexible(
+                                            child:
+                                                Text(orderList[index].cardId)),
+                                      ],
                                     ),
                                     SizedBox(
-                                      width: 7,
+                                      height: 5,
                                     ),
-                                    Text(format.format(orderList[index]
-                                        .transactionDate
-                                        .toDate())),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "Transaction Date:",
+                                          style: TextStyle(
+                                              color: Colors.pinkAccent),
+                                        ),
+                                        SizedBox(
+                                          width: 7,
+                                        ),
+                                        Text(format.format(orderList[index]
+                                            .transactionDate
+                                            .toDate())),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Divider(
+                                      thickness: 1,
+                                      color: Colors.black,
+                                    )
                                   ],
                                 ),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                Divider(
-                                  thickness: 1,
-                                  color: Colors.black,
-                                )
-                              ],
-                            ),
-                          )),
-                    );
-                  }),
+                              )),
+                        );
+                      })
+                  : Container(
+                      child: Center(
+                        child: Text('No orders found'),
+                      ),
+                    ),
             ),
             SizedBox(
               height: 40,
