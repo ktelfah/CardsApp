@@ -71,7 +71,7 @@ class _AddAdminState extends State<AddAdmin> {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 15,
-                    color: Colors.white,
+                  color: Colors.white,
                 ),
               ),
               backgroundColor: Colors.black,
@@ -192,7 +192,7 @@ class _AddAdminState extends State<AddAdmin> {
             height: 20,
           ),
           CustomTextFormField(
-            obscureText: true,
+            obscureText: false,
             textEditingController: TextEditingController(text: phoneNo),
             hintText: 'PhoneNo',
             icon: Icons.phone,

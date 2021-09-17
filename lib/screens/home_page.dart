@@ -8,6 +8,7 @@ import 'package:cards_app/repository/cards_api.dart';
 import 'package:cards_app/screens/add_admin_customer_cards.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({Key key}) : super(key: key);
 
@@ -19,10 +20,12 @@ class _HomePageState extends State<HomePage> {
   final formKey = GlobalKey<FormState>();
   final userNameNode = FocusNode();
   final passwordNode = FocusNode();
+
   ///Test User Credentials
   //String email = "kt\$@sss.com", password = "123";
   // String email = "Zimba", password = "12345";
- String email = "", password = "";
+
+  String email = "", password = "";
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +65,7 @@ class _HomePageState extends State<HomePage> {
         if (state is LoginLoaded) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             getAdminIdUser = state.admin.adminId;
-            if(isCard == false){
+            if (isCard == false) {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (_) => BlocProvider.value(
                       value: BlocProvider.of<FirebaseBloc>(context),
