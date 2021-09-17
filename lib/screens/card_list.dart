@@ -250,7 +250,7 @@ class _CardListState extends State<CardList> {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         behavior: SnackBarBehavior.floating,
         content: Text(
-          "Card buy successfully",
+          "Card bought successfully",
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 15,
@@ -293,7 +293,7 @@ class _CardListState extends State<CardList> {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         behavior: SnackBarBehavior.floating,
         content: Text(
-          "Card buy successfully",
+          "Card bought successfully",
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 15,

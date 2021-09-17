@@ -1,5 +1,4 @@
 class Customer {
-  //static var shared = Admin;
   String customerId;
   String adminId;
   num balance;

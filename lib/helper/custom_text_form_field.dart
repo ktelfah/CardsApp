@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 class CustomTextFormField extends StatelessWidget {
   const CustomTextFormField(
       {this.obscureText,
-         this.hintText,
-        this.icon,
-       this.focusNode,
+      this.hintText,
+      this.icon,
+      this.focusNode,
       this.cursorColor,
-       this.keyboardType,
-        this.textInputAction,
-       this.onFieldSubmitted,
-        this.nextNode,
-         this.onChanged,
-        this.validator,
-       this.textEditingController})
+      this.keyboardType,
+      this.textInputAction,
+      this.onFieldSubmitted,
+      this.nextNode,
+      this.onChanged,
+      this.validator,
+      this.textEditingController})
       : super();
 
   final bool obscureText;

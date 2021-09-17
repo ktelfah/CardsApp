@@ -1,5 +1,4 @@
 class Admin {
-  //static var shared = Admin;
   String adminId;
   String adminName;
   String phoneNo;

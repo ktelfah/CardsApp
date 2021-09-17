@@ -86,8 +86,6 @@ class _AddAdminState extends State<AddAdmin> {
         return Center(
           child: CircularProgressIndicator(),
         );
-
-        return Container();
       }),
     );
   }
