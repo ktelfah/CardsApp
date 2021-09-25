@@ -239,7 +239,6 @@ class _CardListState extends State<CardList> {
   void buyCard() {
     addCardIds = buyCardsArray.join(', ');
     arrayCardIDs = addCardIds.split(",");
-    print("******************${customerAmountGet}");
     if (customerAmountGet >= checkCardAmount) {
       minusCustomerBalance = customerAmountGet - checkCardAmount;
       BlocProvider.of<FirebaseBloc>(context).add(FetchAddOrders(
@@ -294,7 +293,7 @@ class _CardListState extends State<CardList> {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         behavior: SnackBarBehavior.floating,
         content: Text(
-          "Cards buy successfully",
+          "Card buy successfully",
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 15,

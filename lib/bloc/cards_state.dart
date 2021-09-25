@@ -3,7 +3,6 @@ import 'package:cards_app/models/cards.dart';
 import 'package:cards_app/models/customers.dart';
 import 'package:cards_app/models/orders.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 
 abstract class FirebaseState extends Equatable {
   const FirebaseState();
