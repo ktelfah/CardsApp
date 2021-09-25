@@ -3,6 +3,7 @@ import 'package:cards_app/bloc/cards_event.dart';
 import 'package:cards_app/bloc/cards_state.dart';
 import 'package:cards_app/helper/custom_text_form_field.dart';
 import 'package:cards_app/main.dart';
+import 'package:cards_app/screens/add_admin.dart';
 import 'package:cards_app/screens/add_admin_customer_cards.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,11 +23,18 @@ class _AddCustomerState extends State<AddCustomer> {
   final phoneNode = FocusNode();
   num balance = 0;
   String name = "", password = "";
+  String passwordEncrypted;
+  String encryptedS,decryptedS;
 
   @override
   void initState() {
     BlocProvider.of<FirebaseBloc>(context).add(ResetAddCustomer());
     super.initState();
+  }
+
+  Future Encrypt() async {
+    password = password;
+    encryptedS = await cryptor.encrypt(password, key);
   }
 
   @override
@@ -205,11 +213,14 @@ class _AddCustomerState extends State<AddCustomer> {
 
   Widget addCustomerButton(BuildContext context) {
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
+        await Encrypt().whenComplete(() {
+          passwordEncrypted = encryptedS;
+        });
         if (formKey.currentState.validate()) {
           formKey.currentState.save();
           BlocProvider.of<FirebaseBloc>(context).add(
-              FetchAddCustomer('', getAdminIdUser, balance, name, password));
+              FetchAddCustomer('', getAdminIdUser, balance, name, passwordEncrypted));
         }
       },
       child: Container(

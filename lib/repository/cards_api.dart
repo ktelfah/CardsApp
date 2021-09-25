@@ -2,6 +2,7 @@ import 'package:cards_app/models/admin.dart';
 import 'package:cards_app/models/cards.dart';
 import 'package:cards_app/models/customers.dart';
 import 'package:cards_app/models/orders.dart';
+import 'package:cards_app/screens/add_admin.dart';
 import 'package:cards_app/screens/card_list.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
@@ -35,24 +36,36 @@ class FirebaseApiClient {
   //LOGIN
   Future<Admin> fetchLogin(String email, String password) async {
     var data;
-    var res = await admin
-        .where("email", isEqualTo: email)
-        .where("password", isEqualTo: password)
-        .get();
-    if (res.docs.length <= 0) {
-      var resCustomer = await customer
-          .where("name", isEqualTo: email)
-          .where("password", isEqualTo: password)
-          .get();
+    var passwordEncrypted;
+    var customerPasswordEncrypted;
+    String decryptedS;
+    var key =
+        "5621seeF+hm7eBsv6eDl2g==:VQP0A2rHM4F7aafVngOq5fL950nC1F6ElNPUP9lUTnY=";
 
-      data = resCustomer.docs[0];
-      isCard = true;
-      adminIdGet = resCustomer.docs[0].id;
-      customerAmountGet = resCustomer.docs[0].get('balance');
+    var getPasswordEncrypted =
+        await admin.where("email", isEqualTo: email).get();
+
+    if (getPasswordEncrypted.docs.length <= 0) {
+      var customerGetPasswordEncrypted =
+          await customer.where("name", isEqualTo: email).get();
+
+      customerPasswordEncrypted =
+          await customerGetPasswordEncrypted.docs[0].get('password');
+      decryptedS = await cryptor.decrypt(customerPasswordEncrypted, key);
+      if (decryptedS == password) {
+        data = customerGetPasswordEncrypted.docs[0];
+        isCard = true;
+        adminIdGet = customerGetPasswordEncrypted.docs[0].id;
+        customerAmountGet = customerGetPasswordEncrypted.docs[0].get('balance');
+      }
     } else {
-      data = res.docs[0];
-      isCard = false;
-      adminIdGet = res.docs[0].id;
+      passwordEncrypted = await getPasswordEncrypted.docs[0].get('password');
+      decryptedS = await cryptor.decrypt(passwordEncrypted, key);
+      if (decryptedS == password) {
+        data = getPasswordEncrypted.docs[0];
+        isCard = false;
+        adminIdGet = getPasswordEncrypted.docs[0].id;
+      }
     }
 
     return Admin.fromJson(data.data());
@@ -105,8 +118,8 @@ class FirebaseApiClient {
   }
 
   //Add Customer
-  Future<Customer> addCustomer(String customerId, String adminId,
-      num balance, String name, String password) async {
+  Future<Customer> addCustomer(String customerId, String adminId, num balance,
+      String name, String password) async {
     var res = await customer.add({
       "customerId": customerId,
       "adminId": adminId,

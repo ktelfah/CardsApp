@@ -5,6 +5,11 @@ import 'package:cards_app/helper/custom_text_form_field.dart';
 import 'package:cards_app/screens/add_admin_customer_cards.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_string_encryption/flutter_string_encryption.dart';
+
+var key = "5621seeF+hm7eBsv6eDl2g==:VQP0A2rHM4F7aafVngOq5fL950nC1F6ElNPUP9lUTnY=";
+PlatformStringCryptor cryptor = PlatformStringCryptor();
+
 
 class AddAdmin extends StatefulWidget {
   const AddAdmin({Key key}) : super(key: key);
@@ -20,11 +25,19 @@ class _AddAdminState extends State<AddAdmin> {
   final passwordNode = FocusNode();
   final phoneNode = FocusNode();
   String email = "", name = "", password = "", phoneNo = "";
+  String passwordEncrypted;
+  String encryptedS,decryptedS;
+
 
   @override
   void initState() {
     BlocProvider.of<FirebaseBloc>(context).add(ResetAddAdmin());
     super.initState();
+  }
+
+  Future Encrypt() async {
+    password = password;
+    encryptedS = await cryptor.encrypt(password, key);
   }
 
   @override
@@ -225,11 +238,14 @@ class _AddAdminState extends State<AddAdmin> {
 
   Widget addAdminButton(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        if (formKey.currentState.validate()) {
+      onTap: () async {
+       await Encrypt().whenComplete(() {
+          passwordEncrypted = encryptedS;
+        });
+       if (formKey.currentState.validate()) {
           formKey.currentState.save();
           BlocProvider.of<FirebaseBloc>(context)
-              .add(FetchAddAdmin(email, name, password, phoneNo, 'false'));
+              .add(FetchAddAdmin(email, name, passwordEncrypted, phoneNo, 'false'));
         }
       },
       child: Container(
