@@ -217,3 +217,49 @@ class ResetUpdateCustomer extends FirebaseEvent {
   @override
   List<Object> get props => [];
 }
+
+//Fetch Vendors
+class FetchVendors extends FirebaseEvent {
+  FetchVendors();
+
+  @override
+  List<Object> get props => [];
+}
+
+class ResetFetchVendors extends FirebaseEvent {
+  const ResetFetchVendors();
+
+  @override
+  List<Object> get props => [];
+}
+
+//Fetch Category
+class FetchCategory extends FirebaseEvent {
+  FetchCategory();
+
+  @override
+  List<Object> get props => [];
+}
+
+class ResetFetchCategory extends FirebaseEvent {
+  const ResetFetchCategory();
+
+  @override
+  List<Object> get props => [];
+}
+
+
+//Fetch SubCategory
+class FetchSubCategory extends FirebaseEvent {
+  FetchSubCategory();
+
+  @override
+  List<Object> get props => [];
+}
+
+class ResetFetchSubCategory extends FirebaseEvent {
+  const ResetFetchSubCategory();
+
+  @override
+  List<Object> get props => [];
+}

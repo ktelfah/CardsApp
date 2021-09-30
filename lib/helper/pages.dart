@@ -1,6 +1,7 @@
 import 'package:cards_app/screens/card_list.dart';
 import 'package:cards_app/screens/order_list.dart';
 import 'package:cards_app/screens/update_customer_profile.dart';
+import 'package:cards_app/screens/vendors_list.dart';
 import 'package:flutter/material.dart';
 
 class Pages extends StatefulWidget {
@@ -11,7 +12,8 @@ class Pages extends StatefulWidget {
 }
 
 class _PagesState extends State<Pages> {
-  Widget currentPage = CardList();
+  //Widget currentPage = CardList();
+  Widget currentPage = VendorList();
   int _currentIndex = 0;
 
   @override
@@ -52,7 +54,8 @@ class _PagesState extends State<Pages> {
     setState(() {
       switch (tabItem) {
         case 0:
-          currentPage = CardList();
+          //currentPage = CardList();
+          currentPage = VendorList();
           break;
         case 1:
           currentPage = OrderList();

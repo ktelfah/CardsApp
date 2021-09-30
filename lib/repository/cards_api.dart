@@ -1,11 +1,16 @@
 import 'package:cards_app/main.dart';
 import 'package:cards_app/models/admin.dart';
 import 'package:cards_app/models/cards.dart';
+import 'package:cards_app/models/categories.dart';
 import 'package:cards_app/models/customers.dart';
 import 'package:cards_app/models/orders.dart';
+import 'package:cards_app/models/subCategory.dart';
 import 'package:cards_app/models/vendors.dart';
 import 'package:cards_app/screens/add_admin.dart';
 import 'package:cards_app/screens/card_list.dart';
+import 'package:cards_app/screens/category_list.dart';
+import 'package:cards_app/screens/sub_category_list.dart';
+import 'package:cards_app/screens/vendors_list.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 
@@ -43,6 +48,14 @@ class FirebaseApiClient {
   //VENDOR
   CollectionReference vendors =
       FirebaseFirestore.instance.collection('vendors');
+
+  //CATEGORIES
+  CollectionReference categories =
+  FirebaseFirestore.instance.collection('categories');
+
+  //SUB-CATEGORIES
+  CollectionReference subCategories =
+  FirebaseFirestore.instance.collection('subCategories');
 
   //LOGIN
   Future<Admin> fetchLogin(String email, String password) async {
@@ -247,7 +260,7 @@ class FirebaseApiClient {
     vendors.doc(res.id).update({"adminId": adminId});
 
     return Vendors(
-        vendorsId: vendorId,
+        vendorId: vendorId,
         adminId: adminId,
         name: name,
         icon: icon,
@@ -284,4 +297,42 @@ class FirebaseApiClient {
     var data = await customer.doc(customerId).get();
     return data.data() != null;
   }
+
+//Fetch Vendors List
+  Future<List<Vendors>> fetchVendors() async {
+    List<Vendors> vendorsData = [];
+    var res = await vendors.get();
+
+    res.docs.forEach((element) {
+      vendorsData.add(Vendors.fromJson(element.data()));
+    });
+
+    return vendorsData;
+  }
+
+  //Fetch Category List
+  Future<List<Category>> fetchCategory() async {
+    List<Category> categoryData = [];
+    var res = await categories.where("vendorId", isEqualTo: getSelectedVendorId).get();
+
+    res.docs.forEach((element) {
+      categoryData.add(Category.fromJson(element.data()));
+    });
+
+    return categoryData;
+  }
+
+  //Fetch SubCategory List
+  Future<List<SubCategory>> fetchSubCategory() async {
+    List<SubCategory> subCategoryData = [];
+    var res = await subCategories.where("categoryId", isEqualTo: getSelectedCategoryId).get();
+
+    res.docs.forEach((element) {
+      subCategoryData.add(SubCategory.fromJson(element.data()));
+    });
+
+    return subCategoryData;
+  }
+
+
 }

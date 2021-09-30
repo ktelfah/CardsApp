@@ -1,7 +1,9 @@
 import 'package:cards_app/models/admin.dart';
 import 'package:cards_app/models/cards.dart';
+import 'package:cards_app/models/categories.dart';
 import 'package:cards_app/models/customers.dart';
 import 'package:cards_app/models/orders.dart';
+import 'package:cards_app/models/subCategory.dart';
 import 'package:cards_app/models/vendors.dart';
 import 'package:cards_app/repository/cards_api.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -86,5 +88,20 @@ class FirebaseRepository {
       int balance, String password, String address) async {
     return await firebaseApiClient.updateCustomer(
         customerId, adminId, name, balance, password, address);
+  }
+
+  //Fetch Vendors
+  Future<List<Vendors>> fetchVendors() async {
+    return await firebaseApiClient.fetchVendors();
+  }
+
+  //Fetch Category
+  Future<List<Category>> fetchCategory() async {
+    return await firebaseApiClient.fetchCategory();
+  }
+
+  //Fetch SubCategory
+  Future<List<SubCategory>> fetchSubCategory() async {
+    return await firebaseApiClient.fetchSubCategory();
   }
 }

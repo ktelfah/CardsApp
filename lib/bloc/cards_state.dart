@@ -1,7 +1,9 @@
 import 'package:cards_app/models/admin.dart';
 import 'package:cards_app/models/cards.dart';
+import 'package:cards_app/models/categories.dart';
 import 'package:cards_app/models/customers.dart';
 import 'package:cards_app/models/orders.dart';
+import 'package:cards_app/models/subCategory.dart';
 import 'package:cards_app/models/vendors.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
@@ -204,3 +206,53 @@ class CustomerUpdateUpdated extends FirebaseState {
 class CustomerUpdateFail extends FirebaseState {}
 
 class CustomerUpdateDeleted extends FirebaseState {}
+
+
+//Fetch Vendors
+class FetchVendorsEmpty extends FirebaseState {}
+
+class FetchVendorsLoading extends FirebaseState {}
+
+class FetchVendorsLoaded extends FirebaseState {
+  final List<Vendors> vendors;
+
+  const FetchVendorsLoaded({this.vendors});
+
+  @override
+  List<Object> get props => [];
+}
+
+class FetchVendorsError extends FirebaseState {}
+
+//Fetch Category
+class FetchCategoryEmpty extends FirebaseState {}
+
+class FetchCategoryLoading extends FirebaseState {}
+
+class FetchCategoryLoaded extends FirebaseState {
+  final List<Category> category;
+
+  const FetchCategoryLoaded({this.category});
+
+  @override
+  List<Object> get props => [];
+}
+
+class FetchCategoryError extends FirebaseState {}
+
+
+//Fetch SubCategory
+class FetchSubCategoryEmpty extends FirebaseState {}
+
+class FetchSubCategoryLoading extends FirebaseState {}
+
+class FetchSubCategoryLoaded extends FirebaseState {
+  final List<SubCategory> subCategory;
+
+  const FetchSubCategoryLoaded({this.subCategory});
+
+  @override
+  List<Object> get props => [];
+}
+
+class FetchSubCategoryError extends FirebaseState {}

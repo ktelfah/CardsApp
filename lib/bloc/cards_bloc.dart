@@ -2,8 +2,10 @@ import 'package:cards_app/bloc/cards_event.dart';
 import 'package:cards_app/bloc/cards_state.dart';
 import 'package:cards_app/models/admin.dart';
 import 'package:cards_app/models/cards.dart';
+import 'package:cards_app/models/categories.dart';
 import 'package:cards_app/models/customers.dart';
 import 'package:cards_app/models/orders.dart';
+import 'package:cards_app/models/subCategory.dart';
 import 'package:cards_app/models/vendors.dart';
 import 'package:cards_app/repository/cards_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -227,6 +229,58 @@ class FirebaseBloc extends Bloc<FirebaseEvent, FirebaseState> {
       } catch (e) {
         print(e);
         yield CustomerUpdateError();
+      }
+    }
+
+    //Fetch Vendors
+    if (event is ResetFetchVendors) {
+      yield FetchVendorsEmpty();
+    }
+
+    if (event is FetchVendors) {
+      yield FetchVendorsLoading();
+
+      try {
+        final List<Vendors> vendors = await repository.fetchVendors();
+        yield FetchVendorsLoaded(vendors: vendors);
+      } catch (e) {
+        print(e);
+        yield FetchVendorsError();
+      }
+    }
+
+    //Fetch Category
+    if (event is ResetFetchCategory) {
+      yield FetchCategoryEmpty();
+    }
+
+    if (event is FetchCategory) {
+      yield FetchCategoryLoading();
+
+      try {
+        final List<Category> category = await repository.fetchCategory();
+        yield FetchCategoryLoaded(category: category);
+      } catch (e) {
+        print(e);
+        yield FetchCategoryError();
+      }
+    }
+
+    //Fetch SubCategory
+    if (event is ResetFetchSubCategory) {
+      yield FetchSubCategoryEmpty();
+    }
+
+    if (event is FetchSubCategory) {
+      yield FetchSubCategoryLoading();
+
+      try {
+        final List<SubCategory> subCategory =
+            await repository.fetchSubCategory();
+        yield FetchSubCategoryLoaded(subCategory: subCategory);
+      } catch (e) {
+        print(e);
+        yield FetchSubCategoryError();
       }
     }
   }

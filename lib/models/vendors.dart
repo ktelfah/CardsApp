@@ -1,5 +1,5 @@
 class Vendors {
-  String vendorsId;
+  String vendorId;
   String adminId;
   String name;
   String icon;
@@ -9,7 +9,7 @@ class Vendors {
   String county;
 
   Vendors(
-      {this.vendorsId,
+      {this.vendorId,
       this.adminId,
       this.name,
       this.icon,
@@ -19,7 +19,7 @@ class Vendors {
       this.county});
 
   factory Vendors.fromJson(Map<dynamic, dynamic> json) => new Vendors(
-        vendorsId: json["vendorsId"],
+        vendorId: json["vendorId"],
         adminId: json["adminId"],
         name: json["name"],
         icon: json["icon"],
@@ -30,7 +30,7 @@ class Vendors {
       );
 
   Map<dynamic, dynamic> toJson() => {
-        "vendorsId": vendorsId,
+        "vendorId": vendorId,
         "adminId": adminId,
         "name": name,
         "icon": icon,
