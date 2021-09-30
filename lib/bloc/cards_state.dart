@@ -2,7 +2,9 @@ import 'package:cards_app/models/admin.dart';
 import 'package:cards_app/models/cards.dart';
 import 'package:cards_app/models/customers.dart';
 import 'package:cards_app/models/orders.dart';
+import 'package:cards_app/models/vendors.dart';
 import 'package:equatable/equatable.dart';
+import 'package:meta/meta.dart';
 
 abstract class FirebaseState extends Equatable {
   const FirebaseState();
@@ -138,3 +140,67 @@ class FetchOrdersListByOrdersLoaded extends FirebaseState {
 }
 
 class FetchOrdersListByOrdersError extends FirebaseState {}
+
+
+//Add Vendor
+class AddVendorEmpty extends FirebaseState {}
+
+class AddVendorLoading extends FirebaseState {}
+
+class AddVendorLoaded extends FirebaseState {
+  final Vendors vendors;
+
+  const AddVendorLoaded({this.vendors});
+
+  @override
+  List<Object> get props => [];
+}
+
+class AddVendorError extends FirebaseState {}
+
+
+//Fetch Customer
+class FetchCustomerEmpty extends FirebaseState {}
+
+class FetchCustomerLoading extends FirebaseState {}
+
+class FetchCustomerLoaded extends FirebaseState {
+  final List<Customer> customer;
+
+  const FetchCustomerLoaded({this.customer});
+
+  @override
+  List<Object> get props => [];
+}
+
+class FetchCustomerError extends FirebaseState {}
+
+//Customer Update
+class CustomerUpdateEmpty extends FirebaseState {}
+
+class CustomerUpdateLoading extends FirebaseState {}
+
+class CustomerUpdateLoaded extends FirebaseState {
+  final Customer customer;
+
+  const CustomerUpdateLoaded({@required this.customer}) : assert(customer != null);
+
+  @override
+  List<Object> get props => [];
+}
+
+class CustomerUpdateError extends FirebaseState {}
+
+class CustomerUpdateUpdated extends FirebaseState {
+  final bool isCustomerUpdated;
+
+  const CustomerUpdateUpdated({@required this.isCustomerUpdated})
+      : assert(isCustomerUpdated != null);
+
+  @override
+  List<Object> get props => [];
+}
+
+class CustomerUpdateFail extends FirebaseState {}
+
+class CustomerUpdateDeleted extends FirebaseState {}

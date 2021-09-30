@@ -1,13 +1,20 @@
+import 'package:cards_app/main.dart';
 import 'package:cards_app/models/admin.dart';
 import 'package:cards_app/models/cards.dart';
 import 'package:cards_app/models/customers.dart';
 import 'package:cards_app/models/orders.dart';
+import 'package:cards_app/models/vendors.dart';
 import 'package:cards_app/screens/add_admin.dart';
 import 'package:cards_app/screens/card_list.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 
 var adminIdGet;
+var customerAdminIdGet;
+var customerIdGet;
+var customerNameGet;
+var customerAddressGet;
+var customerPasswordGet;
 int customerAmountGet;
 bool isCard = false;
 
@@ -33,6 +40,10 @@ class FirebaseApiClient {
   //ORDERS
   CollectionReference orders = FirebaseFirestore.instance.collection('orders');
 
+  //VENDOR
+  CollectionReference vendors =
+      FirebaseFirestore.instance.collection('vendors');
+
   //LOGIN
   Future<Admin> fetchLogin(String email, String password) async {
     var data;
@@ -57,6 +68,14 @@ class FirebaseApiClient {
         isCard = true;
         adminIdGet = customerGetPasswordEncrypted.docs[0].id;
         customerAmountGet = customerGetPasswordEncrypted.docs[0].get('balance');
+        customerIdGet = customerGetPasswordEncrypted.docs[0].get('customerId');
+        customerAdminIdGet =
+            customerGetPasswordEncrypted.docs[0].get('adminId');
+        customerNameGet = customerGetPasswordEncrypted.docs[0].get('name');
+        customerAddressGet =
+            customerGetPasswordEncrypted.docs[0].get('address');
+        customerPasswordGet = decryptedS;
+        //customerPasswordGet = customerGetPasswordEncrypted.docs[0].get('password');
       }
     } else {
       passwordEncrypted = await getPasswordEncrypted.docs[0].get('password');
@@ -67,7 +86,6 @@ class FirebaseApiClient {
         adminIdGet = getPasswordEncrypted.docs[0].id;
       }
     }
-
     return Admin.fromJson(data.data());
   }
 
@@ -119,12 +137,13 @@ class FirebaseApiClient {
 
   //Add Customer
   Future<Customer> addCustomer(String customerId, String adminId, num balance,
-      String name, String password) async {
+      String name, String address, String password) async {
     var res = await customer.add({
       "customerId": customerId,
       "adminId": adminId,
       "balance": balance,
       "name": name,
+      "address": address,
       "password": password,
     });
 
@@ -137,6 +156,7 @@ class FirebaseApiClient {
         adminId: adminId,
         balance: balance,
         name: name,
+        address: address,
         password: password);
   }
 
@@ -200,5 +220,68 @@ class FirebaseApiClient {
     });
 
     return ordersData;
+  }
+
+  //Add Vendor
+  Future<Vendors> addVendor(
+      String vendorId,
+      String adminId,
+      String name,
+      String icon,
+      String address1,
+      String address2,
+      String zipcode,
+      String county) async {
+    var res = await vendors.add({
+      "vendorId": vendorId,
+      "name": name,
+      "icon": icon,
+      "address1": address1,
+      "address2": address2,
+      "zipcode": zipcode,
+      "county": county,
+    });
+
+    await res.get();
+    vendors.doc(res.id).update({"vendorId": res.id});
+    vendors.doc(res.id).update({"adminId": adminId});
+
+    return Vendors(
+        vendorsId: vendorId,
+        adminId: adminId,
+        name: name,
+        icon: icon,
+        address1: address1,
+        address2: address2,
+        zipcode: zipcode,
+        county: county);
+  }
+
+  //Fetch Customers
+  Future<List<Customer>> fetchCustomers() async {
+    List<Customer> customerData = [];
+    var res = await customer.where("adminId", isEqualTo: adminIdGet).get();
+
+    res.docs.forEach((element) {
+      customerData.add(Customer.fromJson(element.data()));
+    });
+
+    return customerData;
+  }
+
+  //Update Customer
+  Future<bool> updateCustomer(String customerId, String adminId, String name,
+      int balance, String password, String address) async {
+    await customer.doc(customerIdGet).update({
+      "customerId": customerId,
+      "adminId": adminId,
+      "name": name,
+      "balance": balance,
+      "password": password,
+      "address": address
+    });
+
+    var data = await customer.doc(customerId).get();
+    return data.data() != null;
   }
 }

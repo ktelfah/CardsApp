@@ -4,6 +4,7 @@ import 'package:cards_app/models/admin.dart';
 import 'package:cards_app/models/cards.dart';
 import 'package:cards_app/models/customers.dart';
 import 'package:cards_app/models/orders.dart';
+import 'package:cards_app/models/vendors.dart';
 import 'package:cards_app/repository/cards_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -81,8 +82,13 @@ class FirebaseBloc extends Bloc<FirebaseEvent, FirebaseState> {
       yield AddCustomerLoading();
 
       try {
-        final Customer customer = await repository.addCustomer(event.customerId,
-            event.adminId, event.balance, event.name, event.password);
+        final Customer customer = await repository.addCustomer(
+            event.customerId,
+            event.adminId,
+            event.balance,
+            event.name,
+            event.address,
+            event.password);
         yield AddCustomerLoaded(customer: customer);
       } catch (e) {
         print(e);
@@ -156,6 +162,71 @@ class FirebaseBloc extends Bloc<FirebaseEvent, FirebaseState> {
       } catch (e) {
         print(e);
         yield FetchOrdersListByOrdersError();
+      }
+    }
+
+    //Add Vendor
+    if (event is ResetAddVendor) {
+      yield AddVendorEmpty();
+    }
+
+    if (event is FetchAddVendor) {
+      yield AddVendorLoading();
+
+      try {
+        final Vendors vendors = await repository.addVendor(
+            event.vendorId,
+            event.adminId,
+            event.name,
+            event.icon,
+            event.address1,
+            event.address2,
+            event.zipcode,
+            event.county);
+        yield AddVendorLoaded(vendors: vendors);
+      } catch (e) {
+        print(e);
+        yield AddVendorError();
+      }
+    }
+
+    //Fetch Customer
+    if (event is ResetFetchCustomer) {
+      yield FetchCustomerEmpty();
+    }
+
+    if (event is FetchCustomer) {
+      yield FetchCustomerLoading();
+
+      try {
+        final List<Customer> customer = await repository.fetchCustomer();
+        yield FetchCustomerLoaded(customer: customer);
+      } catch (e) {
+        print(e);
+        yield FetchCustomerError();
+      }
+    }
+
+//Customer Updated
+    if (event is ResetUpdateCustomer) {
+      yield CustomerUpdateEmpty();
+    }
+    if (event is UpdateCustomer) {
+      yield CustomerUpdateLoading();
+      try {
+        final bool isCustomerUpdated = (await repository.updateCustomer(
+            event.customerId,
+            event.adminId,
+            event.name,
+            event.balance,
+            event.password,
+            event.address));
+        yield isCustomerUpdated
+            ? CustomerUpdateUpdated(isCustomerUpdated: isCustomerUpdated)
+            : CustomerUpdateFail();
+      } catch (e) {
+        print(e);
+        yield CustomerUpdateError();
       }
     }
   }

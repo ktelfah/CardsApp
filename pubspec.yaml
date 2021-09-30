@@ -31,12 +31,15 @@ dependencies:
   #Firebase
   cloud_firestore:
   firebase_core:
+  firebase_storage:
   #Bloc
   flutter_bloc:
   http:
   equatable:
   meta:
   intl:
+  image_picker:
+  path: ^1.7.0
   #shared_preferences: ^2.0.7
   flutter_string_encryption: ^0.3.1
 

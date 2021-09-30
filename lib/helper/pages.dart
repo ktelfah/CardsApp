@@ -1,5 +1,6 @@
 import 'package:cards_app/screens/card_list.dart';
 import 'package:cards_app/screens/order_list.dart';
+import 'package:cards_app/screens/update_customer_profile.dart';
 import 'package:flutter/material.dart';
 
 class Pages extends StatefulWidget {
@@ -38,6 +39,10 @@ class _PagesState extends State<Pages> {
             icon: new Icon(Icons.bookmark_border),
             label: 'OrderList',
           ),
+          BottomNavigationBarItem(
+            icon: new Icon(Icons.person),
+            label: 'Profile',
+          ),
         ],
       ),
     );
@@ -51,6 +56,9 @@ class _PagesState extends State<Pages> {
           break;
         case 1:
           currentPage = OrderList();
+          break;
+        case 2:
+          currentPage = UpdateCustomerProfile();
           break;
       }
     });

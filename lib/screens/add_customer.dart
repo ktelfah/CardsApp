@@ -18,13 +18,13 @@ class AddCustomer extends StatefulWidget {
 class _AddCustomerState extends State<AddCustomer> {
   final formKey = GlobalKey<FormState>();
   final nameNode = FocusNode();
-  final emailNode = FocusNode();
   final passwordNode = FocusNode();
-  final phoneNode = FocusNode();
+  final addressNode = FocusNode();
+  final balanceNode = FocusNode();
   num balance = 0;
-  String name = "", password = "";
+  String name = "", password = "", address = "";
   String passwordEncrypted;
-  String encryptedS,decryptedS;
+  String encryptedS, decryptedS;
 
   @override
   void initState() {
@@ -143,12 +143,35 @@ class _AddCustomerState extends State<AddCustomer> {
               name = value;
             },
             keyboardType: TextInputType.name,
-            focusNode: emailNode,
-            nextNode: nameNode,
+            focusNode: nameNode,
+            nextNode: addressNode,
             textInputAction: TextInputAction.next,
             validator: (String value) {
               if (value.isEmpty) {
                 return 'Please Enter customer name';
+              }
+            },
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          CustomTextFormField(
+            obscureText: false,
+            textEditingController: TextEditingController(text: address),
+            hintText: 'Address',
+            icon: Icons.location_city,
+            onFieldSubmitted: (String value) {},
+            cursorColor: Color(0xFFFF2562),
+            onChanged: (String value) {
+              address = value;
+            },
+            keyboardType: TextInputType.name,
+            focusNode: addressNode,
+            nextNode: balanceNode,
+            textInputAction: TextInputAction.next,
+            validator: (String value) {
+              if (value.isEmpty) {
+                return 'Please Enter customer address';
               }
             },
           ),
@@ -167,7 +190,7 @@ class _AddCustomerState extends State<AddCustomer> {
               balance = num.parse(value);
             },
             keyboardType: TextInputType.name,
-            focusNode: nameNode,
+            focusNode: balanceNode,
             nextNode: passwordNode,
             textInputAction: TextInputAction.next,
             validator: (String value) {
@@ -191,7 +214,7 @@ class _AddCustomerState extends State<AddCustomer> {
             },
             keyboardType: TextInputType.text,
             focusNode: passwordNode,
-            nextNode: phoneNode,
+            nextNode: passwordNode,
             textInputAction: TextInputAction.done,
             validator: (String value) {
               if (value.isEmpty) {
@@ -219,8 +242,8 @@ class _AddCustomerState extends State<AddCustomer> {
         });
         if (formKey.currentState.validate()) {
           formKey.currentState.save();
-          BlocProvider.of<FirebaseBloc>(context).add(
-              FetchAddCustomer('', getAdminIdUser, balance, name, passwordEncrypted));
+          BlocProvider.of<FirebaseBloc>(context).add(FetchAddCustomer(
+              '', getAdminIdUser, balance, name, address, passwordEncrypted));
         }
       },
       child: Container(

@@ -73,10 +73,11 @@ class FetchAddCustomer extends FirebaseEvent {
   final adminId;
   final balance;
   final name;
+  final address;
   final password;
 
-  FetchAddCustomer(
-      this.customerId, this.adminId, this.balance, this.name, this.password);
+  FetchAddCustomer(this.customerId, this.adminId, this.balance, this.name,
+      this.address, this.password);
 
   List<Object> get props => [];
 }
@@ -148,6 +149,70 @@ class FetchOrdersListByOrders extends FirebaseEvent {
 
 class ResetFetchOrdersListByOrders extends FirebaseEvent {
   const ResetFetchOrdersListByOrders();
+
+  @override
+  List<Object> get props => [];
+}
+
+//Add Vendor
+
+class FetchAddVendor extends FirebaseEvent {
+  final vendorId;
+  final adminId;
+  final name;
+  final icon;
+  final address1;
+  final address2;
+  final zipcode;
+  final county;
+
+  FetchAddVendor(this.vendorId, this.adminId, this.name, this.icon,
+      this.address1, this.address2, this.zipcode, this.county);
+
+  List<Object> get props => [];
+}
+
+class ResetAddVendor extends FirebaseEvent {
+  const ResetAddVendor();
+
+  @override
+  List<Object> get props => [];
+}
+
+//Fetch Customer
+class FetchCustomer extends FirebaseEvent {
+  FetchCustomer();
+
+  @override
+  List<Object> get props => [];
+}
+
+class ResetFetchCustomer extends FirebaseEvent {
+  const ResetFetchCustomer();
+
+  @override
+  List<Object> get props => [];
+}
+
+//Customer Update
+
+class UpdateCustomer extends FirebaseEvent {
+  final customerId;
+  final adminId;
+  final name;
+  final balance;
+  final password;
+  final address;
+
+  UpdateCustomer(this.customerId, this.adminId, this.name, this.balance,
+      this.password, this.address);
+
+  @override
+  List<Object> get props => [];
+}
+
+class ResetUpdateCustomer extends FirebaseEvent {
+  const ResetUpdateCustomer();
 
   @override
   List<Object> get props => [];

@@ -24,10 +24,10 @@ class _HomePageState extends State<HomePage> {
   final passwordNode = FocusNode();
 
   ///Test User Credentials
-  //  String email = "kt\$@sss.com", password = "123";
-  // String email = "Zimba", password = "12345";
+   String email = "kt\$@sss.com", password = "123";
+   //String email = "TitiTangi", password = "titi";
 
-  String email = "", password = "";
+  //String email = "", password = "";
 
   @override
   Widget build(BuildContext context) {
@@ -192,6 +192,7 @@ class _HomePageState extends State<HomePage> {
   Widget signInButton(BuildContext context) {
     return GestureDetector(
       onTap: () async {
+        print("********************${getAdminIdUser}");
         print("Press Login");
         if (formKey.currentState.validate()) {
           formKey.currentState.save();
