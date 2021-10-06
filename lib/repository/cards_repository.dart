@@ -7,7 +7,6 @@ import 'package:cards_app/models/subCategory.dart';
 import 'package:cards_app/models/vendors.dart';
 import 'package:cards_app/repository/cards_api.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 
 class FirebaseRepository {
   final FirebaseApiClient firebaseApiClient;
@@ -84,8 +83,14 @@ class FirebaseRepository {
   }
 
   //Update Customer
-  Future<bool> updateCustomer(String customerId, String adminId, String name,
-      int balance, String password, String address) async {
+  Future<bool> updateCustomer(
+    String customerId,
+    String adminId,
+    String name,
+    int balance,
+    String password,
+    String address,
+  ) async {
     return await firebaseApiClient.updateCustomer(
         customerId, adminId, name, balance, password, address);
   }

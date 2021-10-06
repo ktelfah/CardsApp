@@ -37,12 +37,18 @@ class CardsBlocObserer extends BlocObserver {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  var customerPasswordEncrypted;
+  String decryptedS;
   await Firebase.initializeApp();
   final FirebaseRepository repository = FirebaseRepository(
     firebaseApiClient: FirebaseApiClient(
       httpClient: http.Client(),
     ),
   );
+
+  // decryptedS = await cryptor.decrypt(
+  //     '4+8pWumiFOeCbv9YZP5XDQ==:XusSxwObdx7UYJn/uVyTp3OdHKn1nzw8xu1VI7P6qLc=:kGllWDFMCcO1zzoLOerXPw==',
+  //     "5621seeF+hm7eBsv6eDl2g==:VQP0A2rHM4F7aafVngOq5fL950nC1F6ElNPUP9lUTnY=");
   runApp(MyApp(
     repository: repository,
   ));
@@ -61,10 +67,11 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: BlocProvider(
-          create: (context) => FirebaseBloc(repository: widget.repository),
-          child: HomePage(),
-        ));
+      debugShowCheckedModeBanner: false,
+      home: BlocProvider(
+        create: (context) => FirebaseBloc(repository: widget.repository),
+        child: HomePage(),
+      ),
+    );
   }
 }

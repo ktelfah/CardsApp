@@ -2,6 +2,8 @@ import 'package:cards_app/bloc/cards_bloc.dart';
 import 'package:cards_app/bloc/cards_event.dart';
 import 'package:cards_app/bloc/cards_state.dart';
 import 'package:cards_app/models/subCategory.dart';
+import 'package:cards_app/screens/cart_list.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -58,42 +60,60 @@ class _SubCategoryListState extends State<SubCategoryList> {
 
   Widget body(List<SubCategory> subCategoryList) {
     return Container(
-        child: Padding(
-      padding: const EdgeInsets.only(top: 20, left: 10,right: 10),
-      child: ListView.builder(
-          itemCount: 1,
-          itemBuilder: (BuildContext context, int index) {
-            return Row(
-              children: [
-                Expanded(
-                  flex: 4,
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(10),
-                            bottomLeft: Radius.circular(10))),
-                    height: 60,
-                   // width: MediaQuery.of(context).size.width - 300,
-                  ),
-                ),
-                Expanded(
-                  flex: 6,
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: Colors.yellow,
-                        borderRadius: BorderRadius.only(
+      child: Padding(
+        padding: const EdgeInsets.only(top: 20, left: 10, right: 10),
+        child: ListView.builder(
+            itemCount: subCategoryList.length,
+            itemBuilder: (BuildContext context, int index) {
+              return GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => BlocProvider.value(
+                        value: BlocProvider.of<FirebaseBloc>(context),
+                        child: CartList(
+                          price: subCategoryList[index].price,
+                          vendor: subCategoryList[index].name,
+                          plan: subCategoryList[index].name,
+                          quantity: subCategoryList[index].quantity,
+                          uniqid: subCategoryList[index].uniqid,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 6,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.yellow,
+                          borderRadius: BorderRadius.only(
                             topRight: Radius.circular(10),
-                            bottomRight: Radius.circular(10))),
-                    height: 60,
-                    //width: MediaQuery.of(context).size.width - 130,
-                    child: Text("tititititiiiit"),
-                    //width: MediaQuery.of(context).size.width - 700,
-                  ),
-                )
-              ],
-            );
-          }),
-    ));
+                            bottomRight: Radius.circular(10),
+                          ),
+                        ),
+                        height: 60,
+                        //width: MediaQuery.of(context).size.width - 130,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('${subCategoryList[index].name}'),
+                            Text('${subCategoryList[index].price}',
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                        //width: MediaQuery.of(context).size.width - 700,
+                      ),
+                    )
+                  ],
+                ),
+              );
+            }),
+      ),
+    );
   }
 }

@@ -7,7 +7,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 class OrderList extends StatefulWidget {
-  const OrderList({Key key}) : super(key: key);
+  const OrderList({
+    Key key,
+  }) : super(key: key);
 
   @override
   _OrderListState createState() => _OrderListState();
@@ -95,7 +97,7 @@ class _OrderListState extends State<OrderList> {
                                     Row(
                                       children: [
                                         Text(
-                                          "Card Id:",
+                                          "Customer Id:",
                                           style: TextStyle(
                                               color: Colors.pinkAccent),
                                         ),
@@ -103,8 +105,8 @@ class _OrderListState extends State<OrderList> {
                                           width: 7,
                                         ),
                                         Flexible(
-                                            child:
-                                                Text(orderList[index].cardId)),
+                                            child: Text(
+                                                orderList[index].customerId)),
                                       ],
                                     ),
                                     SizedBox(

@@ -1,4 +1,3 @@
-import 'package:cards_app/main.dart';
 import 'package:cards_app/models/admin.dart';
 import 'package:cards_app/models/cards.dart';
 import 'package:cards_app/models/categories.dart';
@@ -9,7 +8,6 @@ import 'package:cards_app/models/vendors.dart';
 import 'package:cards_app/screens/add_admin.dart';
 import 'package:cards_app/screens/card_list.dart';
 import 'package:cards_app/screens/category_list.dart';
-import 'package:cards_app/screens/sub_category_list.dart';
 import 'package:cards_app/screens/vendors_list.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
@@ -51,11 +49,11 @@ class FirebaseApiClient {
 
   //CATEGORIES
   CollectionReference categories =
-  FirebaseFirestore.instance.collection('categories');
+      FirebaseFirestore.instance.collection('categories');
 
   //SUB-CATEGORIES
   CollectionReference subCategories =
-  FirebaseFirestore.instance.collection('subCategories');
+      FirebaseFirestore.instance.collection('subCategories');
 
   //LOGIN
   Future<Admin> fetchLogin(String email, String password) async {
@@ -313,7 +311,9 @@ class FirebaseApiClient {
   //Fetch Category List
   Future<List<Category>> fetchCategory() async {
     List<Category> categoryData = [];
-    var res = await categories.where("vendorId", isEqualTo: getSelectedVendorId).get();
+    var res = await categories
+        .where("vendorId", isEqualTo: getSelectedVendorId)
+        .get();
 
     res.docs.forEach((element) {
       categoryData.add(Category.fromJson(element.data()));
@@ -325,7 +325,9 @@ class FirebaseApiClient {
   //Fetch SubCategory List
   Future<List<SubCategory>> fetchSubCategory() async {
     List<SubCategory> subCategoryData = [];
-    var res = await subCategories.where("categoryId", isEqualTo: getSelectedCategoryId).get();
+    var res = await subCategories
+        .where("categoryId", isEqualTo: getSelectedCategoryId)
+        .get();
 
     res.docs.forEach((element) {
       subCategoryData.add(SubCategory.fromJson(element.data()));
@@ -333,6 +335,4 @@ class FirebaseApiClient {
 
     return subCategoryData;
   }
-
-
 }

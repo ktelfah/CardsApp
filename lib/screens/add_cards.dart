@@ -24,7 +24,7 @@ class _AddCardState extends State<AddCard> {
   final passwordNode = FocusNode();
   final phoneNode = FocusNode();
   num amount = 0;
-  String  cardNumber = "", cardVender = "", status = "NEW";
+  String cardNumber = "", cardVender = "", status = "NEW";
   var getAdminId;
 
   _AddCardState(this.adminIdget);
@@ -133,7 +133,8 @@ class _AddCardState extends State<AddCard> {
         children: [
           CustomTextFormField(
             obscureText: false,
-            textEditingController: TextEditingController(text: amount.toString()),
+            textEditingController:
+                TextEditingController(text: amount.toString()),
             hintText: 'Amount',
             icon: Icons.monetization_on,
             onFieldSubmitted: (String value) {},
@@ -145,6 +146,7 @@ class _AddCardState extends State<AddCard> {
             focusNode: emailNode,
             nextNode: nameNode,
             textInputAction: TextInputAction.next,
+            // ignore: missing_return
             validator: (String value) {
               if (value.isEmpty) {
                 return 'Please Enter your amount';

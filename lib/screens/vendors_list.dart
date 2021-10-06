@@ -3,9 +3,10 @@ import 'package:cards_app/bloc/cards_event.dart';
 import 'package:cards_app/bloc/cards_state.dart';
 import 'package:cards_app/models/vendors.dart';
 import 'package:cards_app/repository/cards_api.dart';
-import 'package:cards_app/screens/category_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'category_list.dart';
 
 var getSelectedVendorId;
 var getSelectedVendorName;
@@ -18,7 +19,6 @@ class VendorList extends StatefulWidget {
 }
 
 class _VendorListState extends State<VendorList> {
-
   @override
   void initState() {
     super.initState();
@@ -27,6 +27,8 @@ class _VendorListState extends State<VendorList> {
 
   @override
   Widget build(BuildContext context) {
+    print("name$customerNameGet");
+    print("name$customerAmountGet");
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFFFF2562),
@@ -105,15 +107,15 @@ class _VendorListState extends State<VendorList> {
                       getSelectedVendorName = vendorsList[index].name;
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (_) => BlocProvider.value(
-                              value: BlocProvider.of<FirebaseBloc>(context), child: CategoryList())));
+                              value: BlocProvider.of<FirebaseBloc>(context),
+                              child: CategoryList())));
                     },
                     child: Container(
                       decoration: BoxDecoration(
                           border: Border.all(
                             color: Colors.red[500],
                           ),
-                          borderRadius: BorderRadius.all(Radius.circular(6))
-                      ),
+                          borderRadius: BorderRadius.all(Radius.circular(6))),
                       child: Image.network(
                         vendorsList[index].icon,
                         height: 300,
