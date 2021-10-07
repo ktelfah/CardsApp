@@ -32,7 +32,7 @@ class _VendorListState extends State<VendorList> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFFFF2562),
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: true,
         centerTitle: true,
         title: Text("Hello, ${customerNameGet}"),
       ),
@@ -65,29 +65,32 @@ class _VendorListState extends State<VendorList> {
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
-          Container(
-            height: 80,
-            // width: MediaQuery.of(context).size.width - 20,
-            decoration: BoxDecoration(
-                color: Colors.blueGrey,
-                borderRadius: BorderRadius.all(Radius.circular(6))),
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Row(
-                children: [
-                  Text(
-                    "Your Balance: ${customerAmountGet}",
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  Spacer(),
-                  Icon(
-                    Icons.add,
-                    size: 30,
-                  ),
-                ],
-              ),
-            ),
-          ),
+          // Container(
+          //   height: 80,
+          //   // width: MediaQuery.of(context).size.width - 20,
+          //   decoration: BoxDecoration(
+          //     color: Colors.blueGrey,
+          //     borderRadius: BorderRadius.all(
+          //       Radius.circular(6),
+          //     ),
+          //   ),
+          //   child: Padding(
+          //     padding: const EdgeInsets.all(12.0),
+          //     child: Row(
+          //       children: [
+          //         Text(
+          //           "Your Balance: ${customerAmountGet}",
+          //           style: TextStyle(fontSize: 20),
+          //         ),
+          //         Spacer(),
+          //         Icon(
+          //           Icons.add,
+          //           size: 30,
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // ),
           SizedBox(
             height: 20,
           ),

@@ -373,10 +373,16 @@ class _AddAdminCustomerCardsState extends State<AddAdminCustomerCards> {
                     httpClient: http.Client(),
                   ),
                 );
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => MyApp(
-                          repository: repository,
-                        )));
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                        builder: (_) => MyApp(
+                              repository: repository,
+                            )),
+                    (route) => false);
+                // Navigator.of(context).push(MaterialPageRoute(
+                //     builder: (_) => MyApp(
+                //           repository: repository,
+                //         )));
               },
             ),
             FlatButton(

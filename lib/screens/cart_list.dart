@@ -1,13 +1,9 @@
-import 'package:cards_app/bloc/cards_bloc.dart';
 import 'package:cards_app/repository/cards_api.dart';
 import 'package:cards_app/repository/cards_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-
-import 'order_list.dart';
 
 class CartList extends StatefulWidget {
   const CartList(
@@ -41,7 +37,7 @@ class _CartListState extends State<CartList> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Color(0xFFFF2562),
-          automaticallyImplyLeading: false,
+          automaticallyImplyLeading: true,
           centerTitle: true,
           title: Text("Cart"),
         ),
@@ -106,7 +102,10 @@ class _CartListState extends State<CartList> {
                 Spacer(),
                 Column(
                   children: [
-                    Text("Add Balance", style: TextStyle(color: Colors.white)),
+                    Text(
+                      "Add Balance",
+                      style: TextStyle(color: Colors.white),
+                    ),
                     IconButton(
                       onPressed: () {},
                       icon: Icon(Icons.add_circle_outline_outlined),
@@ -204,89 +203,142 @@ class _CartListState extends State<CartList> {
           Center(
             child: GestureDetector(
               onTap: () async {
-                FirebaseRepository fb = FirebaseRepository(
-                  firebaseApiClient: FirebaseApiClient(
-                    httpClient: http.Client(),
-                  ),
-                );
-
-                var customerPasswordEncrypted;
-                if (quantity != 0) {
-                  if (quantity <= int.parse(widget.quantity) &&
-                      customerAmountGet >= int.parse(widget.price)) {
-                    try {
-                      var finalBalance =
-                          customerAmountGet - int.parse(widget.price);
-                      var finalQuantity = int.parse(widget.quantity) - quantity;
-                      print('Final Balance = $finalBalance');
-                      print('Final Balance = $finalQuantity');
-                      CollectionReference customer =
-                          FirebaseFirestore.instance.collection('customers');
-                      var customerGetPasswordEncrypted = await customer
-                          .where("name", isEqualTo: customerNameGet)
-                          .get();
-                      customerPasswordEncrypted =
-                          await customerGetPasswordEncrypted.docs[0]
-                              .get('password');
-
-                      fb
-                          .updateCustomer(
-                              customerIdGet,
-                              adminIdGet,
-                              customerNameGet,
-                              finalBalance,
-                              customerPasswordEncrypted,
-                              customerAddressGet)
-                          .then(
-                        (value) {
-                          fb.firebaseApiClient.subCategories
-                              .doc(widget.uniqid)
-                              .update(
-                                  {"quantity": '${finalQuantity.toString()}'});
-                          DateTime i = DateTime.now();
-                          // DateFormat(format.toString(), i.toString());
-                          var t = Timestamp.fromDate(i);
-                          print('TIME  === $t');
-                          FirebaseRepository(
-                            firebaseApiClient: FirebaseApiClient(
-                              httpClient: http.Client(),
-                            ),
-                          ).addOrders('', customerIdGet, '', t);
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => BlocProvider.value(
-                                value: BlocProvider.of<FirebaseBloc>(context),
-                                child: OrderList(),
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      actionsPadding: EdgeInsets.only(right: 10.0),
+                      content: Text(
+                        "Are you sure you want to buy ${widget.plan} card with ${quantity} quantity?",
+                        style: TextStyle(fontSize: 15.0),
+                      ),
+                      title: Text(
+                        "Confirmation",
+                        style: TextStyle(fontSize: 15.0),
+                      ),
+                      actions: [
+                        GestureDetector(
+                          onTap: () async {
+                            FirebaseRepository fb = FirebaseRepository(
+                              firebaseApiClient: FirebaseApiClient(
+                                httpClient: http.Client(),
                               ),
-                            ),
-                          );
-                        },
-                      );
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            'Balance buy successfully',
-                            style: TextStyle(color: Colors.white),
+                            );
+
+                            var customerPasswordEncrypted;
+                            if (quantity != 0) {
+                              if (quantity <= int.parse(widget.quantity) &&
+                                  customerAmountGet >=
+                                      int.parse(widget.price)) {
+                                try {
+                                  var finalBalance = customerAmountGet -
+                                      int.parse(widget.price);
+                                  var finalQuantity =
+                                      int.parse(widget.quantity) - quantity;
+                                  print('Final Balance = $finalBalance');
+                                  print('Final Balance = $finalQuantity');
+                                  CollectionReference customer =
+                                      FirebaseFirestore.instance
+                                          .collection('customers');
+                                  var customerGetPasswordEncrypted =
+                                      await customer
+                                          .where("name",
+                                              isEqualTo: customerNameGet)
+                                          .get();
+                                  customerPasswordEncrypted =
+                                      await customerGetPasswordEncrypted.docs[0]
+                                          .get('password');
+
+                                  fb
+                                      .updateCustomer(
+                                          customerIdGet,
+                                          adminIdGet,
+                                          customerNameGet,
+                                          finalBalance,
+                                          customerPasswordEncrypted,
+                                          customerAddressGet)
+                                      .then(
+                                    (value) {
+                                      fb.firebaseApiClient.subCategories
+                                          .doc(widget.uniqid)
+                                          .update({
+                                        "quantity":
+                                            '${finalQuantity.toString()}'
+                                      });
+                                      DateTime i = DateTime.now();
+                                      // DateFormat(format.toString(), i.toString());
+                                      var t = Timestamp.fromDate(i);
+                                      print('TIME  === $t');
+                                      FirebaseRepository(
+                                        firebaseApiClient: FirebaseApiClient(
+                                          httpClient: http.Client(),
+                                        ),
+                                      ).addOrders('', customerIdGet, '', t);
+                                    },
+                                  );
+                                  Navigator.of(context).pop();
+                                  // Navigator.of(context).push(MaterialPageRoute(
+                                  //   builder: (_) => BlocProvider.value(
+                                  //     value: BlocProvider.of<FirebaseBloc>(
+                                  //         context),
+                                  //     child: OrderList(),
+                                  //   ),
+                                  // ));
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        'Card bought successfully.',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ),
+                                  );
+                                } catch (e) {
+                                  print('ERROR IN CUSTOMER UPDATE =$e');
+                                }
+                              } else {
+                                Navigator.of(context).pop();
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(
+                                        content: Text(
+                                  'Error Occurred',
+                                  style: TextStyle(color: Colors.white),
+                                )));
+                              }
+                            } else {
+                              Navigator.of(context).pop();
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                      content: Text(
+                                'Select Proper Quantity',
+                                style: TextStyle(color: Colors.white),
+                              )));
+                            }
+                          },
+                          child: Text(
+                            "Buy",
+                            style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
-                      );
-                    } catch (e) {
-                      print('ERROR IN CUSTOMER UPDATE =$e');
-                    }
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text(
-                      'Error Occurred',
-                      style: TextStyle(color: Colors.white),
-                    )));
-                  }
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(
-                    'Select Proper Quantity',
-                    style: TextStyle(color: Colors.white),
-                  )));
-                }
+                        GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text(
+                              "Cancel",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            )),
+                      ],
+                    );
+                  },
+                );
+                //   Navigator.of(context).push(
+                //     MaterialPageRoute(
+                //       builder: (_) => BlocProvider.value(
+                //         value: BlocProvider.of<FirebaseBloc>(context),
+                //         child: OrderList(),
+                //       ),
+                //     ),
+                //   );
               },
               child: Container(
                 width: 250,

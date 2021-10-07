@@ -27,7 +27,7 @@ class _SubCategoryListState extends State<SubCategoryList> {
         backgroundColor: Color(0xFFFF2562),
         // automaticallyImplyLeading: false,
         centerTitle: true,
-        title: Text("Select Data pack"),
+        title: Text("Select Data Pack"),
         leading: GestureDetector(
             onTap: () {
               Navigator.pop(context);
@@ -82,33 +82,38 @@ class _SubCategoryListState extends State<SubCategoryList> {
                     ),
                   );
                 },
-                child: Row(
+                child: Column(
                   children: [
-                    Expanded(
-                      flex: 6,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.yellow,
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(10),
-                            bottomRight: Radius.circular(10),
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 6,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.yellow,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            height: 60,
+                            //width: MediaQuery.of(context).size.width - 130,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text('${subCategoryList[index].name}'),
+                                Text('${subCategoryList[index].price}',
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold)),
+                              ],
+                            ),
+                            //width: MediaQuery.of(context).size.width - 700,
                           ),
                         ),
-                        height: 60,
-                        //width: MediaQuery.of(context).size.width - 130,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text('${subCategoryList[index].name}'),
-                            Text('${subCategoryList[index].price}',
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold)),
-                          ],
-                        ),
-                        //width: MediaQuery.of(context).size.width - 700,
-                      ),
-                    )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
                   ],
                 ),
               );
