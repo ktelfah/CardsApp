@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:cards_app/bloc/cards_bloc.dart';
 import 'package:cards_app/bloc/cards_event.dart';
 import 'package:cards_app/bloc/cards_state.dart';
@@ -34,8 +35,8 @@ class _AddVendorState extends State<AddVendor> {
       address2 = "",
       zipcode = "",
       county = "";
-  File _image;
-  File selectedImage;
+  XFile _image;
+  XFile selectedImage;
   String downloadUrl;
 
   _AddVendorState(this.adminIdget);
@@ -52,8 +53,8 @@ class _AddVendorState extends State<AddVendor> {
   }
 
   _imgFromGallery() async {
-    selectedImage = await ImagePicker.pickImage(
-        source: ImageSource.gallery, imageQuality: 50);
+    selectedImage = await ImagePicker()
+        .pickImage(source: ImageSource.gallery, imageQuality: 50);
     if (selectedImage != null) {
       setState(() {
         _image = selectedImage;
@@ -343,7 +344,7 @@ class _AddVendorState extends State<AddVendor> {
             ? ClipRRect(
                 borderRadius: BorderRadius.circular(50),
                 child: Image.file(
-                  _image,
+                  File(_image.path),
                   width: 100,
                   height: 100,
                   fit: BoxFit.cover,
