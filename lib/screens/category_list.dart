@@ -18,19 +18,17 @@ class CategoryList extends StatefulWidget {
 }
 
 class _CategoryListState extends State<CategoryList> {
-
   void initState() {
     super.initState();
     BlocProvider.of<FirebaseBloc>(context).add(ResetFetchCategory());
   }
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFFFF2562),
-       // automaticallyImplyLeading: false,
+        // automaticallyImplyLeading: false,
         centerTitle: true,
         title: Text(getSelectedVendorName),
         leading: GestureDetector(
@@ -63,7 +61,7 @@ class _CategoryListState extends State<CategoryList> {
     );
   }
 
-  Widget body(List<Category> categoryList){
+  Widget body(List<Category> categoryList) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -76,10 +74,10 @@ class _CategoryListState extends State<CategoryList> {
               padding: const EdgeInsets.all(8.0),
               child: GridView.builder(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 6.0,
-                    mainAxisSpacing: 6.0,
-                   childAspectRatio: MediaQuery.of(context).size.width /
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 6.0,
+                  mainAxisSpacing: 6.0,
+                  childAspectRatio: MediaQuery.of(context).size.width /
                       (MediaQuery.of(context).size.height / 5.1),
                 ),
                 itemCount: categoryList.length,
@@ -89,22 +87,20 @@ class _CategoryListState extends State<CategoryList> {
                       getSelectedCategoryId = categoryList[index].categoryId;
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (_) => BlocProvider.value(
-                              value: BlocProvider.of<FirebaseBloc>(context), child: SubCategoryList())));
+                              value: BlocProvider.of<FirebaseBloc>(context),
+                              child: SubCategoryList())));
                     },
                     child: Container(
                       decoration: BoxDecoration(
                           border: Border.all(
                             color: Colors.red[500],
                           ),
-                          borderRadius: BorderRadius.all(Radius.circular(6))
-                      ),
+                          borderRadius: BorderRadius.all(Radius.circular(6))),
                       child: Center(
                         child: Text(
                           categoryList[index].categoryName,
                           style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16
-                          ),
+                              fontWeight: FontWeight.bold, fontSize: 16),
                         ),
                       ),
                     ),

@@ -175,14 +175,14 @@ class _MainScreenState extends State<MainScreen> {
                                       },
                                       child: Text("Add"))
                                 ],
-                                title: Text('TextField in Dialog'),
+                                title: Text('Add Balance'),
                                 content: TextField(
                                   onChanged: (value) {
                                     amount = value;
                                   },
                                   controller: controller,
-                                  decoration: InputDecoration(
-                                      hintText: "Text Field in Dialog"),
+                                  decoration:
+                                      InputDecoration(hintText: "Enter amount"),
                                 ),
                               );
                             });

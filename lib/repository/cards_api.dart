@@ -30,32 +30,32 @@ class FirebaseApiClient {
 
   FirebaseFirestore database = FirebaseFirestore.instance;
 
-  //LOGIN
+  // LOGIN
   CollectionReference admin = FirebaseFirestore.instance.collection('admin');
 
-  //CARD
+  // CARD
   CollectionReference cards = FirebaseFirestore.instance.collection('cards');
 
-  //CUSTOMER
+  // CUSTOMER
   CollectionReference customer =
       FirebaseFirestore.instance.collection('customers');
 
-  //ORDERS
+  // ORDERS
   CollectionReference orders = FirebaseFirestore.instance.collection('orders');
 
-  //VENDOR
+  // VENDOR
   CollectionReference vendors =
       FirebaseFirestore.instance.collection('vendors');
 
-  //CATEGORIES
+  // CATEGORIES
   CollectionReference categories =
       FirebaseFirestore.instance.collection('categories');
 
-  //SUB-CATEGORIES
+  // SUB-CATEGORIES
   CollectionReference subCategories =
       FirebaseFirestore.instance.collection('subCategories');
 
-  //LOGIN
+  // LOGIN
   Future<Admin> fetchLogin(String email, String password) async {
     var data;
     var passwordEncrypted;
@@ -100,7 +100,7 @@ class FirebaseApiClient {
     return Admin.fromJson(data.data());
   }
 
-//Add Admin
+  // Add Admin
   Future<Admin> addAdmin(String email, String name, String password,
       String phno, String isSuperAdmin) async {
     var res = await database.collection('admin').add({
@@ -123,7 +123,7 @@ class FirebaseApiClient {
         isSuperAdmin: isSuperAdmin);
   }
 
-  //Add Card
+  // Add Card
   Future<Cards> addCard(String adminId, String cardId, num amount,
       String cardNumber, String cardVender, String status) async {
     var res = await cards.add({
@@ -146,7 +146,7 @@ class FirebaseApiClient {
         status: status);
   }
 
-  //Add Customer
+  // Add Customer
   Future<Customer> addCustomer(String customerId, String adminId, num balance,
       String name, String address, String password) async {
     var res = await customer.add({
@@ -171,7 +171,7 @@ class FirebaseApiClient {
         password: password);
   }
 
-  //Fetch Cards
+  // Fetch Cards
   Future<List<Cards>> fetchCards() async {
     List<Cards> cardData = [];
     var res = await cards.where("status", isEqualTo: "NEW").get();
@@ -183,7 +183,7 @@ class FirebaseApiClient {
     return cardData;
   }
 
-  //Add Orders
+  // Add Orders
   Future<Orders> addOrders(String cardId, String customerId, String orderId,
       Timestamp transactionDate) async {
     var res = await orders.add({
@@ -209,7 +209,7 @@ class FirebaseApiClient {
         transactionDate: transactionDate);
   }
 
-  //Fetch OrdersList
+  // Fetch OrdersList
   Future<List<Cards>> fetchOrdersList() async {
     List<Cards> cardData = [];
     var res = await cards.where("status", isEqualTo: "USED").get();
@@ -221,7 +221,7 @@ class FirebaseApiClient {
     return cardData;
   }
 
-  //Fetch OrdersList By OrderTable
+  // Fetch OrdersList By OrderTable
   Future<List<Orders>> fetchOrdersListByOrder() async {
     List<Orders> ordersData = [];
     var res = await orders.where("customerId", isEqualTo: adminIdGet).get();
@@ -233,7 +233,7 @@ class FirebaseApiClient {
     return ordersData;
   }
 
-  //Add Vendor
+  // Add Vendor
   Future<Vendors> addVendor(
       String vendorId,
       String adminId,
@@ -268,7 +268,7 @@ class FirebaseApiClient {
         county: county);
   }
 
-  //Fetch Customers
+  // Fetch Customers
   Future<List<Customer>> fetchCustomers() async {
     List<Customer> customerData = [];
     var res = await customer.where("adminId", isEqualTo: adminIdGet).get();
@@ -280,7 +280,7 @@ class FirebaseApiClient {
     return customerData;
   }
 
-  //Update Customer
+  // Update Customer
   Future<bool> updateCustomer(String customerId, String adminId, String name,
       int balance, String password, String address) async {
     await customer.doc(customerIdGet).update({
@@ -296,7 +296,7 @@ class FirebaseApiClient {
     return data.data() != null;
   }
 
-//Fetch Vendors List
+  // Fetch Vendors List
   Future<List<Vendors>> fetchVendors() async {
     List<Vendors> vendorsData = [];
     var res = await vendors.get();
@@ -308,7 +308,7 @@ class FirebaseApiClient {
     return vendorsData;
   }
 
-  //Fetch Category List
+  // Fetch Category List
   Future<List<Category>> fetchCategory() async {
     List<Category> categoryData = [];
     var res = await categories
@@ -322,7 +322,7 @@ class FirebaseApiClient {
     return categoryData;
   }
 
-  //Fetch SubCategory List
+  // Fetch SubCategory List
   Future<List<SubCategory>> fetchSubCategory() async {
     List<SubCategory> subCategoryData = [];
     var res = await subCategories
