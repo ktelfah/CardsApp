@@ -219,6 +219,14 @@ class _CartListState extends State<CartList> {
                       actions: [
                         GestureDetector(
                           onTap: () async {
+                            // Navigator.of(context).push(
+                            //   MaterialPageRoute(
+                            //     builder: (_) => BlocProvider.value(
+                            //       value: BlocProvider.of<FirebaseBloc>(context),
+                            //       child: OrderList(),
+                            //     ),
+                            //   ),
+                            // );
                             FirebaseRepository fb = FirebaseRepository(
                               firebaseApiClient: FirebaseApiClient(
                                 httpClient: http.Client(),
@@ -277,13 +285,6 @@ class _CartListState extends State<CartList> {
                                     },
                                   );
                                   Navigator.of(context).pop();
-                                  // Navigator.of(context).push(MaterialPageRoute(
-                                  //   builder: (_) => BlocProvider.value(
-                                  //     value: BlocProvider.of<FirebaseBloc>(
-                                  //         context),
-                                  //     child: OrderList(),
-                                  //   ),
-                                  // ));
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       content: Text(
@@ -331,14 +332,6 @@ class _CartListState extends State<CartList> {
                     );
                   },
                 );
-                //   Navigator.of(context).push(
-                //     MaterialPageRoute(
-                //       builder: (_) => BlocProvider.value(
-                //         value: BlocProvider.of<FirebaseBloc>(context),
-                //         child: OrderList(),
-                //       ),
-                //     ),
-                //   );
               },
               child: Container(
                 width: 250,

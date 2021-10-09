@@ -4,6 +4,7 @@ import 'package:cards_app/bloc/cards_state.dart';
 import 'package:cards_app/helper/pages.dart';
 import 'package:cards_app/repository/cards_api.dart';
 import 'package:cards_app/screens/add_admin.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -60,6 +61,17 @@ class _UpdateCustomerProfileState extends State<UpdateCustomerProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          IconButton(
+            onPressed: () {
+              FirebaseAuth.instance.signOut();
+              // Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+              //   return HomePage();
+              // }));
+            },
+            icon: Icon(Icons.logout),
+          )
+        ],
         backgroundColor: Color(0xFFFF2562),
         automaticallyImplyLeading: false,
         centerTitle: true,

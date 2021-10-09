@@ -30,6 +30,8 @@ class _AddCardState extends State<AddCard> {
   var getAdminId;
   List dd = [];
   List ddd = [];
+  List dddd = [];
+  String venid;
 
   _AddCardState(this.adminIdget);
 
@@ -41,6 +43,19 @@ class _AddCardState extends State<AddCard> {
         dd.add(result.get('name'));
         setState(() {});
         print(dd);
+        var map1 = Map.fromIterable(dddd, key: (e) => dd, value: (e) => ddd);
+        print(map1);
+      });
+    });
+    firestoreInstance
+        .collection("categories")
+        .where("vendorId", isEqualTo: "eE59OtcT1SmekUGCnhQ7")
+        .get()
+        .then((querySnapshot) {
+      querySnapshot.docs.forEach((result) {
+        ddd.add(result.get('categoryName'));
+        setState(() {});
+        print(ddd);
       });
     });
 
@@ -51,12 +66,6 @@ class _AddCardState extends State<AddCard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // floatingActionButton: FloatingActionButton(onPressed: () {
-      //   Navigator.of(context).push(MaterialPageRoute(
-      //       builder: (_) => BlocProvider.value(
-      //           value: BlocProvider.of<FirebaseBloc>(context),
-      //           child: VendorList())));
-      // }),
       appBar: AppBar(
         backgroundColor: Color(0xFFFF2562),
         title: Text("Add Card"),
@@ -251,6 +260,41 @@ class _AddCardState extends State<AddCard> {
                 },
                 value: value,
                 items: dd.map((category) {
+                  return DropdownMenuItem(
+                    value: category,
+                    child: Text(category),
+                  );
+                }).toList(),
+                // List.generate(
+                //     dd.length,
+                //     (index) => DropdownMenuItem(
+                //           value: dd[index],
+                //           child: Text(dd[index]),
+                //         )),
+              ),
+
+              SizedBox(
+                height: 20,
+              ),
+
+              DropdownButtonFormField(
+                decoration: InputDecoration(
+                  icon: Icon(
+                    Icons.person,
+                    size: 20,
+                  ),
+                  hintText: "CardVender",
+                ),
+                focusNode: passwordNode,
+                onChanged: (value) {
+                  setState(() {
+                    cardVender = value;
+                    print('SELECTED  ==$cardVender');
+                  });
+                  print(ddd.length);
+                },
+                value: value,
+                items: ddd.map((category) {
                   return DropdownMenuItem(
                     value: category,
                     child: Text(category),
