@@ -122,9 +122,9 @@ class _CartListState extends State<CartList> {
             children: [
               Column(
                 children: [
-                  Text("Zain"),
-                  Text("Mix"),
-                  Text("price"),
+                  //Text("Zain"),
+                  //Text("Mix"),
+                  Text("Price"),
                 ],
               ),
               Expanded(
@@ -213,7 +213,7 @@ class _CartListState extends State<CartList> {
                         style: TextStyle(fontSize: 15.0),
                       ),
                       title: Text(
-                        "Confirmation",
+                        "Please confirm",
                         style: TextStyle(fontSize: 15.0),
                       ),
                       actions: [
