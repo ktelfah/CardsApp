@@ -235,7 +235,7 @@ class _MainScreenState extends State<MainScreen> {
                             width: 200,
                             child: Center(
                               child: Text(
-                                "Prepaid cards",
+                                "Prepaid Cards",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   color: Colors.white,

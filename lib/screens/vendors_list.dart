@@ -27,14 +27,12 @@ class _VendorListState extends State<VendorList> {
 
   @override
   Widget build(BuildContext context) {
-    print("name$customerNameGet");
-    print("name$customerAmountGet");
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFFFF2562),
         automaticallyImplyLeading: true,
         centerTitle: true,
-        title: Text("Hello, ${customerNameGet}"),
+        title: Text("Choose Vendors"),
       ),
       //body: body(vendorsList),
       body: BlocBuilder<FirebaseBloc, FirebaseState>(builder: (context, state) {
