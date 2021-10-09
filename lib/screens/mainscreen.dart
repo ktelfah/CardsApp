@@ -250,10 +250,13 @@ class _MainScreenState extends State<MainScreen> {
               ),
               InkWell(
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) => BlocProvider.value(
-                          value: BlocProvider.of<FirebaseBloc>(context),
-                          child: VendorList())));
+                  // Navigator.of(context).push(MaterialPageRoute(
+                  //     builder: (_) => BlocProvider.value(
+                  //         value: BlocProvider.of<FirebaseBloc>(context),
+                  //         child: VendorList())));
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text('This option is not available right now.'),
+                  ));
                 },
                 child: Container(
                     margin: EdgeInsets.only(top: 20.0),
