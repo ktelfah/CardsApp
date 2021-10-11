@@ -2,11 +2,14 @@ import 'package:cards_app/bloc/cards_bloc.dart';
 import 'package:cards_app/bloc/cards_event.dart';
 import 'package:cards_app/bloc/cards_state.dart';
 import 'package:cards_app/helper/pages.dart';
+import 'package:cards_app/main.dart';
 import 'package:cards_app/repository/cards_api.dart';
+import 'package:cards_app/repository/cards_repository.dart';
 import 'package:cards_app/screens/add_admin.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cards_app/screens/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart' as http;
 
 class UpdateCustomerProfile extends StatefulWidget {
   final adminId;
@@ -64,10 +67,33 @@ class _UpdateCustomerProfileState extends State<UpdateCustomerProfile> {
         actions: [
           IconButton(
             onPressed: () {
-              FirebaseAuth.instance.signOut();
-              // Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              //   return HomePage();
-              // }));
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      actions: [
+                        GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).pop();
+                              final FirebaseRepository repository =
+                                  FirebaseRepository(
+                                firebaseApiClient: FirebaseApiClient(
+                                  httpClient: http.Client(),
+                                ),
+                              );
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (_) => MyApp(
+                                        repository: repository,
+                                      )));
+                            },
+                            child: Text("Ok"))
+                      ],
+                    );
+                  });
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (_) => BlocProvider.value(
+                      value: BlocProvider.of<FirebaseBloc>(context),
+                      child: HomePage())));
             },
             icon: Icon(Icons.logout),
           )

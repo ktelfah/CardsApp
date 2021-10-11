@@ -22,39 +22,47 @@ class _SubCategoryListState extends State<SubCategoryList> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(0xFFFF2562),
-        // automaticallyImplyLeading: false,
-        centerTitle: true,
-        title: Text("Select Data Pack"),
-        leading: GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-              BlocProvider.of<FirebaseBloc>(context).add(ResetFetchCategory());
-            },
-            child: Icon(Icons.arrow_back)),
-      ),
-      body: BlocBuilder<FirebaseBloc, FirebaseState>(builder: (context, state) {
-        if (state is FetchSubCategoryEmpty) {
-          BlocProvider.of<FirebaseBloc>(context).add(FetchSubCategory());
-        }
+    return WillPopScope(
+      onWillPop: () {
+        Navigator.pop(context);
+        BlocProvider.of<FirebaseBloc>(context).add(ResetFetchCategory());
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Color(0xFFFF2562),
+          // automaticallyImplyLeading: false,
+          centerTitle: true,
+          title: Text("Select Data Pack"),
+          leading: GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+                BlocProvider.of<FirebaseBloc>(context)
+                    .add(ResetFetchCategory());
+              },
+              child: Icon(Icons.arrow_back)),
+        ),
+        body:
+            BlocBuilder<FirebaseBloc, FirebaseState>(builder: (context, state) {
+          if (state is FetchSubCategoryEmpty) {
+            BlocProvider.of<FirebaseBloc>(context).add(FetchSubCategory());
+          }
 
-        if (state is FetchSubCategoryError) {
+          if (state is FetchSubCategoryError) {
+            return Center(
+              child: Text("Failed to fetch data"),
+            );
+          }
+
+          if (state is FetchSubCategoryLoaded) {
+            var subCategoryList = state.subCategory;
+            return body(subCategoryList);
+          }
+
           return Center(
-            child: Text("Failed to fetch data"),
+            child: CircularProgressIndicator(),
           );
-        }
-
-        if (state is FetchSubCategoryLoaded) {
-          var subCategoryList = state.subCategory;
-          return body(subCategoryList);
-        }
-
-        return Center(
-          child: CircularProgressIndicator(),
-        );
-      }),
+        }),
+      ),
     );
   }
 

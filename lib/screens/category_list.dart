@@ -1,7 +1,6 @@
 import 'package:cards_app/bloc/cards_bloc.dart';
 import 'package:cards_app/bloc/cards_event.dart';
 import 'package:cards_app/bloc/cards_state.dart';
-import 'package:cards_app/helper/pages.dart';
 import 'package:cards_app/models/categories.dart';
 import 'package:cards_app/screens/sub_category_list.dart';
 import 'package:cards_app/screens/vendors_list.dart';
@@ -25,39 +24,46 @@ class _CategoryListState extends State<CategoryList> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(0xFFFF2562),
-        // automaticallyImplyLeading: false,
-        centerTitle: true,
-        title: Text(getSelectedVendorName),
-        leading: GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-              BlocProvider.of<FirebaseBloc>(context).add(ResetFetchVendors());
-            },
-            child: Icon(Icons.arrow_back)),
-      ),
-      body: BlocBuilder<FirebaseBloc, FirebaseState>(builder: (context, state) {
-        if (state is FetchCategoryEmpty) {
-          BlocProvider.of<FirebaseBloc>(context).add(FetchCategory());
-        }
+    return WillPopScope(
+      onWillPop: () {
+        Navigator.pop(context);
+        BlocProvider.of<FirebaseBloc>(context).add(ResetFetchVendors());
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Color(0xFFFF2562),
+          // automaticallyImplyLeading: false,
+          centerTitle: true,
+          title: Text(getSelectedVendorName),
+          leading: GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+                BlocProvider.of<FirebaseBloc>(context).add(ResetFetchVendors());
+              },
+              child: Icon(Icons.arrow_back)),
+        ),
+        body:
+            BlocBuilder<FirebaseBloc, FirebaseState>(builder: (context, state) {
+          if (state is FetchCategoryEmpty) {
+            BlocProvider.of<FirebaseBloc>(context).add(FetchCategory());
+          }
 
-        if (state is FetchCategoryError) {
+          if (state is FetchCategoryError) {
+            return Center(
+              child: Text("Failed to fetch data"),
+            );
+          }
+
+          if (state is FetchCategoryLoaded) {
+            var categoryList = state.category;
+            return body(categoryList);
+          }
+
           return Center(
-            child: Text("Failed to fetch data"),
+            child: CircularProgressIndicator(),
           );
-        }
-
-        if (state is FetchCategoryLoaded) {
-          var categoryList = state.category;
-          return body(categoryList);
-        }
-
-        return Center(
-          child: CircularProgressIndicator(),
-        );
-      }),
+        }),
+      ),
     );
   }
 

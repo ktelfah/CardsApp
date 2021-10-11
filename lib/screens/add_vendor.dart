@@ -72,65 +72,72 @@ class _AddVendorState extends State<AddVendor> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(0xFFFF2562),
-        title: Text("Add Vendor"),
-      ),
-      //body: body(context)
-      body: BlocBuilder<FirebaseBloc, FirebaseState>(builder: (context, state) {
-        print("STATE:$state");
-        if (state is AddVendorEmpty) {
-          return Container(
-            child: body(context),
-          );
-        }
+    return WillPopScope(
+      onWillPop: () {
+        Navigator.of(context).pop();
+        BlocProvider.of<FirebaseBloc>(context).add(ResetFetchCustomer());
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Color(0xFFFF2562),
+          title: Text("Add Vendor"),
+        ),
+        //body: body(context)
+        body:
+            BlocBuilder<FirebaseBloc, FirebaseState>(builder: (context, state) {
+          print("STATE:$state");
+          if (state is AddVendorEmpty) {
+            return Container(
+              child: body(context),
+            );
+          }
 
-        if (state is AddVendorError) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text(
-                "Invalid Data",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                    height: 3.0,
-                    fontSize: 20),
-              ),
-              backgroundColor: Colors.red,
-            ));
-          });
-          return Container(
-            child: body(context),
-          );
-        }
-
-        if (state is AddVendorLoaded) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              behavior: SnackBarBehavior.floating,
-              content: Text(
-                "Vendor Added Successfully",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 15,
-                  color: Colors.white,
+          if (state is AddVendorError) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(
+                  "Invalid Data",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      height: 3.0,
+                      fontSize: 20),
                 ),
-              ),
-              backgroundColor: Colors.black,
-            ));
+                backgroundColor: Colors.red,
+              ));
+            });
+            return Container(
+              child: body(context),
+            );
+          }
 
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (_) => BlocProvider.value(
-                    value: BlocProvider.of<FirebaseBloc>(context),
-                    child: AddAdminCustomerCards())));
-          });
-        }
+          if (state is AddVendorLoaded) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                behavior: SnackBarBehavior.floating,
+                content: Text(
+                  "Vendor Added Successfully",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.white,
+                  ),
+                ),
+                backgroundColor: Colors.black,
+              ));
 
-        return Center(
-          child: CircularProgressIndicator(),
-        );
-      }),
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => BlocProvider.value(
+                      value: BlocProvider.of<FirebaseBloc>(context),
+                      child: AddAdminCustomerCards())));
+            });
+          }
+
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }),
+      ),
     );
   }
 

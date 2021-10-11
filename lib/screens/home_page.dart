@@ -23,14 +23,15 @@ class _HomePageState extends State<HomePage> {
 
   ///Test User Credentials
   // String email = "kt\$@sss.com", password = "123";
-  // String email = "TitiTangi", password = "open";
+  String email = "TitiTangi", password = "open";
 
-  String email = "", password = "";
+  // String email = "", password = "";
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Color(0xFFFF2562),
         title: Center(child: Text("Cards App")),
       ),
@@ -45,17 +46,19 @@ class _HomePageState extends State<HomePage> {
 
         if (state is LoginError) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text(
-                "Invalid User",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                    height: 3.0,
-                    fontSize: 20),
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  "Invalid User",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      height: 3.0,
+                      fontSize: 20),
+                ),
+                backgroundColor: Colors.red,
               ),
-              backgroundColor: Colors.red,
-            ));
+            );
           });
           return Container(
             child: body(context),

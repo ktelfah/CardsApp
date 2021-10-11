@@ -17,6 +17,7 @@ class OrderList extends StatefulWidget {
 
 class _OrderListState extends State<OrderList> {
   var format = new DateFormat('yyyy-MM-dd HH:mm a');
+  List ol;
 
   @override
   void initState() {
@@ -48,6 +49,8 @@ class _OrderListState extends State<OrderList> {
 
         if (state is FetchOrdersListByOrdersLoaded) {
           var orderList = state.orders;
+          orderList
+              .sort((a, b) => a.transactionDate.compareTo(b.transactionDate));
           return body(orderList);
         }
 
@@ -67,6 +70,7 @@ class _OrderListState extends State<OrderList> {
             Flexible(
               child: orderList.length > 0
                   ? ListView.builder(
+                      reverse: true,
                       itemCount: orderList.length <= 0 ? 0 : orderList.length,
                       itemBuilder: (BuildContext context, int index) {
                         return Padding(

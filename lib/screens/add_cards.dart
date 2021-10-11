@@ -65,77 +65,84 @@ class _AddCardState extends State<AddCard> {
   final firestoreInstance = FirebaseFirestore.instance;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(0xFFFF2562),
-        title: Text("Add Card"),
-      ),
-      //body: body(context)
-      body: BlocBuilder<FirebaseBloc, FirebaseState>(builder: (context, state) {
-        print("STATE:$state");
+    return WillPopScope(
+      onWillPop: () {
+        Navigator.of(context).pop();
+        BlocProvider.of<FirebaseBloc>(context).add(ResetFetchCustomer());
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Color(0xFFFF2562),
+          title: Text("Add Card"),
+        ),
+        //body: body(context)
+        body:
+            BlocBuilder<FirebaseBloc, FirebaseState>(builder: (context, state) {
+          print("STATE:$state");
 
-        if (state is FetchVendorsEmpty) {
-          BlocProvider.of<FirebaseBloc>(context).add(FetchVendors());
-        }
+          if (state is FetchVendorsEmpty) {
+            BlocProvider.of<FirebaseBloc>(context).add(FetchVendors());
+          }
 
-        if (state is FetchVendorsLoaded) {
-          var vendorsList = state.vendors;
-          return body(vendorsList: vendorsList);
-        }
+          if (state is FetchVendorsLoaded) {
+            var vendorsList = state.vendors;
+            return body(vendorsList: vendorsList);
+          }
 
-        if (state is AddCardEmpty) {
-          return Container(
-            child: body(context: context),
-          );
-        }
+          if (state is AddCardEmpty) {
+            return Container(
+              child: body(context: context),
+            );
+          }
 
-        if (state is AddCardError) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text(
-                "Invalid Data",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                    height: 3.0,
-                    fontSize: 20),
-              ),
-              backgroundColor: Colors.red,
-            ));
-          });
-          return Container(
-            child: body(context: context),
-          );
-        }
-
-        if (state is AddCardLoaded) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              behavior: SnackBarBehavior.floating,
-              content: Text(
-                "Card Added Successfully",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 15,
-                  color: Colors.white,
+          if (state is AddCardError) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(
+                  "Invalid Data",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      height: 3.0,
+                      fontSize: 20),
                 ),
-              ),
-              backgroundColor: Colors.black,
-            ));
+                backgroundColor: Colors.red,
+              ));
+            });
+            return Container(
+              child: body(context: context),
+            );
+          }
 
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (_) => BlocProvider.value(
-                    value: BlocProvider.of<FirebaseBloc>(context),
-                    child: AddAdminCustomerCards())));
-          });
-        }
+          if (state is AddCardLoaded) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                behavior: SnackBarBehavior.floating,
+                content: Text(
+                  "Card Added Successfully",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.white,
+                  ),
+                ),
+                backgroundColor: Colors.black,
+              ));
 
-        return Center(
-          child: CircularProgressIndicator(),
-        );
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => BlocProvider.value(
+                      value: BlocProvider.of<FirebaseBloc>(context),
+                      child: AddAdminCustomerCards())));
+            });
+          }
 
-        return Container();
-      }),
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+
+          return Container();
+        }),
+      ),
     );
   }
 

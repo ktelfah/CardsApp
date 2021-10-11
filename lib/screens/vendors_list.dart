@@ -2,7 +2,6 @@ import 'package:cards_app/bloc/cards_bloc.dart';
 import 'package:cards_app/bloc/cards_event.dart';
 import 'package:cards_app/bloc/cards_state.dart';
 import 'package:cards_app/models/vendors.dart';
-import 'package:cards_app/repository/cards_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -29,6 +28,11 @@ class _VendorListState extends State<VendorList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Icon(Icons.arrow_back)),
         backgroundColor: Color(0xFFFF2562),
         automaticallyImplyLeading: true,
         centerTitle: true,

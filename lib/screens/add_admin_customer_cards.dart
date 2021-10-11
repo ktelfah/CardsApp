@@ -11,6 +11,7 @@ import 'package:cards_app/screens/add_customer.dart';
 import 'package:cards_app/screens/add_vendor.dart';
 import 'package:cards_app/screens/update_customer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 
@@ -43,35 +44,42 @@ class _AddAdminCustomerCardsState extends State<AddAdminCustomerCards> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async => false,
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Color(0xFFFF2562),
-          automaticallyImplyLeading: false,
-          centerTitle: true,
-          title: Text("ADD"),
-        ),
-        body:
-            BlocBuilder<FirebaseBloc, FirebaseState>(builder: (context, state) {
-          if (state is FetchCustomerEmpty) {
-            BlocProvider.of<FirebaseBloc>(context).add(FetchCustomer());
-          }
+      onWillPop: () {
+        SystemNavigator.pop();
+      },
+      child: WillPopScope(
+        onWillPop: () {
+          SystemNavigator.pop();
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Color(0xFFFF2562),
+            automaticallyImplyLeading: false,
+            centerTitle: true,
+            title: Text("ADD"),
+          ),
+          body: BlocBuilder<FirebaseBloc, FirebaseState>(
+              builder: (context, state) {
+            if (state is FetchCustomerEmpty) {
+              BlocProvider.of<FirebaseBloc>(context).add(FetchCustomer());
+            }
 
-          if (state is FetchCustomerError) {
+            if (state is FetchCustomerError) {
+              return Center(
+                child: Text("Failed to fetch data"),
+              );
+            }
+
+            if (state is FetchCustomerLoaded) {
+              var customerList = state.customer;
+              return body(customerList);
+            }
+
             return Center(
-              child: Text("Failed to fetch data"),
+              child: CircularProgressIndicator(),
             );
-          }
-
-          if (state is FetchCustomerLoaded) {
-            var customerList = state.customer;
-            return body(customerList);
-          }
-
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }),
+          }),
+        ),
       ),
     );
   }
@@ -367,7 +375,7 @@ class _AddAdminCustomerCardsState extends State<AddAdminCustomerCards> {
             FlatButton(
               child: Text("YES"),
               onPressed: () {
-                Navigator.of(context).pop();
+                // Navigator.of(context).pop();
                 final FirebaseRepository repository = FirebaseRepository(
                   firebaseApiClient: FirebaseApiClient(
                     httpClient: http.Client(),

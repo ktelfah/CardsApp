@@ -7,9 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_string_encryption/flutter_string_encryption.dart';
 
-var key = "5621seeF+hm7eBsv6eDl2g==:VQP0A2rHM4F7aafVngOq5fL950nC1F6ElNPUP9lUTnY=";
+var key =
+    "5621seeF+hm7eBsv6eDl2g==:VQP0A2rHM4F7aafVngOq5fL950nC1F6ElNPUP9lUTnY=";
 PlatformStringCryptor cryptor = PlatformStringCryptor();
-
 
 class AddAdmin extends StatefulWidget {
   const AddAdmin({Key key}) : super(key: key);
@@ -26,8 +26,7 @@ class _AddAdminState extends State<AddAdmin> {
   final phoneNode = FocusNode();
   String email = "", name = "", password = "", phoneNo = "";
   String passwordEncrypted;
-  String encryptedS,decryptedS;
-
+  String encryptedS, decryptedS;
 
   @override
   void initState() {
@@ -42,64 +41,71 @@ class _AddAdminState extends State<AddAdmin> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(0xFFFF2562),
-        title: Text("Add Admin"),
-      ),
-      //body: body(context)
-      body: BlocBuilder<FirebaseBloc, FirebaseState>(builder: (context, state) {
-        print("STATE:$state");
-        if (state is AddAdminEmpty) {
-          return Container(
-            child: body(context),
-          );
-        }
+    return WillPopScope(
+      onWillPop: () {
+        Navigator.of(context).pop();
+        BlocProvider.of<FirebaseBloc>(context).add(ResetFetchCustomer());
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Color(0xFFFF2562),
+          title: Text("Add Admin"),
+        ),
+        //body: body(context)
+        body:
+            BlocBuilder<FirebaseBloc, FirebaseState>(builder: (context, state) {
+          print("STATE:$state");
+          if (state is AddAdminEmpty) {
+            return Container(
+              child: body(context),
+            );
+          }
 
-        if (state is AddAdminError) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text(
-                "Invalid Data",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                    height: 3.0,
-                    fontSize: 20),
-              ),
-              backgroundColor: Colors.red,
-            ));
-          });
-          return Container(
-            child: body(context),
-          );
-        }
-
-        if (state is AddAdminLoaded) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              behavior: SnackBarBehavior.floating,
-              content: Text(
-                "Admin Added Successfully",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 15,
-                  color: Colors.white,
+          if (state is AddAdminError) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(
+                  "Invalid Data",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      height: 3.0,
+                      fontSize: 20),
                 ),
-              ),
-              backgroundColor: Colors.black,
-            ));
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (_) => BlocProvider.value(
-                    value: BlocProvider.of<FirebaseBloc>(context),
-                    child: AddAdminCustomerCards())));
-          });
-        }
+                backgroundColor: Colors.red,
+              ));
+            });
+            return Container(
+              child: body(context),
+            );
+          }
 
-        return Center(
-          child: CircularProgressIndicator(),
-        );
-      }),
+          if (state is AddAdminLoaded) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                behavior: SnackBarBehavior.floating,
+                content: Text(
+                  "Admin Added Successfully",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.white,
+                  ),
+                ),
+                backgroundColor: Colors.black,
+              ));
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => BlocProvider.value(
+                      value: BlocProvider.of<FirebaseBloc>(context),
+                      child: AddAdminCustomerCards())));
+            });
+          }
+
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }),
+      ),
     );
   }
 
@@ -237,13 +243,13 @@ class _AddAdminState extends State<AddAdmin> {
   Widget addAdminButton(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-       await Encrypt().whenComplete(() {
+        await Encrypt().whenComplete(() {
           passwordEncrypted = encryptedS;
         });
-       if (formKey.currentState.validate()) {
+        if (formKey.currentState.validate()) {
           formKey.currentState.save();
-          BlocProvider.of<FirebaseBloc>(context)
-              .add(FetchAddAdmin(email, name, passwordEncrypted, phoneNo, 'false'));
+          BlocProvider.of<FirebaseBloc>(context).add(
+              FetchAddAdmin(email, name, passwordEncrypted, phoneNo, 'false'));
         }
       },
       child: Container(

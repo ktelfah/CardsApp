@@ -34,37 +34,42 @@ class _CartListState extends State<CartList> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Color(0xFFFF2562),
-          automaticallyImplyLeading: true,
-          centerTitle: true,
-          title: Text("Cart"),
-        ),
-        body: body()
-        // BlocBuilder<FirebaseBloc, FirebaseState>(builder: (context, state) {
-        //   print("STATE:${state}");
-        //
-        //   if (state is FetchOrdersListByOrdersEmpty) {
-        //     BlocProvider.of<FirebaseBloc>(context).add(FetchOrdersListByOrders());
-        //   }
-        //
-        //   if (state is FetchOrdersListByOrdersError) {
-        //     return Center(
-        //       child: Text("Failed to fetch data"),
-        //     );
-        //   }
-        //
-        //   if (state is FetchOrdersListByOrdersLoaded) {
-        //     var orderList = state.orders;
-        //     return body();
-        //   }
-        //
-        //   return Center(
-        //     child: CircularProgressIndicator(),
-        //   );
-        // }),
-        );
+    return WillPopScope(
+      onWillPop: () {
+        Navigator.of(context).pop();
+      },
+      child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Color(0xFFFF2562),
+            automaticallyImplyLeading: true,
+            centerTitle: true,
+            title: Text("Cart"),
+          ),
+          body: body()
+          // BlocBuilder<FirebaseBloc, FirebaseState>(builder: (context, state) {
+          //   print("STATE:${state}");
+          //
+          //   if (state is FetchOrdersListByOrdersEmpty) {
+          //     BlocProvider.of<FirebaseBloc>(context).add(FetchOrdersListByOrders());
+          //   }
+          //
+          //   if (state is FetchOrdersListByOrdersError) {
+          //     return Center(
+          //       child: Text("Failed to fetch data"),
+          //     );
+          //   }
+          //
+          //   if (state is FetchOrdersListByOrdersLoaded) {
+          //     var orderList = state.orders;
+          //     return body();
+          //   }
+          //
+          //   return Center(
+          //     child: CircularProgressIndicator(),
+          //   );
+          // }),
+          ),
+    );
   }
 
   Widget body() {
@@ -219,14 +224,6 @@ class _CartListState extends State<CartList> {
                       actions: [
                         GestureDetector(
                           onTap: () async {
-                            // Navigator.of(context).push(
-                            //   MaterialPageRoute(
-                            //     builder: (_) => BlocProvider.value(
-                            //       value: BlocProvider.of<FirebaseBloc>(context),
-                            //       child: OrderList(),
-                            //     ),
-                            //   ),
-                            // );
                             FirebaseRepository fb = FirebaseRepository(
                               firebaseApiClient: FirebaseApiClient(
                                 httpClient: http.Client(),
@@ -284,7 +281,6 @@ class _CartListState extends State<CartList> {
                                       ).addOrders('', customerIdGet, '', t);
                                     },
                                   );
-                                  Navigator.of(context).pop();
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       content: Text(
@@ -293,6 +289,23 @@ class _CartListState extends State<CartList> {
                                       ),
                                     ),
                                   );
+                                  // Navigator.of(context).pop();
+
+                                  // Navigator.of(context).push(
+                                  //   MaterialPageRoute<FirebaseBloc>(
+                                  //     builder: (_) => BlocProvider.value(
+                                  //       value: BlocProvider.of<FirebaseBloc>(
+                                  //           context),
+                                  //       child: MainScreen(),
+                                  //     ),
+                                  //   ),
+                                  // );
+
+                                  // Navigator.of(context).push(MaterialPageRoute(
+                                  //     builder: (_) => BlocProvider.value(
+                                  //         value: BlocProvider.of<FirebaseBloc>(
+                                  //             context),
+                                  //         child: MainScreen())));
                                 } catch (e) {
                                   print('ERROR IN CUSTOMER UPDATE =$e');
                                 }
@@ -301,7 +314,7 @@ class _CartListState extends State<CartList> {
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(SnackBar(
                                         content: Text(
-                                  'Error Occurred',
+                                  'Please Check Balance',
                                   style: TextStyle(color: Colors.white),
                                 )));
                               }
@@ -310,7 +323,7 @@ class _CartListState extends State<CartList> {
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(SnackBar(
                                       content: Text(
-                                'Select Proper Quantity',
+                                'Quantity Is Over',
                                 style: TextStyle(color: Colors.white),
                               )));
                             }
