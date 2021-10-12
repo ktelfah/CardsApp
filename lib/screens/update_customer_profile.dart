@@ -6,7 +6,6 @@ import 'package:cards_app/main.dart';
 import 'package:cards_app/repository/cards_api.dart';
 import 'package:cards_app/repository/cards_repository.dart';
 import 'package:cards_app/screens/add_admin.dart';
-import 'package:cards_app/screens/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
@@ -71,29 +70,38 @@ class _UpdateCustomerProfileState extends State<UpdateCustomerProfile> {
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      actions: [
-                        GestureDetector(
-                            onTap: () {
-                              Navigator.of(context).pop();
-                              final FirebaseRepository repository =
-                                  FirebaseRepository(
-                                firebaseApiClient: FirebaseApiClient(
-                                  httpClient: http.Client(),
-                                ),
-                              );
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (_) => MyApp(
-                                        repository: repository,
-                                      )));
-                            },
-                            child: Text("Ok"))
+                      title: Text('Logout'),
+                      content: Text("Are you sure you want to logout?"),
+                      actions: <Widget>[
+                        FlatButton(
+                          child: Text("YES"),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            final FirebaseRepository repository =
+                                FirebaseRepository(
+                              firebaseApiClient: FirebaseApiClient(
+                                httpClient: http.Client(),
+                              ),
+                            );
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) => MyApp(
+                                      repository: repository,
+                                    )));
+                          },
+                        ),
+                        FlatButton(
+                          child: Text("NO"),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
                       ],
                     );
                   });
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (_) => BlocProvider.value(
-                      value: BlocProvider.of<FirebaseBloc>(context),
-                      child: HomePage())));
+              // Navigator.of(context).pushReplacement(MaterialPageRoute(
+              //     builder: (_) => BlocProvider.value(
+              //         value: BlocProvider.of<FirebaseBloc>(context),
+              //         child: HomePage())));
             },
             icon: Icon(Icons.logout),
           )

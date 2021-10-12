@@ -1,9 +1,13 @@
+import 'package:cards_app/bloc/cards_bloc.dart';
 import 'package:cards_app/repository/cards_api.dart';
 import 'package:cards_app/repository/cards_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+
+import 'mainscreen.dart';
 
 class CartList extends StatefulWidget {
   const CartList(
@@ -31,6 +35,20 @@ class _CartListState extends State<CartList> {
   // }
 
   int quantity = 0;
+  TextEditingController controller = TextEditingController();
+  var amount;
+  bool navigate = false;
+
+  // void navigate(BuildContext context) {
+  //   Navigator.of(context).push(
+  //     MaterialPageRoute<FirebaseBloc>(
+  //       builder: (_) => BlocProvider.value(
+  //         value: BlocProvider.of<FirebaseBloc>(context),
+  //         child: MainScreen(),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +63,7 @@ class _CartListState extends State<CartList> {
             centerTitle: true,
             title: Text("Cart"),
           ),
-          body: body()
+          body: body(ctx: context)
           // BlocBuilder<FirebaseBloc, FirebaseState>(builder: (context, state) {
           //   print("STATE:${state}");
           //
@@ -72,7 +90,7 @@ class _CartListState extends State<CartList> {
     );
   }
 
-  Widget body() {
+  Widget body({BuildContext ctx}) {
     return Container(
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
@@ -112,7 +130,60 @@ class _CartListState extends State<CartList> {
                       style: TextStyle(color: Colors.white),
                     ),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                actions: [
+                                  FlatButton(
+                                      onPressed: () async {
+                                        customerAmountGet = customerAmountGet +
+                                            int.parse(amount);
+                                        FirebaseRepository fb =
+                                            FirebaseRepository(
+                                          firebaseApiClient: FirebaseApiClient(
+                                            httpClient: http.Client(),
+                                          ),
+                                        );
+                                        var customerPasswordEncrypted;
+                                        CollectionReference customer =
+                                            FirebaseFirestore.instance
+                                                .collection('customers');
+                                        var customerGetPasswordEncrypted =
+                                            await customer
+                                                .where("name",
+                                                    isEqualTo: customerNameGet)
+                                                .get();
+                                        customerPasswordEncrypted =
+                                            await customerGetPasswordEncrypted
+                                                .docs[0]
+                                                .get('password');
+
+                                        fb.updateCustomer(
+                                            customerIdGet,
+                                            adminIdGet,
+                                            customerNameGet,
+                                            customerAmountGet,
+                                            customerPasswordEncrypted,
+                                            customerAddressGet);
+                                        Navigator.of(context).pop();
+                                        setState(() {});
+                                      },
+                                      child: Text("Add"))
+                                ],
+                                title: Text('Add Balance'),
+                                content: TextField(
+                                  onChanged: (value) {
+                                    amount = value;
+                                  },
+                                  controller: controller,
+                                  decoration:
+                                      InputDecoration(hintText: "Enter amount"),
+                                ),
+                              );
+                            });
+                      },
                       icon: Icon(Icons.add_circle_outline_outlined),
                     ),
                   ],
@@ -291,21 +362,26 @@ class _CartListState extends State<CartList> {
                                   );
                                   // Navigator.of(context).pop();
 
-                                  // Navigator.of(context).push(
-                                  //   MaterialPageRoute<FirebaseBloc>(
-                                  //     builder: (_) => BlocProvider.value(
-                                  //       value: BlocProvider.of<FirebaseBloc>(
-                                  //           context),
-                                  //       child: MainScreen(),
-                                  //     ),
-                                  //   ),
-                                  // );
+                                  //============================================================================//
 
-                                  // Navigator.of(context).push(MaterialPageRoute(
-                                  //     builder: (_) => BlocProvider.value(
-                                  //         value: BlocProvider.of<FirebaseBloc>(
-                                  //             context),
-                                  //         child: MainScreen())));
+                                  Navigator.of(ctx)
+                                      .push(
+                                    MaterialPageRoute<FirebaseBloc>(
+                                      builder: (_) => BlocProvider.value(
+                                        value:
+                                            BlocProvider.of<FirebaseBloc>(ctx),
+                                        child: MainScreen(),
+                                      ),
+                                    ),
+                                  )
+                                      .then((value) {
+                                    setState(() {
+                                      print(
+                                          "=================== DONE ==============");
+                                    });
+                                  });
+
+                                  //===========================================================================//
                                 } catch (e) {
                                   print('ERROR IN CUSTOMER UPDATE =$e');
                                 }
@@ -355,6 +431,57 @@ class _CartListState extends State<CartList> {
                 ),
                 child: Center(
                   child: Text("Buy"),
+                ),
+              ),
+            ),
+          ),
+          Center(
+            child: GestureDetector(
+              onTap: () {
+                // Navigator.of(context).push(
+                //   MaterialPageRoute<FirebaseBloc>(
+                //     builder: (_) => BlocProvider.value(
+                //       value: BlocProvider.of<FirebaseBloc>(context),
+                //       child: MainScreen(),
+                //     ),
+                //   ),
+                // );
+                // showModalBottomSheet(
+                //     context: context,
+                //     builder: (BuildContext context) {
+                //       return Center(
+                //         child: Column(
+                //           children: [
+                //             Container(
+                //               child: Text("I am Bottom Sheet"),
+                //             ),
+                //             ElevatedButton(
+                //                 onPressed: () {
+                //                   Navigator.of(context).push(
+                //                     MaterialPageRoute<FirebaseBloc>(
+                //                       builder: (_) => BlocProvider.value(
+                //                         value: BlocProvider.of<FirebaseBloc>(
+                //                             context),
+                //                         child: MainScreen(),
+                //                       ),
+                //                     ),
+                //                   );
+                //                 },
+                //                 child: Text("Close")),
+                //           ],
+                //         ),
+                //       );
+                //     });
+              },
+              child: Container(
+                width: 250,
+                height: 60,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Colors.yellowAccent,
+                ),
+                child: Center(
+                  child: Text("Buy new"),
                 ),
               ),
             ),

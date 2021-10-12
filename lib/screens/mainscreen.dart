@@ -134,7 +134,6 @@ class _MainScreenState extends State<MainScreen> {
                     ),
                     IconButton(
                       onPressed: () {
-                        print("press");
                         showDialog(
                             context: context,
                             builder: (BuildContext context) {
@@ -172,6 +171,7 @@ class _MainScreenState extends State<MainScreen> {
                                             customerPasswordEncrypted,
                                             customerAddressGet);
                                         Navigator.of(context).pop();
+                                        setState(() {});
                                       },
                                       child: Text("Add"))
                                 ],

@@ -43,19 +43,19 @@ class _AddCardState extends State<AddCard> {
         dd.add(result.get('name'));
         setState(() {});
         print(dd);
-        var map1 = Map.fromIterable(dddd, key: (e) => dd, value: (e) => ddd);
-        print(map1);
       });
     });
-    firestoreInstance
-        .collection("categories")
-        .where("vendorId", isEqualTo: "eE59OtcT1SmekUGCnhQ7")
-        .get()
-        .then((querySnapshot) {
-      querySnapshot.docs.forEach((result) {
-        ddd.add(result.get('categoryName'));
-        setState(() {});
-        print(ddd);
+    setState(() {
+      firestoreInstance
+          .collection("categories")
+          .where("vendorId", isEqualTo: "G97blAzdM8l4SBQKXStM")
+          .get()
+          .then((querySnapshot) {
+        querySnapshot.docs.forEach((result) {
+          ddd.add(result.get('categoryName'));
+          setState(() {});
+          print(ddd);
+        });
       });
     });
 
@@ -63,9 +63,11 @@ class _AddCardState extends State<AddCard> {
   }
 
   final firestoreInstance = FirebaseFirestore.instance;
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
+      // ignore: missing_return
       onWillPop: () {
         Navigator.of(context).pop();
         BlocProvider.of<FirebaseBloc>(context).add(ResetFetchCustomer());
@@ -76,72 +78,75 @@ class _AddCardState extends State<AddCard> {
           title: Text("Add Card"),
         ),
         //body: body(context)
-        body:
-            BlocBuilder<FirebaseBloc, FirebaseState>(builder: (context, state) {
-          print("STATE:$state");
+        body: BlocBuilder<FirebaseBloc, FirebaseState>(
+          builder: (context, state) {
+            print("STATE:$state");
 
-          if (state is FetchVendorsEmpty) {
-            BlocProvider.of<FirebaseBloc>(context).add(FetchVendors());
-          }
+            if (state is FetchVendorsEmpty) {
+              BlocProvider.of<FirebaseBloc>(context).add(FetchVendors());
+            }
 
-          if (state is FetchVendorsLoaded) {
-            var vendorsList = state.vendors;
-            return body(vendorsList: vendorsList);
-          }
+            if (state is FetchVendorsLoaded) {
+              var vendorsList = state.vendors;
+              return body(vendorsList: vendorsList);
+            }
 
-          if (state is AddCardEmpty) {
-            return Container(
-              child: body(context: context),
-            );
-          }
+            if (state is AddCardEmpty) {
+              return Container(
+                child: body(context: context),
+              );
+            }
 
-          if (state is AddCardError) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text(
-                  "Invalid Data",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      height: 3.0,
-                      fontSize: 20),
-                ),
-                backgroundColor: Colors.red,
-              ));
-            });
-            return Container(
-              child: body(context: context),
-            );
-          }
-
-          if (state is AddCardLoaded) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                behavior: SnackBarBehavior.floating,
-                content: Text(
-                  "Card Added Successfully",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.white,
+            if (state is AddCardError) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(
+                    "Invalid Data",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        height: 3.0,
+                        fontSize: 20),
                   ),
-                ),
-                backgroundColor: Colors.black,
-              ));
+                  backgroundColor: Colors.red,
+                ));
+              });
+              return Container(
+                child: body(context: context),
+              );
+            }
 
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (_) => BlocProvider.value(
-                      value: BlocProvider.of<FirebaseBloc>(context),
-                      child: AddAdminCustomerCards())));
-            });
-          }
+            if (state is AddCardLoaded) {
+              WidgetsBinding.instance.addPostFrameCallback(
+                (_) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    behavior: SnackBarBehavior.floating,
+                    content: Text(
+                      "Card Added Successfully",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.white,
+                      ),
+                    ),
+                    backgroundColor: Colors.black,
+                  ));
 
-          return Center(
-            child: CircularProgressIndicator(),
-          );
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => BlocProvider.value(
+                          value: BlocProvider.of<FirebaseBloc>(context),
+                          child: AddAdminCustomerCards())));
+                },
+              );
+            }
 
-          return Container();
-        }),
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+
+            return Container();
+          },
+        ),
       ),
     );
   }
@@ -228,26 +233,6 @@ class _AddCardState extends State<AddCard> {
               SizedBox(
                 height: 20,
               ),
-              // CustomTextFormField(
-              //   obscureText: false,
-              //   textEditingController: TextEditingController(text: cardVender),
-              //   hintText: 'CardVender',
-              //   icon: Icons.person,
-              //   onFieldSubmitted: (String value) {},
-              //   cursorColor: Color(0xFFFF2562),
-              //   onChanged: (String value) {
-              //     cardVender = value;
-              //   },
-              //   keyboardType: TextInputType.text,
-              //   focusNode: passwordNode,
-              //   nextNode: phoneNode,
-              //   textInputAction: TextInputAction.done,
-              //   validator: (String value) {
-              //     if (value.isEmpty) {
-              //       return 'Please Enter your CardVender.';
-              //     }
-              //   },
-              // ),
 
               DropdownButtonFormField(
                 decoration: InputDecoration(
