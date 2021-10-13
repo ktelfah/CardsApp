@@ -91,6 +91,7 @@ class _CartListState extends State<CartList> {
   }
 
   Widget body({BuildContext ctx}) {
+    var finalBalance = customerAmountGet;
     return Container(
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
@@ -307,7 +308,7 @@ class _CartListState extends State<CartList> {
                                   customerAmountGet >=
                                       int.parse(widget.price)) {
                                 try {
-                                  var finalBalance = customerAmountGet -
+                                  finalBalance = customerAmountGet -
                                       int.parse(widget.price);
                                   var finalQuantity =
                                       int.parse(widget.quantity) - quantity;
@@ -374,10 +375,9 @@ class _CartListState extends State<CartList> {
                                       ),
                                     ),
                                   )
-                                      .then((value) {
+                                      .then((_) {
                                     setState(() {
-                                      print(
-                                          "=================== DONE ==============");
+                                      customerAmountGet;
                                     });
                                   });
 

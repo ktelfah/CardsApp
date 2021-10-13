@@ -9,7 +9,7 @@ import 'package:cards_app/screens/add_admin.dart';
 import 'package:cards_app/screens/add_cards.dart';
 import 'package:cards_app/screens/add_customer.dart';
 import 'package:cards_app/screens/add_vendor.dart';
-import 'package:cards_app/screens/update_customer.dart';
+import 'package:cards_app/screens/customer_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -44,22 +44,19 @@ class _AddAdminCustomerCardsState extends State<AddAdminCustomerCards> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
+      // ignore: missing_return
       onWillPop: () {
         SystemNavigator.pop();
       },
-      child: WillPopScope(
-        onWillPop: () {
-          SystemNavigator.pop();
-        },
-        child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Color(0xFFFF2562),
-            automaticallyImplyLeading: false,
-            centerTitle: true,
-            title: Text("ADD"),
-          ),
-          body: BlocBuilder<FirebaseBloc, FirebaseState>(
-              builder: (context, state) {
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Color(0xFFFF2562),
+          automaticallyImplyLeading: false,
+          centerTitle: true,
+          title: Text("ADD"),
+        ),
+        body: BlocBuilder<FirebaseBloc, FirebaseState>(
+          builder: (context, state) {
             if (state is FetchCustomerEmpty) {
               BlocProvider.of<FirebaseBloc>(context).add(FetchCustomer());
             }
@@ -78,7 +75,7 @@ class _AddAdminCustomerCardsState extends State<AddAdminCustomerCards> {
             return Center(
               child: CircularProgressIndicator(),
             );
-          }),
+          },
         ),
       ),
     );
@@ -88,79 +85,80 @@ class _AddAdminCustomerCardsState extends State<AddAdminCustomerCards> {
     return Container(
       child: Column(
         children: [
-          Flexible(
-            child: ListView.builder(
-              itemCount: customerList.length,
-              itemBuilder: (BuildContext context, int index) {
-                adminId = customerList[index].adminId;
-                customerId = customerList[index].customerId;
-                name = customerList[index].name;
-                balance = customerList[index].balance;
-                address = customerList[index].address;
-                EncrytoDecryPassword = customerList[index].password;
-                passwordDecrypted().whenComplete(() {});
-                return Padding(
-                  padding: const EdgeInsets.only(top: 8),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Dismissible(
-                            key: Key(customerList[index].toString()),
-                            child: Container(
-                              height: 60,
-                              width: MediaQuery.of(context).size.width - 20,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.blueGrey[50],
-                              ),
-                              child: Center(
-                                  child: Text(
-                                customerList[index].name,
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 20),
-                              )),
-                            ),
-                            background: slideLeftBackground(),
-                            confirmDismiss: (direction) async {
-                              if (direction == DismissDirection.endToStart) {
-                                final bool res = await showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return updateDialog(
-                                          context,
-                                          customerList[index].adminId,
-                                          customerList[index].customerId,
-                                          customerList[index].name,
-                                          customerList[index].balance,
-                                          customerList[index].address,
-                                          decryptedS);
-                                    });
-                                return res;
-                              } else {
-                                final bool res = await showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return updateDialog(
-                                          context,
-                                          customerList[index].adminId,
-                                          customerList[index].customerId,
-                                          customerList[index].name,
-                                          customerList[index].balance,
-                                          customerList[index].address,
-                                          decryptedS);
-                                    });
-                                return res;
-                              }
-                            }),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
+          Spacer(),
+          // Flexible(
+          //   child: ListView.builder(
+          //     itemCount: customerList.length,
+          //     itemBuilder: (BuildContext context, int index) {
+          //       adminId = customerList[index].adminId;
+          //       customerId = customerList[index].customerId;
+          //       name = customerList[index].name;
+          //       balance = customerList[index].balance;
+          //       address = customerList[index].address;
+          //       EncrytoDecryPassword = customerList[index].password;
+          //       passwordDecrypted().whenComplete(() {});
+          //       return Padding(
+          //         padding: const EdgeInsets.only(top: 8),
+          //         child: Container(
+          //           padding: const EdgeInsets.symmetric(horizontal: 8),
+          //           child: Column(
+          //             crossAxisAlignment: CrossAxisAlignment.start,
+          //             children: [
+          //               Dismissible(
+          //                   key: Key(customerList[index].toString()),
+          //                   child: Container(
+          //                     height: 60,
+          //                     width: MediaQuery.of(context).size.width - 20,
+          //                     decoration: BoxDecoration(
+          //                       borderRadius: BorderRadius.circular(10),
+          //                       color: Colors.blueGrey[50],
+          //                     ),
+          //                     child: Center(
+          //                         child: Text(
+          //                       customerList[index].name,
+          //                       style: TextStyle(
+          //                           color: Colors.black, fontSize: 20),
+          //                     )),
+          //                   ),
+          //                   background: slideLeftBackground(),
+          //                   confirmDismiss: (direction) async {
+          //                     if (direction == DismissDirection.endToStart) {
+          //                       final bool res = await showDialog(
+          //                           context: context,
+          //                           builder: (BuildContext context) {
+          //                             return updateDialog(
+          //                                 context,
+          //                                 customerList[index].adminId,
+          //                                 customerList[index].customerId,
+          //                                 customerList[index].name,
+          //                                 customerList[index].balance,
+          //                                 customerList[index].address,
+          //                                 decryptedS);
+          //                           });
+          //                       return res;
+          //                     } else {
+          //                       final bool res = await showDialog(
+          //                           context: context,
+          //                           builder: (BuildContext context) {
+          //                             return updateDialog(
+          //                                 context,
+          //                                 customerList[index].adminId,
+          //                                 customerList[index].customerId,
+          //                                 customerList[index].name,
+          //                                 customerList[index].balance,
+          //                                 customerList[index].address,
+          //                                 decryptedS);
+          //                           });
+          //                       return res;
+          //                     }
+          //                   }),
+          //             ],
+          //           ),
+          //         ),
+          //       );
+          //     },
+          //   ),
+          // ),
           SizedBox(
             height: 5,
           ),
@@ -169,6 +167,31 @@ class _AddAdminCustomerCardsState extends State<AddAdminCustomerCards> {
             children: [
               Column(
                 children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (_) => BlocProvider.value(
+                                  value: BlocProvider.of<FirebaseBloc>(context),
+                                  child: CustomersList())));
+                        },
+                        child: Container(
+                          height: 40,
+                          width: 130,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Color(0xFFFF2562),
+                          ),
+                          child: Center(child: Text("Customers List")),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -289,80 +312,81 @@ class _AddAdminCustomerCardsState extends State<AddAdminCustomerCards> {
     );
   }
 
-  Widget updateDialog(
-      BuildContext mainContext,
-      String adminId,
-      String customerId,
-      String name,
-      int balance,
-      String address,
-      String decryptedS) {
-    return AlertDialog(
-      content: Text("Are you sure you want to edit '' ?"),
-      actions: <Widget>[
-        FlatButton(
-          child: Text(
-            "Cancel",
-            style: TextStyle(color: Colors.black),
-          ),
-          onPressed: () {
-            Navigator.of(mainContext).pop();
-          },
-        ),
-        FlatButton(
-          child: Text(
-            "Edit",
-            style: TextStyle(color: Colors.green),
-          ),
-          onPressed: () async {
-            Navigator.of(mainContext).pop();
-            var value = Navigator.of(mainContext).push(MaterialPageRoute(
-                builder: (_) => BlocProvider.value(
-                    value: BlocProvider.of<FirebaseBloc>(context),
-                    child: UpdateCustomers(
-                      adminId: adminId,
-                      customerId: customerId,
-                      name: name,
-                      balance: balance,
-                      address: address,
-                      password: decryptedS,
-                    ))));
-            //Navigator.of(mainContext).pop();
-            print("RES UDPAED:$value");
-          },
-        ),
-      ],
-    );
-  }
+  //
+  // Widget updateDialog(
+  //     BuildContext mainContext,
+  //     String adminId,
+  //     String customerId,
+  //     String name,
+  //     int balance,
+  //     String address,
+  //     String decryptedS) {
+  //   return AlertDialog(
+  //     content: Text("Are you sure you want to edit '' ?"),
+  //     actions: <Widget>[
+  //       FlatButton(
+  //         child: Text(
+  //           "Cancel",
+  //           style: TextStyle(color: Colors.black),
+  //         ),
+  //         onPressed: () {
+  //           Navigator.of(mainContext).pop();
+  //         },
+  //       ),
+  //       FlatButton(
+  //         child: Text(
+  //           "Edit",
+  //           style: TextStyle(color: Colors.green),
+  //         ),
+  //         onPressed: () async {
+  //           Navigator.of(mainContext).pop();
+  //           var value = Navigator.of(mainContext).push(MaterialPageRoute(
+  //               builder: (_) => BlocProvider.value(
+  //                   value: BlocProvider.of<FirebaseBloc>(context),
+  //                   child: UpdateCustomers(
+  //                     adminId: adminId,
+  //                     customerId: customerId,
+  //                     name: name,
+  //                     balance: balance,
+  //                     address: address,
+  //                     password: decryptedS,
+  //                   ))));
+  //           //Navigator.of(mainContext).pop();
+  //           print("RES UDPAED:$value");
+  //         },
+  //       ),
+  //     ],
+  //   );
+  // }
 
-  Widget slideLeftBackground() {
-    return Container(
-      color: Colors.green,
-      child: Align(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            Icon(
-              Icons.edit,
-              color: Colors.white,
-            ),
-            Text(
-              " Edit",
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w700,
-              ),
-              textAlign: TextAlign.right,
-            ),
-            SizedBox(
-              width: 20,
-            ),
-          ],
-        ),
-        alignment: Alignment.centerRight,
-      ),
-    );
-  }
+  // Widget slideLeftBackground() {
+  //   return Container(
+  //     color: Colors.green,
+  //     child: Align(
+  //       child: Row(
+  //         mainAxisAlignment: MainAxisAlignment.end,
+  //         children: <Widget>[
+  //           Icon(
+  //             Icons.edit,
+  //             color: Colors.white,
+  //           ),
+  //           Text(
+  //             " Edit",
+  //             style: TextStyle(
+  //               color: Colors.white,
+  //               fontWeight: FontWeight.w700,
+  //             ),
+  //             textAlign: TextAlign.right,
+  //           ),
+  //           SizedBox(
+  //             width: 20,
+  //           ),
+  //         ],
+  //       ),
+  //       alignment: Alignment.centerRight,
+  //     ),
+  //   );
+  // }
 
   showAlert(BuildContext context) {
     showDialog(

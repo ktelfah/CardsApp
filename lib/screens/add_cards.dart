@@ -30,7 +30,6 @@ class _AddCardState extends State<AddCard> {
   var getAdminId;
   List dd = [];
   List ddd = [];
-  List dddd = [];
   String venid;
 
   _AddCardState(this.adminIdget);
@@ -48,7 +47,7 @@ class _AddCardState extends State<AddCard> {
     setState(() {
       firestoreInstance
           .collection("categories")
-          .where("vendorId", isEqualTo: "G97blAzdM8l4SBQKXStM")
+          .where("vendorId", isEqualTo: "fQsKDiB3jJJfRZafZw6w")
           .get()
           .then((querySnapshot) {
         querySnapshot.docs.forEach((result) {

@@ -22,16 +22,37 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  num amm;
   @override
   void initState() {
     super.initState();
     BlocProvider.of<FirebaseBloc>(context).add(ResetFetchVendors());
+
+    FirebaseFirestore.instance
+        .collection("customers")
+        .where("name", isEqualTo: "$customerNameGet")
+        .get()
+        .then((querySnapshot) {
+      querySnapshot.docs.forEach((result) {
+        amm = result.get('balance');
+        print(amm);
+      });
+    });
+  }
+
+  @override
+  void setState(VoidCallback fn) {
+    customerAmountGet;
+    super.setState(fn);
   }
 
   TextEditingController controller = TextEditingController();
   var amount;
   @override
   Widget build(BuildContext context) {
+    // ignore: unnecessary_statements
+
+    print("name$amm");
     print("name$customerNameGet");
     print("name$customerAmountGet");
     return Scaffold(
@@ -121,8 +142,7 @@ class _MainScreenState extends State<MainScreen> {
                       "Your Balance",
                       style: TextStyle(color: Colors.white),
                     ),
-                    Text("$customerAmountGet",
-                        style: TextStyle(color: Colors.white)),
+                    Text("$amm", style: TextStyle(color: Colors.white)),
                   ],
                 ),
                 Spacer(),
@@ -141,7 +161,7 @@ class _MainScreenState extends State<MainScreen> {
                                 actions: [
                                   FlatButton(
                                       onPressed: () async {
-                                        customerAmountGet = customerAmountGet +
+                                        amm = customerAmountGet +
                                             int.parse(amount);
                                         FirebaseRepository fb =
                                             FirebaseRepository(
@@ -167,7 +187,7 @@ class _MainScreenState extends State<MainScreen> {
                                             customerIdGet,
                                             adminIdGet,
                                             customerNameGet,
-                                            customerAmountGet,
+                                            amm,
                                             customerPasswordEncrypted,
                                             customerAddressGet);
                                         Navigator.of(context).pop();
