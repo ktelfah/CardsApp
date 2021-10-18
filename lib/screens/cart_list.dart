@@ -364,7 +364,7 @@ class _CartListState extends State<CartList> {
                                   // Navigator.of(context).pop();
 
                                   //============================================================================//
-
+                                  Navigator.of(context).pop();
                                   Navigator.of(ctx)
                                       .push(
                                     MaterialPageRoute<FirebaseBloc>(
@@ -435,57 +435,6 @@ class _CartListState extends State<CartList> {
               ),
             ),
           ),
-          Center(
-            child: GestureDetector(
-              onTap: () {
-                // Navigator.of(context).push(
-                //   MaterialPageRoute<FirebaseBloc>(
-                //     builder: (_) => BlocProvider.value(
-                //       value: BlocProvider.of<FirebaseBloc>(context),
-                //       child: MainScreen(),
-                //     ),
-                //   ),
-                // );
-                // showModalBottomSheet(
-                //     context: context,
-                //     builder: (BuildContext context) {
-                //       return Center(
-                //         child: Column(
-                //           children: [
-                //             Container(
-                //               child: Text("I am Bottom Sheet"),
-                //             ),
-                //             ElevatedButton(
-                //                 onPressed: () {
-                //                   Navigator.of(context).push(
-                //                     MaterialPageRoute<FirebaseBloc>(
-                //                       builder: (_) => BlocProvider.value(
-                //                         value: BlocProvider.of<FirebaseBloc>(
-                //                             context),
-                //                         child: MainScreen(),
-                //                       ),
-                //                     ),
-                //                   );
-                //                 },
-                //                 child: Text("Close")),
-                //           ],
-                //         ),
-                //       );
-                //     });
-              },
-              child: Container(
-                width: 250,
-                height: 60,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Colors.yellowAccent,
-                ),
-                child: Center(
-                  child: Text("Buy new"),
-                ),
-              ),
-            ),
-          )
         ],
       ),
     );

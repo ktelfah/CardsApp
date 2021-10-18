@@ -165,9 +165,11 @@ class FetchAddVendor extends FirebaseEvent {
   final address2;
   final zipcode;
   final county;
+  final type;
+
 
   FetchAddVendor(this.vendorId, this.adminId, this.name, this.icon,
-      this.address1, this.address2, this.zipcode, this.county);
+      this.address1, this.address2, this.zipcode, this.county, this.type);
 
   List<Object> get props => [];
 }
@@ -247,7 +249,6 @@ class ResetFetchCategory extends FirebaseEvent {
   @override
   List<Object> get props => [];
 }
-
 
 //Fetch SubCategory
 class FetchSubCategory extends FirebaseEvent {

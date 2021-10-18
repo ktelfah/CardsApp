@@ -70,6 +70,10 @@ class _AddVendorState extends State<AddVendor> {
     super.initState();
   }
 
+  String type = "Prepaid";
+  @override
+  var val = 1;
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -83,60 +87,61 @@ class _AddVendorState extends State<AddVendor> {
           title: Text("Add Vendor"),
         ),
         //body: body(context)
-        body:
-            BlocBuilder<FirebaseBloc, FirebaseState>(builder: (context, state) {
-          print("STATE:$state");
-          if (state is AddVendorEmpty) {
-            return Container(
-              child: body(context),
-            );
-          }
+        body: BlocBuilder<FirebaseBloc, FirebaseState>(
+          builder: (context, state) {
+            print("STATE:$state");
+            if (state is AddVendorEmpty) {
+              return Container(
+                child: body(context),
+              );
+            }
 
-          if (state is AddVendorError) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text(
-                  "Invalid Data",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      height: 3.0,
-                      fontSize: 20),
-                ),
-                backgroundColor: Colors.red,
-              ));
-            });
-            return Container(
-              child: body(context),
-            );
-          }
-
-          if (state is AddVendorLoaded) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                behavior: SnackBarBehavior.floating,
-                content: Text(
-                  "Vendor Added Successfully",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.white,
+            if (state is AddVendorError) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(
+                    "Invalid Data",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        height: 3.0,
+                        fontSize: 20),
                   ),
-                ),
-                backgroundColor: Colors.black,
-              ));
+                  backgroundColor: Colors.red,
+                ));
+              });
+              return Container(
+                child: body(context),
+              );
+            }
 
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (_) => BlocProvider.value(
-                      value: BlocProvider.of<FirebaseBloc>(context),
-                      child: AddAdminCustomerCards())));
-            });
-          }
+            if (state is AddVendorLoaded) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  behavior: SnackBarBehavior.floating,
+                  content: Text(
+                    "Vendor Added Successfully",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.white,
+                    ),
+                  ),
+                  backgroundColor: Colors.black,
+                ));
 
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }),
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => BlocProvider.value(
+                        value: BlocProvider.of<FirebaseBloc>(context),
+                        child: AddAdminCustomerCards())));
+              });
+            }
+
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          },
+        ),
       ),
     );
   }
@@ -169,133 +174,175 @@ class _AddVendorState extends State<AddVendor> {
     return Form(
       key: formKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
-      child: Column(
-        children: [
-          selectImage(),
-          SizedBox(
-            height: 20,
-          ),
-          CustomTextFormField(
-            obscureText: false,
-            textEditingController: TextEditingController(text: name),
-            hintText: 'Name',
-            icon: Icons.person,
-            onFieldSubmitted: (String value) {},
-            cursorColor: Color(0xFFFF2562),
-            onChanged: (String value) {
-              name = value;
+      child: Column(children: [
+        selectImage(),
+        SizedBox(
+          height: 20,
+        ),
+        CustomTextFormField(
+          obscureText: false,
+          textEditingController: TextEditingController(text: name),
+          hintText: 'Name',
+          icon: Icons.person,
+          onFieldSubmitted: (String value) {},
+          cursorColor: Color(0xFFFF2562),
+          onChanged: (String value) {
+            name = value;
+          },
+          keyboardType: TextInputType.name,
+          focusNode: nameNode,
+          nextNode: addressNode1,
+          textInputAction: TextInputAction.next,
+          validator: (String value) {
+            if (value.isEmpty) {
+              return 'Please Enter your Vendor name';
+            }
+          },
+        ),
+        SizedBox(
+          height: 15,
+        ),
+        CustomTextFormField(
+          obscureText: false,
+          textEditingController: TextEditingController(text: address1),
+          hintText: 'Address 1',
+          icon: Icons.location_city,
+          onFieldSubmitted: (String value) {},
+          cursorColor: Color(0xFFFF2562),
+          onChanged: (String value) {
+            address1 = value;
+          },
+          keyboardType: TextInputType.text,
+          focusNode: addressNode1,
+          nextNode: addressNode2,
+          textInputAction: TextInputAction.done,
+          validator: (String value) {
+            if (value.isEmpty) {
+              return 'Please Enter your Vendor Address 1';
+            }
+          },
+        ),
+        SizedBox(
+          height: 15,
+        ),
+        CustomTextFormField(
+          obscureText: false,
+          textEditingController: TextEditingController(text: address2),
+          hintText: 'Address 2',
+          icon: Icons.location_city,
+          onFieldSubmitted: (String value) {},
+          cursorColor: Color(0xFFFF2562),
+          onChanged: (String value) {
+            address2 = value;
+          },
+          keyboardType: TextInputType.text,
+          focusNode: addressNode2,
+          nextNode: zipcodeNode,
+          textInputAction: TextInputAction.done,
+          validator: (String value) {
+            if (value.isEmpty) {
+              return 'Please Enter your Vendor Address 2';
+            }
+          },
+        ),
+        SizedBox(
+          height: 15,
+        ),
+        CustomTextFormField(
+          obscureText: false,
+          textEditingController: TextEditingController(text: zipcode),
+          hintText: 'Zip Code',
+          icon: Icons.location_city,
+          onFieldSubmitted: (String value) {},
+          cursorColor: Color(0xFFFF2562),
+          onChanged: (String value) {
+            zipcode = value;
+          },
+          keyboardType: TextInputType.text,
+          focusNode: zipcodeNode,
+          nextNode: countyNode,
+          textInputAction: TextInputAction.done,
+          validator: (String value) {
+            if (value.isEmpty) {
+              return 'Please Enter your Vendor Zipcode.';
+            }
+          },
+        ),
+        SizedBox(
+          height: 15,
+        ),
+        CustomTextFormField(
+          obscureText: false,
+          textEditingController: TextEditingController(text: county),
+          hintText: 'County',
+          icon: Icons.location_city,
+          onFieldSubmitted: (String value) {},
+          cursorColor: Color(0xFFFF2562),
+          onChanged: (String value) {
+            county = value;
+          },
+          keyboardType: TextInputType.text,
+          focusNode: countyNode,
+          nextNode: iconNode,
+          textInputAction: TextInputAction.done,
+          validator: (String value) {
+            if (value.isEmpty) {
+              return 'Please Enter your Vendor County.';
+            }
+          },
+        ),
+        SizedBox(
+          height: 15,
+        ),
+        radioButton(context),
+        SizedBox(
+          height: 20,
+        ),
+        addVendorButton(context),
+        SizedBox(
+          height: 20,
+        ),
+      ]),
+    );
+  }
+
+  Widget radioButton(context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        ListTile(
+          title: Text("Prepaid"),
+          leading: Radio(
+            value: 1,
+            groupValue: val,
+            onChanged: (value) {
+              setState(() {
+                type = "Prepaid";
+                val = value;
+                print(val);
+                print(type);
+              });
             },
-            keyboardType: TextInputType.name,
-            focusNode: nameNode,
-            nextNode: addressNode1,
-            textInputAction: TextInputAction.next,
-            validator: (String value) {
-              if (value.isEmpty) {
-                return 'Please Enter your Vendor name';
-              }
+            activeColor: Color(0xFFFF2562),
+          ),
+        ),
+        ListTile(
+          title: Text("Direct"),
+          leading: Radio(
+            value: 2,
+            groupValue: val,
+            onChanged: (value) {
+              setState(() {
+                type = "Direct";
+                val = value;
+                print(val);
+                print(type);
+              });
             },
+            activeColor: Color(0xFFFF2562),
           ),
-          SizedBox(
-            height: 15,
-          ),
-          CustomTextFormField(
-            obscureText: false,
-            textEditingController: TextEditingController(text: address1),
-            hintText: 'Address 1',
-            icon: Icons.location_city,
-            onFieldSubmitted: (String value) {},
-            cursorColor: Color(0xFFFF2562),
-            onChanged: (String value) {
-              address1 = value;
-            },
-            keyboardType: TextInputType.text,
-            focusNode: addressNode1,
-            nextNode: addressNode2,
-            textInputAction: TextInputAction.done,
-            validator: (String value) {
-              if (value.isEmpty) {
-                return 'Please Enter your Vendor Address 1';
-              }
-            },
-          ),
-          SizedBox(
-            height: 15,
-          ),
-          CustomTextFormField(
-            obscureText: false,
-            textEditingController: TextEditingController(text: address2),
-            hintText: 'Address 2',
-            icon: Icons.location_city,
-            onFieldSubmitted: (String value) {},
-            cursorColor: Color(0xFFFF2562),
-            onChanged: (String value) {
-              address2 = value;
-            },
-            keyboardType: TextInputType.text,
-            focusNode: addressNode2,
-            nextNode: zipcodeNode,
-            textInputAction: TextInputAction.done,
-            validator: (String value) {
-              if (value.isEmpty) {
-                return 'Please Enter your Vendor Address 2';
-              }
-            },
-          ),
-          SizedBox(
-            height: 15,
-          ),
-          CustomTextFormField(
-            obscureText: false,
-            textEditingController: TextEditingController(text: zipcode),
-            hintText: 'Zip Code',
-            icon: Icons.location_city,
-            onFieldSubmitted: (String value) {},
-            cursorColor: Color(0xFFFF2562),
-            onChanged: (String value) {
-              zipcode = value;
-            },
-            keyboardType: TextInputType.text,
-            focusNode: zipcodeNode,
-            nextNode: countyNode,
-            textInputAction: TextInputAction.done,
-            validator: (String value) {
-              if (value.isEmpty) {
-                return 'Please Enter your Vendor Zipcode.';
-              }
-            },
-          ),
-          SizedBox(
-            height: 15,
-          ),
-          CustomTextFormField(
-            obscureText: false,
-            textEditingController: TextEditingController(text: county),
-            hintText: 'County',
-            icon: Icons.location_city,
-            onFieldSubmitted: (String value) {},
-            cursorColor: Color(0xFFFF2562),
-            onChanged: (String value) {
-              county = value;
-            },
-            keyboardType: TextInputType.text,
-            focusNode: countyNode,
-            nextNode: iconNode,
-            textInputAction: TextInputAction.done,
-            validator: (String value) {
-              if (value.isEmpty) {
-                return 'Please Enter your Vendor County.';
-              }
-            },
-          ),
-          SizedBox(
-            height: 70,
-          ),
-          addVendorButton(context),
-          SizedBox(
-            height: 20,
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -308,14 +355,16 @@ class _AddVendorState extends State<AddVendor> {
             uploadImage().whenComplete(() {
               print("downloadUrl: $downloadUrl");
               BlocProvider.of<FirebaseBloc>(context).add(FetchAddVendor(
-                  '',
-                  getAdminIdUser,
-                  name,
-                  downloadUrl,
-                  address1,
-                  address2,
-                  zipcode,
-                  county));
+                '',
+                getAdminIdUser,
+                name,
+                downloadUrl,
+                address1,
+                address2,
+                zipcode,
+                county,
+                type,
+              ));
             });
           } else {
             Scaffold.of(context)

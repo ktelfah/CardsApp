@@ -8,7 +8,7 @@ import 'package:cards_app/models/vendors.dart';
 import 'package:cards_app/screens/add_admin.dart';
 import 'package:cards_app/screens/card_list.dart';
 import 'package:cards_app/screens/category_list.dart';
-import 'package:cards_app/screens/vendors_list.dart';
+import 'package:cards_app/screens/mainscreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 
@@ -242,7 +242,8 @@ class FirebaseApiClient {
       String address1,
       String address2,
       String zipcode,
-      String county) async {
+      String county,
+      String type) async {
     var res = await vendors.add({
       "vendorId": vendorId,
       "name": name,
@@ -251,6 +252,7 @@ class FirebaseApiClient {
       "address2": address2,
       "zipcode": zipcode,
       "county": county,
+      "type": type,
     });
 
     await res.get();
@@ -258,14 +260,16 @@ class FirebaseApiClient {
     vendors.doc(res.id).update({"adminId": adminId});
 
     return Vendors(
-        vendorId: vendorId,
-        adminId: adminId,
-        name: name,
-        icon: icon,
-        address1: address1,
-        address2: address2,
-        zipcode: zipcode,
-        county: county);
+      vendorId: vendorId,
+      adminId: adminId,
+      name: name,
+      icon: icon,
+      address1: address1,
+      address2: address2,
+      zipcode: zipcode,
+      county: county,
+      type: type,
+    );
   }
 
   // Fetch Customers

@@ -177,14 +177,16 @@ class FirebaseBloc extends Bloc<FirebaseEvent, FirebaseState> {
 
       try {
         final Vendors vendors = await repository.addVendor(
-            event.vendorId,
-            event.adminId,
-            event.name,
-            event.icon,
-            event.address1,
-            event.address2,
-            event.zipcode,
-            event.county);
+          event.vendorId,
+          event.adminId,
+          event.name,
+          event.icon,
+          event.address1,
+          event.address2,
+          event.zipcode,
+          event.county,
+          event.type,
+        );
         yield AddVendorLoaded(vendors: vendors);
       } catch (e) {
         print(e);

@@ -72,9 +72,10 @@ class FirebaseRepository {
     String address2,
     String zipcode,
     String county,
+    String type,
   ) async {
     return await firebaseApiClient.addVendor(
-        vendorId, adminId, name, icon, address1, address2, zipcode, county);
+        vendorId, adminId, name, icon, address1, address2, zipcode, county,type);
   }
 
   // Fetch Customer

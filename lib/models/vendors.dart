@@ -7,6 +7,7 @@ class Vendors {
   String address2;
   String zipcode;
   String county;
+  String type;
 
   Vendors(
       {this.vendorId,
@@ -16,7 +17,8 @@ class Vendors {
       this.address1,
       this.address2,
       this.zipcode,
-      this.county});
+      this.county,
+      this.type});
 
   factory Vendors.fromJson(Map<dynamic, dynamic> json) => new Vendors(
         vendorId: json["vendorId"],
@@ -27,6 +29,7 @@ class Vendors {
         address2: json["address2"],
         zipcode: json["zipcode"],
         county: json["county"],
+        type: json["type"],
       );
 
   Map<dynamic, dynamic> toJson() => {
@@ -38,5 +41,6 @@ class Vendors {
         "address2": address2,
         "zipcode": zipcode,
         "county": county,
+        "type": type,
       };
 }

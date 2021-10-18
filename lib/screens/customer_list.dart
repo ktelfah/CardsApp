@@ -75,7 +75,6 @@ class _CustomersListState extends State<CustomersList> {
           child: ListView.builder(
             itemCount: customerList.length,
             itemBuilder: (BuildContext context, int index) {
-              print("=================== ${customerList.length}");
               adminId = customerList[index].adminId;
               customerId = customerList[index].customerId;
               name = customerList[index].name;
