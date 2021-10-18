@@ -24,6 +24,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   num amm;
   String icons;
+  var directs;
 
   @override
   void initState() {
@@ -40,11 +41,6 @@ class _MainScreenState extends State<MainScreen> {
         print(amm);
       });
     });
-
-    var direct = FirebaseFirestore.instance
-        .collection("vendors")
-        .where("type", isEqualTo: "Direct");
-    print(direct.get());
   }
 
   @override
@@ -55,11 +51,12 @@ class _MainScreenState extends State<MainScreen> {
 
   TextEditingController controller = TextEditingController();
   var amount;
-  bool prepaid = false;
+  bool prepaid = true;
   bool direct = false;
 
   @override
   Widget build(BuildContext context) {
+    print("========================== This is body ===============");
     // ignore: unnecessary_statements
 
     print("name$amm");
@@ -74,6 +71,16 @@ class _MainScreenState extends State<MainScreen> {
       ),
       //body: body(vendorsList),
       body: BlocBuilder<FirebaseBloc, FirebaseState>(builder: (context, state) {
+        FirebaseFirestore.instance
+            .collection("vendors")
+            .where("type", isEqualTo: "Direct")
+            .get()
+            .then((querySnapshot) {
+          querySnapshot.docs.forEach((result) {
+            directs = result.get('icon');
+            print(directs);
+          });
+        });
         if (state is FetchVendorsEmpty) {
           BlocProvider.of<FirebaseBloc>(context).add(FetchVendors());
         }
@@ -381,7 +388,47 @@ class _MainScreenState extends State<MainScreen> {
                   ),
                 )
               : direct
-                  ? Container(child: Text("Currently Not Available"))
+                  ? Flexible(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: GridView.builder(
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  crossAxisSpacing: 6.0,
+                                  mainAxisSpacing: 6.0),
+                          itemCount: directs.length,
+                          itemBuilder: (context, index) {
+                            return GestureDetector(
+                              onTap: () {
+                                // getSelectedVendorId = vendorsList[index].vendorId;
+                                // getSelectedVendorName = vendorsList[index].name;
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (_) => BlocProvider.value(
+                                        value: BlocProvider.of<FirebaseBloc>(
+                                            context),
+                                        child: CategoryList())));
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.red[500],
+                                    ),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(6))),
+                                child: Image.network(
+                                  directs,
+                                  // vendorsList[index].icon,
+                                  height: 300,
+                                  width: 300,
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    )
                   : Container(
                       child: Text("Please Select"),
                     ),
