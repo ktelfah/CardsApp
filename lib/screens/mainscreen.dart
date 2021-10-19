@@ -24,7 +24,15 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   num amm;
   String icons;
-  var directs;
+  var amount;
+  bool prepaid = true;
+  bool direct = false;
+  List directs = [];
+  List directvendorid = [];
+  List directvendorname = [];
+  List prepaids = [];
+  List prepaidvendorid = [];
+  List prepaidvendorname = [];
 
   @override
   void initState() {
@@ -50,18 +58,10 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   TextEditingController controller = TextEditingController();
-  var amount;
-  bool prepaid = true;
-  bool direct = false;
 
   @override
   Widget build(BuildContext context) {
-    print("========================== This is body ===============");
     // ignore: unnecessary_statements
-
-    print("name$amm");
-    print("name$customerNameGet");
-    print("name$customerAmountGet");
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFFFF2562),
@@ -73,14 +73,47 @@ class _MainScreenState extends State<MainScreen> {
       body: BlocBuilder<FirebaseBloc, FirebaseState>(builder: (context, state) {
         FirebaseFirestore.instance
             .collection("vendors")
+            .where("type", isEqualTo: "Prepaid")
+            .get()
+            .then((querySnapshot) {
+          if (prepaids.isEmpty) {
+            querySnapshot.docs.forEach((result) {
+              prepaids.add(result.get('icon'));
+
+              print(prepaids);
+            });
+          } else {
+            prepaids.clear();
+            querySnapshot.docs.forEach((result) {
+              prepaids.add(result.get('icon'));
+              prepaidvendorid.add(result.get('vendorId'));
+              prepaidvendorname.add(result.get('name'));
+              print(prepaids);
+            });
+          }
+        });
+
+        FirebaseFirestore.instance
+            .collection("vendors")
             .where("type", isEqualTo: "Direct")
             .get()
             .then((querySnapshot) {
-          querySnapshot.docs.forEach((result) {
-            directs = result.get('icon');
-            print(directs);
-          });
+          if (directs.isEmpty) {
+            querySnapshot.docs.forEach((result) {
+              directs.add(result.get('icon'));
+              print(directs);
+            });
+          } else {
+            directs.clear();
+            querySnapshot.docs.forEach((result) {
+              directs.add(result.get('icon'));
+              directvendorid.add(result.get('vendorId'));
+              directvendorname.add(result.get('name'));
+              print(directs);
+            });
+          }
         });
+
         if (state is FetchVendorsEmpty) {
           BlocProvider.of<FirebaseBloc>(context).add(FetchVendors());
         }
@@ -288,9 +321,9 @@ class _MainScreenState extends State<MainScreen> {
                   //     builder: (_) => BlocProvider.value(
                   //         value: BlocProvider.of<FirebaseBloc>(context),
                   //         child: VendorList())));
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text('This option is not available right now.'),
-                  ));
+                  // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  //   content: Text('This option is not available right now.'),
+                  // ));
                 },
                 child: Container(
                     margin: EdgeInsets.only(top: 20.0),
@@ -356,12 +389,12 @@ class _MainScreenState extends State<MainScreen> {
                           crossAxisCount: 2,
                           crossAxisSpacing: 6.0,
                           mainAxisSpacing: 6.0),
-                      itemCount: vendorsList.length,
+                      itemCount: prepaids.length,
                       itemBuilder: (BuildContext context, int index) {
                         return GestureDetector(
                           onTap: () {
-                            getSelectedVendorId = vendorsList[index].vendorId;
-                            getSelectedVendorName = vendorsList[index].name;
+                            getSelectedVendorId = prepaidvendorid[index];
+                            getSelectedVendorName = prepaidvendorname[index];
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (_) => BlocProvider.value(
                                     value:
@@ -376,7 +409,7 @@ class _MainScreenState extends State<MainScreen> {
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(6))),
                             child: Image.network(
-                              vendorsList[index].icon,
+                              prepaids[index],
                               height: 300,
                               width: 300,
                               fit: BoxFit.fill,
@@ -401,8 +434,8 @@ class _MainScreenState extends State<MainScreen> {
                           itemBuilder: (context, index) {
                             return GestureDetector(
                               onTap: () {
-                                // getSelectedVendorId = vendorsList[index].vendorId;
-                                // getSelectedVendorName = vendorsList[index].name;
+                                getSelectedVendorId = directvendorid[index];
+                                getSelectedVendorName = directvendorname[index];
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (_) => BlocProvider.value(
                                         value: BlocProvider.of<FirebaseBloc>(
@@ -417,7 +450,7 @@ class _MainScreenState extends State<MainScreen> {
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(6))),
                                 child: Image.network(
-                                  directs,
+                                  directs[index],
                                   // vendorsList[index].icon,
                                   height: 300,
                                   width: 300,
