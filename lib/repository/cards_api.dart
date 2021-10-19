@@ -59,13 +59,20 @@ class FirebaseApiClient {
   Future<Admin> fetchLogin(String email, String password) async {
     var data;
     var passwordEncrypted;
+    var newpasswordEncrypted;
     var customerPasswordEncrypted;
+    // var customerGetPasswordEncrypted;
     String decryptedS;
     var key =
         "5621seeF+hm7eBsv6eDl2g==:VQP0A2rHM4F7aafVngOq5fL950nC1F6ElNPUP9lUTnY=";
 
-    var getPasswordEncrypted =
-        await admin.where("email", isEqualTo: email).get();
+    var getPasswordEncrypted = await admin
+        .where("email", isEqualTo: email)
+        // .where("isSuperAdmin", isEqualTo: "true")
+        .get();
+
+    // customerGetPasswordEncrypted =
+    //     await customer.where("name", isEqualTo: email).get();
 
     if (getPasswordEncrypted.docs.length <= 0) {
       var customerGetPasswordEncrypted =
@@ -88,8 +95,25 @@ class FirebaseApiClient {
         customerPasswordGet = decryptedS;
         //customerPasswordGet = customerGetPasswordEncrypted.docs[0].get('password');
       }
+    } else if (getPasswordEncrypted.docs.length <= 0) {
+      var normalAdminGetPasswordEncrypted = await admin
+          .where("name", isEqualTo: email)
+          .where("isSuperAdmin", isEqualTo: "false")
+          .get();
+      newpasswordEncrypted =
+          await normalAdminGetPasswordEncrypted.docs[0].get('password');
+      print("*********************** Normal Admin ******************");
+      // passwordEncrypted = await getPasswordEncrypted.docs[0].get('isSuperAdmin');
+      decryptedS = await cryptor.decrypt(newpasswordEncrypted, key);
+      if (decryptedS == password) {
+        data = normalAdminGetPasswordEncrypted.docs[0];
+        isCard = false;
+        adminIdGet = normalAdminGetPasswordEncrypted.docs[0].id;
+      }
     } else {
       passwordEncrypted = await getPasswordEncrypted.docs[0].get('password');
+      print("*********************** Super Admin ******************");
+      // passwordEncrypted = await getPasswordEncrypted.docs[0].get('isSuperAdmin');
       decryptedS = await cryptor.decrypt(passwordEncrypted, key);
       if (decryptedS == password) {
         data = getPasswordEncrypted.docs[0];
