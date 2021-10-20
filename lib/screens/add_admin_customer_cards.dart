@@ -16,7 +16,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 
 class AddAdminCustomerCards extends StatefulWidget {
-  const AddAdminCustomerCards({Key key}) : super(key: key);
+  AddAdminCustomerCards({this.isSuperAdmin = false});
+  bool isSuperAdmin;
 
   @override
   _AddAdminCustomerCardsState createState() => _AddAdminCustomerCardsState();
@@ -30,11 +31,13 @@ class _AddAdminCustomerCardsState extends State<AddAdminCustomerCards> {
   String name;
   String address;
   int balance;
+  bool isadmin;
 
   @override
   void initState() {
     super.initState();
     BlocProvider.of<FirebaseBloc>(context).add(ResetFetchCustomer());
+    isadmin = widget.isSuperAdmin;
   }
 
   Future passwordDecrypted() async {
@@ -127,7 +130,7 @@ class _AddAdminCustomerCardsState extends State<AddAdminCustomerCards> {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (_) => BlocProvider.value(
                                   value: BlocProvider.of<FirebaseBloc>(context),
-                                  child: AddAdmin())));
+                                  child: AddCustomer())));
                         },
                         child: Container(
                           height: 40,
@@ -136,7 +139,7 @@ class _AddAdminCustomerCardsState extends State<AddAdminCustomerCards> {
                             borderRadius: BorderRadius.circular(10),
                             color: Color(0xFFFF2562),
                           ),
-                          child: Center(child: Text("ADD ADMIN")),
+                          child: Center(child: Text("ADD CUSTOMER")),
                         ),
                       ),
                       SizedBox(
@@ -166,48 +169,52 @@ class _AddAdminCustomerCardsState extends State<AddAdminCustomerCards> {
               SizedBox(
                 height: 30,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (_) => BlocProvider.value(
-                              value: BlocProvider.of<FirebaseBloc>(context),
-                              child: AddCustomer())));
-                    },
-                    child: Container(
-                      height: 40,
-                      width: 130,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Color(0xFFFF2562),
-                      ),
-                      child: Center(child: Text("ADD CUSTOMER")),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 30,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (_) => BlocProvider.value(
-                              value: BlocProvider.of<FirebaseBloc>(context),
-                              child: AddVendor())));
-                    },
-                    child: Container(
-                      height: 40,
-                      width: 130,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Color(0xFFFF2562),
-                      ),
-                      child: Center(child: Text("ADD VENDOR")),
-                    ),
-                  ),
-                ],
-              ),
+              isadmin
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) => BlocProvider.value(
+                                    value:
+                                        BlocProvider.of<FirebaseBloc>(context),
+                                    child: AddAdmin())));
+                          },
+                          child: Container(
+                            height: 40,
+                            width: 130,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Color(0xFFFF2562),
+                            ),
+                            child: Center(child: Text("ADD ADMIN")),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 30,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) => BlocProvider.value(
+                                    value:
+                                        BlocProvider.of<FirebaseBloc>(context),
+                                    child: AddVendor())));
+                          },
+                          child: Container(
+                            height: 40,
+                            width: 130,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Color(0xFFFF2562),
+                            ),
+                            child: Center(child: Text("ADD VENDOR")),
+                          ),
+                        ),
+                      ],
+                    )
+                  : Container(),
               SizedBox(
                 height: 30,
               ),

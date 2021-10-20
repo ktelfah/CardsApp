@@ -4,7 +4,6 @@ import 'package:cards_app/bloc/cards_state.dart';
 import 'package:cards_app/helper/custom_text_form_field.dart';
 import 'package:cards_app/main.dart';
 import 'package:cards_app/screens/add_admin.dart';
-import 'package:cards_app/screens/add_admin_customer_cards.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -50,61 +49,67 @@ class _AddCustomerState extends State<AddCustomer> {
           title: Text("Add Customer"),
         ),
         //body: body(context)
-        body:
-            BlocBuilder<FirebaseBloc, FirebaseState>(builder: (context, state) {
-          print("STATE:$state");
-          if (state is AddCustomerEmpty) {
-            return Container(
-              child: body(context),
-            );
-          }
+        body: BlocBuilder<FirebaseBloc, FirebaseState>(
+          builder: (context, state) {
+            print("STATE:$state");
+            if (state is AddCustomerEmpty) {
+              return Container(
+                child: body(context),
+              );
+            }
 
-          if (state is AddCustomerError) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text(
-                  "Invalid Data",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      height: 3.0,
-                      fontSize: 20),
-                ),
-                backgroundColor: Colors.red,
-              ));
-            });
-            return Container(
-              child: body(context),
-            );
-          }
-
-          if (state is AddCustomerLoaded) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                behavior: SnackBarBehavior.floating,
-                content: Text(
-                  "Customer Added Successfully",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.white,
+            if (state is AddCustomerError) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(
+                    "Invalid Data",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        height: 3.0,
+                        fontSize: 20),
                   ),
-                ),
-                backgroundColor: Colors.black,
-              ));
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (_) => BlocProvider.value(
-                      value: BlocProvider.of<FirebaseBloc>(context),
-                      child: AddAdminCustomerCards())));
-            });
-          }
+                  backgroundColor: Colors.red,
+                ));
+              });
+              return Container(
+                child: body(context),
+              );
+            }
 
-          return Center(
-            child: CircularProgressIndicator(),
-          );
+            if (state is AddCustomerLoaded) {
+              WidgetsBinding.instance.addPostFrameCallback(
+                (_) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    behavior: SnackBarBehavior.floating,
+                    content: Text(
+                      "Customer Added Successfully",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.white,
+                      ),
+                    ),
+                    backgroundColor: Colors.black,
+                  ));
+                  Navigator.of(context).pop();
+                  BlocProvider.of<FirebaseBloc>(context)
+                      .add(ResetFetchCustomer());
+                  // Navigator.of(context).push(MaterialPageRoute(
+                  //     builder: (_) => BlocProvider.value(
+                  //         value: BlocProvider.of<FirebaseBloc>(context),
+                  //         child: AddAdminCustomerCards())));
+                },
+              );
+            }
 
-          return Container();
-        }),
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+
+            return Container();
+          },
+        ),
       ),
     );
   }

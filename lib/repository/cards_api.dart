@@ -19,7 +19,7 @@ var customerNameGet;
 var customerAddressGet;
 var customerPasswordGet;
 int customerAmountGet;
-bool isCard = false;
+String isCard;
 
 class FirebaseApiClient {
   final http.Client httpClient;
@@ -70,11 +70,11 @@ class FirebaseApiClient {
         .where("email", isEqualTo: email)
         // .where("isSuperAdmin", isEqualTo: "true")
         .get();
-
+    print('LOGIN VALUE === ${getPasswordEncrypted.docs.length}');
     // customerGetPasswordEncrypted =
     //     await customer.where("name", isEqualTo: email).get();
 
-    if (getPasswordEncrypted.docs.length <= 0) {
+    if (getPasswordEncrypted.docs.length == 0) {
       var customerGetPasswordEncrypted =
           await customer.where("name", isEqualTo: email).get();
 
@@ -83,7 +83,7 @@ class FirebaseApiClient {
       decryptedS = await cryptor.decrypt(customerPasswordEncrypted, key);
       if (decryptedS == password) {
         data = customerGetPasswordEncrypted.docs[0];
-        isCard = true;
+        isCard = "Customer";
         adminIdGet = customerGetPasswordEncrypted.docs[0].id;
         customerAmountGet = customerGetPasswordEncrypted.docs[0].get('balance');
         customerIdGet = customerGetPasswordEncrypted.docs[0].get('customerId');
@@ -95,30 +95,28 @@ class FirebaseApiClient {
         customerPasswordGet = decryptedS;
         //customerPasswordGet = customerGetPasswordEncrypted.docs[0].get('password');
       }
-    } else if (getPasswordEncrypted.docs.length <= 0) {
-      var normalAdminGetPasswordEncrypted = await admin
-          .where("name", isEqualTo: email)
-          .where("isSuperAdmin", isEqualTo: "false")
-          .get();
-      newpasswordEncrypted =
-          await normalAdminGetPasswordEncrypted.docs[0].get('password');
-      print("*********************** Normal Admin ******************");
-      // passwordEncrypted = await getPasswordEncrypted.docs[0].get('isSuperAdmin');
-      decryptedS = await cryptor.decrypt(newpasswordEncrypted, key);
-      if (decryptedS == password) {
-        data = normalAdminGetPasswordEncrypted.docs[0];
-        isCard = false;
-        adminIdGet = normalAdminGetPasswordEncrypted.docs[0].id;
-      }
     } else {
-      passwordEncrypted = await getPasswordEncrypted.docs[0].get('password');
-      print("*********************** Super Admin ******************");
-      // passwordEncrypted = await getPasswordEncrypted.docs[0].get('isSuperAdmin');
-      decryptedS = await cryptor.decrypt(passwordEncrypted, key);
-      if (decryptedS == password) {
-        data = getPasswordEncrypted.docs[0];
-        isCard = false;
-        adminIdGet = getPasswordEncrypted.docs[0].id;
+      var nonSuper = await admin
+          .where("isSuperAdmin", isEqualTo: "false")
+          .where("email", isEqualTo: email)
+          .get();
+
+      if (nonSuper.docs.length == 0) {
+        passwordEncrypted = await getPasswordEncrypted.docs[0].get('password');
+        decryptedS = await cryptor.decrypt(passwordEncrypted, key);
+        if (decryptedS == password) {
+          data = getPasswordEncrypted.docs[0];
+          isCard = "SuperAdmin";
+          adminIdGet = getPasswordEncrypted.docs[0].id;
+        }
+      } else {
+        newpasswordEncrypted = await nonSuper.docs[0].get('password');
+        decryptedS = await cryptor.decrypt(newpasswordEncrypted, key);
+        if (decryptedS == password) {
+          data = nonSuper.docs[0];
+          isCard = "NormalAdmin";
+          adminIdGet = nonSuper.docs[0].id;
+        }
       }
     }
     return Admin.fromJson(data.data());

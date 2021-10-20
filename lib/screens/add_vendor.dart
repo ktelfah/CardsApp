@@ -5,7 +5,6 @@ import 'package:cards_app/bloc/cards_event.dart';
 import 'package:cards_app/bloc/cards_state.dart';
 import 'package:cards_app/helper/custom_text_form_field.dart';
 import 'package:cards_app/main.dart';
-import 'package:cards_app/screens/add_admin_customer_cards.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -130,10 +129,9 @@ class _AddVendorState extends State<AddVendor> {
                   backgroundColor: Colors.black,
                 ));
 
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => BlocProvider.value(
-                        value: BlocProvider.of<FirebaseBloc>(context),
-                        child: AddAdminCustomerCards())));
+                Navigator.pop(context);
+                BlocProvider.of<FirebaseBloc>(context)
+                    .add(ResetFetchCustomer());
               });
             }
 

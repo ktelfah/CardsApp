@@ -9,6 +9,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 
 var getSelectedVendorId;
@@ -408,7 +409,7 @@ class _MainScreenState extends State<MainScreen> {
                                 ),
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(6))),
-                            child: Image.network(
+                            child: SvgPicture.network(
                               prepaids[index],
                               height: 300,
                               width: 300,
@@ -449,7 +450,7 @@ class _MainScreenState extends State<MainScreen> {
                                     ),
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(6))),
-                                child: Image.network(
+                                child: SvgPicture.network(
                                   directs[index],
                                   // vendorsList[index].icon,
                                   height: 300,
