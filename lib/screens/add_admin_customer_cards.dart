@@ -100,23 +100,26 @@ class _AddAdminCustomerCardsState extends State<AddAdminCustomerCards> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (_) => BlocProvider.value(
-                                  value: BlocProvider.of<FirebaseBloc>(context),
-                                  child: CustomersList())));
-                        },
-                        child: Container(
-                          height: 40,
-                          width: 130,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Color(0xFFFF2562),
-                          ),
-                          child: Center(child: Text("Customers List")),
-                        ),
-                      ),
+                      isadmin == false
+                          ? GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (_) => BlocProvider.value(
+                                        value: BlocProvider.of<FirebaseBloc>(
+                                            context),
+                                        child: CustomersList())));
+                              },
+                              child: Container(
+                                height: 40,
+                                width: 130,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Color(0xFFFF2562),
+                                ),
+                                child: Center(child: Text("Customers List")),
+                              ),
+                            )
+                          : Container(),
                     ],
                   ),
                   SizedBox(
@@ -125,43 +128,49 @@ class _AddAdminCustomerCardsState extends State<AddAdminCustomerCards> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (_) => BlocProvider.value(
-                                  value: BlocProvider.of<FirebaseBloc>(context),
-                                  child: AddCustomer())));
-                        },
-                        child: Container(
-                          height: 40,
-                          width: 130,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Color(0xFFFF2562),
-                          ),
-                          child: Center(child: Text("ADD CUSTOMER")),
-                        ),
-                      ),
+                      isadmin == false
+                          ? GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (_) => BlocProvider.value(
+                                        value: BlocProvider.of<FirebaseBloc>(
+                                            context),
+                                        child: AddCustomer())));
+                              },
+                              child: Container(
+                                height: 40,
+                                width: 130,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Color(0xFFFF2562),
+                                ),
+                                child: Center(child: Text("ADD CUSTOMER")),
+                              ),
+                            )
+                          : Container(),
                       SizedBox(
                         width: 30,
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (_) => BlocProvider.value(
-                                  value: BlocProvider.of<FirebaseBloc>(context),
-                                  child: AddCard())));
-                        },
-                        child: Container(
-                          height: 40,
-                          width: 130,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Color(0xFFFF2562),
-                          ),
-                          child: Center(child: Text("ADD CARD")),
-                        ),
-                      ),
+                      isadmin == false
+                          ? GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (_) => BlocProvider.value(
+                                        value: BlocProvider.of<FirebaseBloc>(
+                                            context),
+                                        child: AddCard())));
+                              },
+                              child: Container(
+                                height: 40,
+                                width: 130,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Color(0xFFFF2562),
+                                ),
+                                child: Center(child: Text("ADD CARD")),
+                              ),
+                            )
+                          : Container(),
                     ],
                   ),
                 ],
