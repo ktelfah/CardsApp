@@ -90,7 +90,7 @@ class _CategoryListState extends State<CategoryList> {
                 itemBuilder: (BuildContext context, int index) {
                   return GestureDetector(
                     onTap: () {
-                      getSelectedCategoryId = categoryList[index].categoryId;
+                      // getSelectedCategoryId = categoryList[index].categoryId;
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (_) => BlocProvider.value(
                               value: BlocProvider.of<FirebaseBloc>(context),

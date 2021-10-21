@@ -9,6 +9,7 @@ import 'package:cards_app/models/subCategory.dart';
 import 'package:cards_app/models/vendors.dart';
 import 'package:cards_app/repository/cards_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FirebaseBloc extends Bloc<FirebaseEvent, FirebaseState> {
   final FirebaseRepository repository;
@@ -32,6 +33,8 @@ class FirebaseBloc extends Bloc<FirebaseEvent, FirebaseState> {
       try {
         final Admin admin =
             await repository.fetchLogin(event.email, event.password);
+        SharedPreferences pref = await SharedPreferences.getInstance();
+        pref.setString('email', event.email);
         yield LoginLoaded(admin: admin);
       } catch (e) {
         print(e);
@@ -97,7 +100,25 @@ class FirebaseBloc extends Bloc<FirebaseEvent, FirebaseState> {
         yield AddCustomerError();
       }
     }
+//===============================================================================//
+    //Add Category
+    if (event is ResetAddCategory) {
+      yield AddCategoryEmpty();
+    }
 
+    if (event is FetchAddCategory) {
+      yield AddCategoryLoading();
+
+      try {
+        final Category category =
+            await repository.addCategory(event.categoryName);
+        yield AddCategoryLoaded(category: category);
+      } catch (e) {
+        print(e);
+        yield AddCategoryError();
+      }
+    }
+//================================================================================//
     //Fetch Cards
     if (event is ResetFetchCards) {
       yield FetchCardEmpty();

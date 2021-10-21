@@ -15,6 +15,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 
+import 'add_category.dart';
+
 class AddAdminCustomerCards extends StatefulWidget {
   AddAdminCustomerCards({this.isSuperAdmin = false});
   bool isSuperAdmin;
@@ -97,6 +99,33 @@ class _AddAdminCustomerCardsState extends State<AddAdminCustomerCards> {
             children: [
               Column(
                 children: [
+                  //=========================================================================================//
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      isadmin
+                          ? GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (_) => BlocProvider.value(
+                                        value: BlocProvider.of<FirebaseBloc>(
+                                            context),
+                                        child: AddCategory())));
+                              },
+                              child: Container(
+                                height: 40,
+                                width: 130,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Color(0xFFFF2562),
+                                ),
+                                child: Center(child: Text("ADD CATEGORY")),
+                              ),
+                            )
+                          : Container(),
+                    ],
+                  ),
+                  // ========================================================================================//
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

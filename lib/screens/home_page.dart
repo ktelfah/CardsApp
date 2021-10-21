@@ -10,8 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key key}) : super(key: key);
-
+  const HomePage({Key key, this.email}) : super(key: key);
+  final String email;
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -22,10 +22,10 @@ class _HomePageState extends State<HomePage> {
   final passwordNode = FocusNode();
 
   ///Test User Credentials
-  // String email = "kt\$@sss.com", password = "open";
+  String email = "kt\$@sss.com", password = "open";
   // String email = "TitiTangi", password = "open";
   // String email = "miral@gmail.com", password = "123";
-  String email = "priyal@gmail.com", password = "open";
+  // String email = "priyal@gmail.com", password = "open";
   // String email = "", password = "";
 
   @override
@@ -38,6 +38,40 @@ class _HomePageState extends State<HomePage> {
       ),
       // body: body(context)
       body: BlocBuilder<FirebaseBloc, FirebaseState>(builder: (context, state) {
+        // if (widget.email == null) {
+        //   if (state is LoginEmpty) {
+        //     return Container(
+        //       child: body(context),
+        //     );
+        //   }
+        // } else {
+        //   if (state is LoginLoaded) {
+        //     WidgetsBinding.instance.addPostFrameCallback((_) {
+        //       getAdminIdUser = adminIdGet;
+        //       if (isCard == "SuperAdmin") {
+        //         Navigator.of(context).push(MaterialPageRoute(
+        //             builder: (_) => BlocProvider.value(
+        //                 value: BlocProvider.of<FirebaseBloc>(context),
+        //                 child: AddAdminCustomerCards(
+        //                   isSuperAdmin: true,
+        //                 ))));
+        //       } else if (isCard == "NormalAdmin") {
+        //         Navigator.of(context).push(MaterialPageRoute(
+        //             builder: (_) => BlocProvider.value(
+        //                 value: BlocProvider.of<FirebaseBloc>(context),
+        //                 child: AddAdminCustomerCards(
+        //                   isSuperAdmin: false,
+        //                 ))));
+        //       } else {
+        //         Navigator.of(context).push(MaterialPageRoute(
+        //             builder: (_) => BlocProvider.value(
+        //                 value: BlocProvider.of<FirebaseBloc>(context),
+        //                 child: Pages())));
+        //       }
+        //     });
+        //   }
+        // }
+
         print("STATE:$state");
         if (state is LoginEmpty) {
           return Container(
@@ -91,7 +125,6 @@ class _HomePageState extends State<HomePage> {
             }
           });
         }
-
         return Center(
           child: CircularProgressIndicator(),
         );

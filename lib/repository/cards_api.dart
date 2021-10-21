@@ -193,6 +193,22 @@ class FirebaseApiClient {
         password: password);
   }
 
+//=================================================================================//
+  //ADD CATEGORY
+  Future<Category> addCategory(
+    String categoryName,
+  ) async {
+    var res = await categories.add({
+      "categoryName": categoryName,
+    });
+    // await res.get();
+    // categories.doc(res.id).update({"categoryName": res.id});
+    return Category(
+      categoryName: categoryName,
+    );
+  }
+
+//=================================================================================//
   // Fetch Cards
   Future<List<Cards>> fetchCards() async {
     List<Cards> cardData = [];

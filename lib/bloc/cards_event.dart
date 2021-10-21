@@ -89,6 +89,24 @@ class ResetAddCustomer extends FirebaseEvent {
   List<Object> get props => [];
 }
 
+//==============================================================//
+// ADD CATEGORY
+class FetchAddCategory extends FirebaseEvent {
+  final categoryName;
+
+  FetchAddCategory(this.categoryName);
+
+  List<Object> get props => [];
+}
+
+class ResetAddCategory extends FirebaseEvent {
+  const ResetAddCategory();
+
+  @override
+  List<Object> get props => [];
+}
+
+//===================================================================//
 //Fetch Cards
 class FetchCards extends FirebaseEvent {
   FetchCards();
@@ -166,7 +184,6 @@ class FetchAddVendor extends FirebaseEvent {
   final zipcode;
   final county;
   final type;
-
 
   FetchAddVendor(this.vendorId, this.adminId, this.name, this.icon,
       this.address1, this.address2, this.zipcode, this.county, this.type);

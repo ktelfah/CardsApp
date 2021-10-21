@@ -40,6 +40,13 @@ class FirebaseRepository {
         customerId, adminId, balance, name, address, password);
   }
 
+  //=============================================================================//
+  // ADD CATEGORY
+  Future<Category> addCategory(String categoryName) async {
+    return await firebaseApiClient.addCategory(categoryName);
+  }
+  //=============================================================================//
+
   // Fetch Cards
   Future<List<Cards>> fetchCards() async {
     return await firebaseApiClient.fetchCards();
@@ -74,8 +81,8 @@ class FirebaseRepository {
     String county,
     String type,
   ) async {
-    return await firebaseApiClient.addVendor(
-        vendorId, adminId, name, icon, address1, address2, zipcode, county,type);
+    return await firebaseApiClient.addVendor(vendorId, adminId, name, icon,
+        address1, address2, zipcode, county, type);
   }
 
   // Fetch Customer

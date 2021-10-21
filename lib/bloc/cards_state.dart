@@ -79,6 +79,24 @@ class AddCustomerLoaded extends FirebaseState {
 
 class AddCustomerError extends FirebaseState {}
 
+//=================================================================================//
+//Add Category
+class AddCategoryEmpty extends FirebaseState {}
+
+class AddCategoryLoading extends FirebaseState {}
+
+class AddCategoryLoaded extends FirebaseState {
+  final Category category;
+
+  const AddCategoryLoaded({this.category});
+
+  @override
+  List<Object> get props => [];
+}
+
+class AddCategoryError extends FirebaseState {}
+
+//================================================================================//
 //Fetch Cards
 class FetchCardEmpty extends FirebaseState {}
 
@@ -143,7 +161,6 @@ class FetchOrdersListByOrdersLoaded extends FirebaseState {
 
 class FetchOrdersListByOrdersError extends FirebaseState {}
 
-
 //Add Vendor
 class AddVendorEmpty extends FirebaseState {}
 
@@ -159,7 +176,6 @@ class AddVendorLoaded extends FirebaseState {
 }
 
 class AddVendorError extends FirebaseState {}
-
 
 //Fetch Customer
 class FetchCustomerEmpty extends FirebaseState {}
@@ -185,7 +201,8 @@ class CustomerUpdateLoading extends FirebaseState {}
 class CustomerUpdateLoaded extends FirebaseState {
   final Customer customer;
 
-  const CustomerUpdateLoaded({@required this.customer}) : assert(customer != null);
+  const CustomerUpdateLoaded({@required this.customer})
+      : assert(customer != null);
 
   @override
   List<Object> get props => [];
@@ -206,7 +223,6 @@ class CustomerUpdateUpdated extends FirebaseState {
 class CustomerUpdateFail extends FirebaseState {}
 
 class CustomerUpdateDeleted extends FirebaseState {}
-
 
 //Fetch Vendors
 class FetchVendorsEmpty extends FirebaseState {}
@@ -239,7 +255,6 @@ class FetchCategoryLoaded extends FirebaseState {
 }
 
 class FetchCategoryError extends FirebaseState {}
-
 
 //Fetch SubCategory
 class FetchSubCategoryEmpty extends FirebaseState {}
