@@ -25,12 +25,18 @@ class _AddCardState extends State<AddCard> {
   final passwordNode = FocusNode();
   final phoneNode = FocusNode();
   num amount = 0;
-  String cardNumber = "", cardVender = "", status = "NEW";
+  String cardNumber = "",
+      cardVender = "",
+      category = "",
+      subcategory = "",
+      status = "NEW";
   var getAdminId;
   List dd = [];
   List ddd = [];
+  List subcategorylist = [];
   String venid;
-
+  String categoryId;
+  final firestoreInstance = FirebaseFirestore.instance;
   _AddCardState(this.adminIdget);
 
   @override
@@ -55,8 +61,6 @@ class _AddCardState extends State<AddCard> {
 
     super.initState();
   }
-
-  final firestoreInstance = FirebaseFirestore.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -129,10 +133,6 @@ class _AddCardState extends State<AddCard> {
                   Navigator.of(context).pop();
                   BlocProvider.of<FirebaseBloc>(context)
                       .add(ResetFetchCustomer());
-                  // Navigator.of(context).push(MaterialPageRoute(
-                  //     builder: (_) => BlocProvider.value(
-                  //         value: BlocProvider.of<FirebaseBloc>(context),
-                  //         child: AddAdminCustomerCards())));
                 },
               );
             }
@@ -184,31 +184,6 @@ class _AddCardState extends State<AddCard> {
             children: [
               CustomTextFormField(
                 obscureText: false,
-                textEditingController:
-                    TextEditingController(text: amount.toString()),
-                hintText: 'Amount',
-                icon: Icons.monetization_on,
-                onFieldSubmitted: (String value) {},
-                cursorColor: Color(0xFFFF2562),
-                onChanged: (value) {
-                  amount = num.parse(value);
-                },
-                keyboardType: TextInputType.name,
-                focusNode: emailNode,
-                nextNode: nameNode,
-                textInputAction: TextInputAction.next,
-                // ignore: missing_return
-                validator: (String value) {
-                  if (value.isEmpty) {
-                    return 'Please Enter your amount';
-                  }
-                },
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              CustomTextFormField(
-                obscureText: false,
                 textEditingController: TextEditingController(text: cardNumber),
                 hintText: 'CardNumber',
                 icon: Icons.person,
@@ -230,20 +205,44 @@ class _AddCardState extends State<AddCard> {
               SizedBox(
                 height: 20,
               ),
-
+              CustomTextFormField(
+                obscureText: false,
+                textEditingController:
+                    TextEditingController(text: amount.toString()),
+                hintText: 'Amount',
+                icon: Icons.monetization_on,
+                onFieldSubmitted: (String value) {},
+                cursorColor: Color(0xFFFF2562),
+                onChanged: (value) {
+                  amount = num.parse(value);
+                },
+                keyboardType: TextInputType.number,
+                focusNode: emailNode,
+                nextNode: nameNode,
+                textInputAction: TextInputAction.next,
+                // ignore: missing_return
+                validator: (String value) {
+                  if (value.isEmpty) {
+                    return 'Please Enter your amount';
+                  }
+                },
+              ),
+              SizedBox(
+                height: 20,
+              ),
               DropdownButtonFormField(
                 decoration: InputDecoration(
                   icon: Icon(
                     Icons.person,
                     size: 20,
                   ),
-                  hintText: "CardVender",
+                  hintText: "Vendor",
                 ),
                 focusNode: passwordNode,
                 onChanged: (value) {
                   setState(() {
+                    print('SELECTED  ==$value');
                     cardVender = value;
-                    print('SELECTED  ==$cardVender');
                   });
                   print(dd.length);
                 },
@@ -254,17 +253,11 @@ class _AddCardState extends State<AddCard> {
                     child: Text(category),
                   );
                 }).toList(),
-                // List.generate(
-                //     dd.length,
-                //     (index) => DropdownMenuItem(
-                //           value: dd[index],
-                //           child: Text(dd[index]),
-                //         )),
               ),
-
               SizedBox(
                 height: 20,
               ),
+              //===========================================CATEGORY==========================//0.
 
               DropdownButtonFormField(
                 decoration: InputDecoration(
@@ -272,15 +265,52 @@ class _AddCardState extends State<AddCard> {
                     Icons.person,
                     size: 20,
                   ),
-                  hintText: "CardVender",
+                  hintText: "Category",
                 ),
                 focusNode: passwordNode,
                 onChanged: (value) {
                   setState(() {
-                    cardVender = value;
-                    print('SELECTED  ==$cardVender');
+                    category = value;
+                    firestoreInstance
+                        .collection("categories")
+                        .where("categoryName", isEqualTo: category)
+                        .get()
+                        .then((querySnapshot) {
+                      querySnapshot.docs.forEach((result) {
+                        categoryId = result.get('categoryID');
+                        print(" =========111 ${categoryId}");
+                      });
+                    });
+                    print('SELECTED  ==$category');
+
+                    firestoreInstance
+                        .collection("subCategories")
+                        .where("categoryId", isEqualTo: categoryId)
+                        .get()
+                        .then((querySnapshot) {
+                      if (subcategorylist.isNotEmpty) {
+                        print("1111111111");
+                        subcategorylist.clear();
+                        print(" ========= ${subcategorylist}");
+                        print(" =========wwwwww ${categoryId}");
+                        querySnapshot.docs.forEach((result) {
+                          print(" ========= ${result}");
+
+                          subcategorylist.add(result.get('name'));
+                          print(" =========CATEGORYID ${subcategorylist}");
+                        });
+                      } else {
+                        print("2===========");
+                        querySnapshot.docs.forEach((result) {
+                          print(" ========= ${result}");
+
+                          subcategorylist.add(result.get('name'));
+                          print(" =========CATEGORYID ${subcategorylist}");
+                        });
+                      }
+                    });
                   });
-                  print(ddd.length);
+                  setState(() {});
                 },
                 value: value,
                 items: ddd.map((category) {
@@ -289,33 +319,35 @@ class _AddCardState extends State<AddCard> {
                     child: Text(category),
                   );
                 }).toList(),
-                // List.generate(
-                //     dd.length,
-                //     (index) => DropdownMenuItem(
-                //           value: dd[index],
-                //           child: Text(dd[index]),
-                //         )),
               ),
-              // CustomTextFormField(
-              //   obscureText: false,
-              //   textEditingController: TextEditingController(text: cardVender),
-              //   hintText: 'CardVender',
-              //   icon: Icons.person,
-              //   onFieldSubmitted: (String value) {},
-              //   cursorColor: Color(0xFFFF2562),
-              //   onChanged: (String value) {
-              //     cardVender = value;
-              //   },
-              //   keyboardType: TextInputType.text,
-              //   focusNode: passwordNode,
-              //   nextNode: phoneNode,
-              //   textInputAction: TextInputAction.done,
-              //   validator: (String value) {
-              //     if (value.isEmpty) {
-              //       return 'Please Enter your CardVender.';
-              //     }
-              //   },
-              // ),
+              SizedBox(
+                height: 20,
+              ),
+              //==================================================SUBCATEGORY============================//
+              DropdownButtonFormField(
+                decoration: InputDecoration(
+                  icon: Icon(
+                    Icons.person,
+                    size: 20,
+                  ),
+                  hintText: "SubCategory",
+                ),
+                focusNode: passwordNode,
+                onChanged: (value) {
+                  setState(() {
+                    subcategory = value;
+                    print('SELECTED  ==$subcategory');
+                  });
+                  print(subcategorylist.length);
+                },
+                value: value,
+                items: subcategorylist.map((subCategory) {
+                  return DropdownMenuItem(
+                    value: subCategory,
+                    child: Text(subCategory),
+                  );
+                }).toList(),
+              ),
               SizedBox(
                 height: 70,
               ),
@@ -333,10 +365,21 @@ class _AddCardState extends State<AddCard> {
   Widget addAdminButton(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        DateTime i = DateTime.now();
+        var t = Timestamp.fromDate(i);
         if (formKey.currentState.validate()) {
           formKey.currentState.save();
           BlocProvider.of<FirebaseBloc>(context).add(FetchAddCard(
-              getAdminIdUser, '', amount, cardNumber, cardVender, 'NEW'));
+            getAdminIdUser,
+            '',
+            amount,
+            cardNumber,
+            cardVender,
+            category,
+            subcategory,
+            'NEW',
+            t,
+          ));
         }
       },
       child: Container(

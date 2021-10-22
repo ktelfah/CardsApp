@@ -27,10 +27,18 @@ class FirebaseRepository {
   }
 
   // Add Card
-  Future<Cards> addCard(String adminId, String cardId, num amount,
-      String cardNumber, String cardVender, String status) async {
-    return await firebaseApiClient.addCard(
-        adminId, cardId, amount, cardNumber, cardVender, status);
+  Future<Cards> addCard(
+      String adminId,
+      String cardId,
+      num amount,
+      String cardNumber,
+      String cardVender,
+      String category,
+      String subCategory,
+      Timestamp addingnDate,
+      String status) async {
+    return await firebaseApiClient.addCard(adminId, cardId, amount, cardNumber,
+        cardVender, category, subCategory, addingnDate, status);
   }
 
   // Add Customer

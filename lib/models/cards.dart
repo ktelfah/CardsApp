@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Cards {
   String adminId;
   String cardId;
@@ -5,6 +7,9 @@ class Cards {
   String cardNumber;
   String cardVender;
   String status;
+  String category;
+  String subCategory;
+  Timestamp addingnDate;
   bool isChecked = false;
 
   Cards(
@@ -14,6 +19,9 @@ class Cards {
       this.cardNumber,
       this.cardVender,
       this.status,
+      this.category,
+      this.subCategory,
+      this.addingnDate,
       this.isChecked});
 
   factory Cards.fromJson(Map<dynamic, dynamic> json) => new Cards(
@@ -22,7 +30,10 @@ class Cards {
         amount: json["amount"],
         cardNumber: json["cardNumber"],
         cardVender: json["cardVender"],
+        category: json["category"],
+        subCategory: json["subCategory"],
         status: json["status"],
+        addingnDate: json["addingnDate"],
         isChecked: false,
       );
 
@@ -33,6 +44,9 @@ class Cards {
         "cardNumber": cardNumber,
         "cardVender": cardVender,
         "status": status,
+        "category": category,
+        "subCategory": subCategory,
         "isChecked": isChecked,
+        "addingnDate": addingnDate,
       };
 }

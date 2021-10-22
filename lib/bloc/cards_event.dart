@@ -45,17 +45,27 @@ class ResetAddAdmin extends FirebaseEvent {
 }
 
 //Add Card
-
 class FetchAddCard extends FirebaseEvent {
   final adminId;
   final cardId;
   final amount;
   final cardNumber;
   final cardVender;
+  final category;
+  final subCategory;
   final status;
+  final addingnDate;
 
-  FetchAddCard(this.adminId, this.cardId, this.amount, this.cardNumber,
-      this.cardVender, this.status);
+  FetchAddCard(
+      this.adminId,
+      this.cardId,
+      this.amount,
+      this.cardNumber,
+      this.cardVender,
+      this.category,
+      this.subCategory,
+      this.status,
+      this.addingnDate);
 
   List<Object> get props => [];
 }

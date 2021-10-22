@@ -146,18 +146,32 @@ class FirebaseApiClient {
   }
 
   // Add Card
-  Future<Cards> addCard(String adminId, String cardId, num amount,
-      String cardNumber, String cardVender, String status) async {
+  Future<Cards> addCard(
+      String adminId,
+      String cardId,
+      num amount,
+      String cardNumber,
+      String cardVender,
+      String category,
+      String subCategory,
+      Timestamp addingnDate,
+      String status) async {
     var res = await cards.add({
       "amount": amount,
       "cardNumber": cardNumber,
       "cardVender": cardVender,
+      "category": category,
+      "subCategory": subCategory,
+      "addingnDate": addingnDate,
       "status": status,
     });
 
     await res.get();
     cards.doc(res.id).update({"adminId": adminId});
-    cards.doc(res.id).update({"cardId": res.id});
+    cards.doc(res.id).update({
+      ""
+          "cardId": res.id
+    });
 
     return Cards(
         adminId: adminId,
@@ -165,6 +179,9 @@ class FirebaseApiClient {
         amount: amount,
         cardNumber: cardNumber,
         cardVender: cardVender,
+        category: category,
+        subCategory: subCategory,
+        addingnDate: addingnDate,
         status: status);
   }
 

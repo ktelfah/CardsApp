@@ -69,8 +69,17 @@ class FirebaseBloc extends Bloc<FirebaseEvent, FirebaseState> {
       yield AddCardLoading();
 
       try {
-        final Cards card = await repository.addCard(event.adminId, event.cardId,
-            event.amount, event.cardNumber, event.cardVender, event.status);
+        final Cards card = await repository.addCard(
+          event.adminId,
+          event.cardId,
+          event.amount,
+          event.cardNumber,
+          event.cardVender,
+          event.category,
+          event.subCategory,
+          event.addingnDate,
+          event.status,
+        );
         yield AddCardLoaded(card: card);
       } catch (e) {
         print(e);
