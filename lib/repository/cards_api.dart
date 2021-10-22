@@ -193,6 +193,35 @@ class FirebaseApiClient {
         password: password);
   }
 
+  //============================================================================//
+  //Add Sub-Category
+  Future<SubCategory> addSubCategory(
+    String categoryId,
+    String name,
+    String price,
+    String quantity,
+    String description,
+  ) async {
+    var res = await subCategories.add({
+      "categoryId": categoryId,
+      "name": name,
+      "price": price,
+      "quantity": quantity,
+      "description": description,
+    });
+
+    await res.get();
+    subCategories.doc(res.id).update({"uniqid": res.id});
+
+    return SubCategory(
+      categoryId: categoryId,
+      name: name,
+      price: price,
+      quantity: quantity,
+      description: description,
+    );
+  }
+
 //=================================================================================//
   //ADD CATEGORY
   Future<Category> addCategory(
@@ -202,7 +231,7 @@ class FirebaseApiClient {
       "categoryName": categoryName,
     });
     // await res.get();
-    // categories.doc(res.id).update({"categoryName": res.id});
+    categories.doc(res.id).update({"categoryID": res.id});
     return Category(
       categoryName: categoryName,
     );

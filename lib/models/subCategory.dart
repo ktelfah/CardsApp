@@ -1,5 +1,4 @@
 class SubCategory {
-  String subCategoryId;
   String categoryId;
   String name;
   String price;
@@ -8,8 +7,7 @@ class SubCategory {
   String description;
 
   SubCategory(
-      {this.subCategoryId,
-      this.categoryId,
+      {this.categoryId,
       this.name,
       this.price,
       this.quantity,
@@ -17,22 +15,20 @@ class SubCategory {
       this.description});
 
   factory SubCategory.fromJson(Map<dynamic, dynamic> json) => new SubCategory(
-        subCategoryId: json["subCategoryId"],
         categoryId: json["categoryId"],
-        uniqid: json["uniqid"],
         name: json["name"],
         price: json["price"],
         quantity: json["quantity"],
+        uniqid: json["uniqid"],
         description: json["description"],
       );
 
   Map<dynamic, dynamic> toJson() => {
-        "subCategoryId": subCategoryId,
         "categoryId": categoryId,
         "name": name,
-        "uniqid": uniqid,
         "price": price,
         "quantity": quantity,
+        "uniqid": uniqid,
         "description": description,
       };
 }

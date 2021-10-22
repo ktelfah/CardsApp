@@ -79,6 +79,23 @@ class AddCustomerLoaded extends FirebaseState {
 
 class AddCustomerError extends FirebaseState {}
 
+//==================================================================================//
+//Add SubCategory
+class AddSubCategoryEmpty extends FirebaseState {}
+
+class AddSubCategoryLoading extends FirebaseState {}
+
+class AddSubCategoryLoaded extends FirebaseState {
+  final SubCategory subCategory;
+
+  const AddSubCategoryLoaded({this.subCategory});
+
+  @override
+  List<Object> get props => [];
+}
+
+class AddSubCategoryError extends FirebaseState {}
+
 //=================================================================================//
 //Add Category
 class AddCategoryEmpty extends FirebaseState {}

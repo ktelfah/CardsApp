@@ -8,6 +8,7 @@ import 'package:cards_app/repository/cards_repository.dart';
 import 'package:cards_app/screens/add_admin.dart';
 import 'package:cards_app/screens/add_cards.dart';
 import 'package:cards_app/screens/add_customer.dart';
+import 'package:cards_app/screens/add_subcategory.dart';
 import 'package:cards_app/screens/add_vendor.dart';
 import 'package:cards_app/screens/customer_list.dart';
 import 'package:flutter/material.dart';
@@ -100,11 +101,11 @@ class _AddAdminCustomerCardsState extends State<AddAdminCustomerCards> {
               Column(
                 children: [
                   //=========================================================================================//
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      isadmin
-                          ? GestureDetector(
+                  isadmin
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            GestureDetector(
                               onTap: () {
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (_) => BlocProvider.value(
@@ -121,10 +122,35 @@ class _AddAdminCustomerCardsState extends State<AddAdminCustomerCards> {
                                 ),
                                 child: Center(child: Text("ADD CATEGORY")),
                               ),
-                            )
-                          : Container(),
-                    ],
-                  ),
+                            ),
+                            SizedBox(
+                              width: 30,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (_) => BlocProvider.value(
+                                        value: BlocProvider.of<FirebaseBloc>(
+                                            context),
+                                        child: AddSubCategory())));
+                              },
+                              child: Container(
+                                height: 40,
+                                width: 130,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Color(0xFFFF2562),
+                                ),
+                                child: Center(
+                                    child: Text(
+                                  "ADD SUBCATEGORY",
+                                  style: TextStyle(fontSize: 13),
+                                )),
+                              ),
+                            ),
+                          ],
+                        )
+                      : Container(),
                   // ========================================================================================//
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,

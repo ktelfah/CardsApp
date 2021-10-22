@@ -100,6 +100,30 @@ class FirebaseBloc extends Bloc<FirebaseEvent, FirebaseState> {
         yield AddCustomerError();
       }
     }
+//==============================================================================//
+    //Add SubCategory
+
+    if (event is ResetAddSubCategory) {
+      yield AddSubCategoryEmpty();
+    }
+
+    if (event is FetchAddSubCategory) {
+      yield AddSubCategoryLoading();
+
+      try {
+        final SubCategory subCategory = await repository.addSubCategory(
+          event.categoryId,
+          event.name,
+          event.price,
+          event.quantity,
+          event.description,
+        );
+        yield AddSubCategoryLoaded(subCategory: subCategory);
+      } catch (e) {
+        print(e);
+        yield AddSubCategoryError();
+      }
+    }
 //===============================================================================//
     //Add Category
     if (event is ResetAddCategory) {
@@ -110,8 +134,9 @@ class FirebaseBloc extends Bloc<FirebaseEvent, FirebaseState> {
       yield AddCategoryLoading();
 
       try {
-        final Category category =
-            await repository.addCategory(event.categoryName);
+        final Category category = await repository.addCategory(
+          event.categoryName,
+        );
         yield AddCategoryLoaded(category: category);
       } catch (e) {
         print(e);

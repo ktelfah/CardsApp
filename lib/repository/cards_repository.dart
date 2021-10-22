@@ -41,10 +41,19 @@ class FirebaseRepository {
   }
 
   //=============================================================================//
+  // Add SubCategory
+  Future<SubCategory> addSubCategory(String categoryId, String name,
+      String price, String quantity, String description) async {
+    return await firebaseApiClient.addSubCategory(
+        categoryId, name, price, quantity, description);
+  }
+
+  //=============================================================================//
   // ADD CATEGORY
   Future<Category> addCategory(String categoryName) async {
     return await firebaseApiClient.addCategory(categoryName);
   }
+
   //=============================================================================//
 
   // Fetch Cards

@@ -80,7 +80,9 @@ class _AddCategoryState extends State<AddCategory> {
                         TextButton(
                           onPressed: () {
                             BlocProvider.of<FirebaseBloc>(context)
-                                .add(FetchAddCategory(controller.text));
+                                .add(FetchAddCategory(
+                              controller.text,
+                            ));
                             Navigator.pop(context);
                             setState(() {
                               if (ddd.isNotEmpty) {

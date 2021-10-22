@@ -44,11 +44,7 @@ class _AddCardState extends State<AddCard> {
       });
     });
     setState(() {
-      firestoreInstance
-          .collection("categories")
-          .where("vendorId", isEqualTo: "fQsKDiB3jJJfRZafZw6w")
-          .get()
-          .then((querySnapshot) {
+      firestoreInstance.collection("categories").get().then((querySnapshot) {
         querySnapshot.docs.forEach((result) {
           ddd.add(result.get('categoryName'));
           setState(() {});
