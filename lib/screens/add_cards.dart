@@ -271,6 +271,7 @@ class _AddCardState extends State<AddCard> {
                 onChanged: (value) {
                   setState(() {
                     category = value;
+                    // ================================= CATEGORY ID QUERY ==========================================//
                     firestoreInstance
                         .collection("categories")
                         .where("categoryName", isEqualTo: category)
@@ -280,35 +281,31 @@ class _AddCardState extends State<AddCard> {
                         categoryId = result.get('categoryID');
                         print(" =========111 ${categoryId}");
                       });
+                    }).then((value) {
+                      //======================================= LIST SUB CATEGORY =========================================//
+                      firestoreInstance
+                          .collection("subCategories")
+                          .where("categoryId", isEqualTo: categoryId)
+                          .get()
+                          .then((querySnapshot) {
+                        print("= QUERYSNAPSHOT ${querySnapshot.docs.length}");
+                        if (subcategorylist.isNotEmpty) {
+                          subcategorylist.clear();
+                          querySnapshot.docs.forEach((result) {
+                            subcategorylist.add(result.get('name'));
+                            print("= IF SUBCATEGORY ${subcategorylist}");
+                          });
+                          setState(() {});
+                        } else {
+                          querySnapshot.docs.forEach((result) {
+                            subcategorylist.add(result.get('name'));
+                            print("= ELSE SUBCATEGORY ${subcategorylist}");
+                          });
+                          setState(() {});
+                        }
+                      });
                     });
-                    print('SELECTED  ==$category');
-
-                    firestoreInstance
-                        .collection("subCategories")
-                        .where("categoryId", isEqualTo: categoryId)
-                        .get()
-                        .then((querySnapshot) {
-                      if (subcategorylist.isNotEmpty) {
-                        print("1111111111");
-                        subcategorylist.clear();
-                        print(" ========= ${subcategorylist}");
-                        print(" =========wwwwww ${categoryId}");
-                        querySnapshot.docs.forEach((result) {
-                          print(" ========= ${result}");
-
-                          subcategorylist.add(result.get('name'));
-                          print(" =========CATEGORYID ${subcategorylist}");
-                        });
-                      } else {
-                        print("2===========");
-                        querySnapshot.docs.forEach((result) {
-                          print(" ========= ${result}");
-
-                          subcategorylist.add(result.get('name'));
-                          print(" =========CATEGORYID ${subcategorylist}");
-                        });
-                      }
-                    });
+                    print('SELECTED  ==$categoryId');
                   });
                   setState(() {});
                 },
