@@ -36,7 +36,9 @@ class _AddCardState extends State<AddCard> {
   List subcategorylist = [];
   String venid;
   String categoryId;
+  String subcatid;
   final firestoreInstance = FirebaseFirestore.instance;
+
   _AddCardState(this.adminIdget);
 
   @override
@@ -257,8 +259,6 @@ class _AddCardState extends State<AddCard> {
               SizedBox(
                 height: 20,
               ),
-              //===========================================CATEGORY==========================//0.
-
               DropdownButtonFormField(
                 decoration: InputDecoration(
                   icon: Icon(
@@ -271,7 +271,6 @@ class _AddCardState extends State<AddCard> {
                 onChanged: (value) {
                   setState(() {
                     category = value;
-                    // ================================= CATEGORY ID QUERY ==========================================//
                     firestoreInstance
                         .collection("categories")
                         .where("categoryName", isEqualTo: category)
@@ -279,33 +278,27 @@ class _AddCardState extends State<AddCard> {
                         .then((querySnapshot) {
                       querySnapshot.docs.forEach((result) {
                         categoryId = result.get('categoryID');
-                        print(" =========111 ${categoryId}");
                       });
                     }).then((value) {
-                      //======================================= LIST SUB CATEGORY =========================================//
                       firestoreInstance
                           .collection("subCategories")
                           .where("categoryId", isEqualTo: categoryId)
                           .get()
                           .then((querySnapshot) {
-                        print("= QUERYSNAPSHOT ${querySnapshot.docs.length}");
                         if (subcategorylist.isNotEmpty) {
                           subcategorylist.clear();
                           querySnapshot.docs.forEach((result) {
                             subcategorylist.add(result.get('name'));
-                            print("= IF SUBCATEGORY ${subcategorylist}");
                           });
                           setState(() {});
                         } else {
                           querySnapshot.docs.forEach((result) {
                             subcategorylist.add(result.get('name'));
-                            print("= ELSE SUBCATEGORY ${subcategorylist}");
                           });
                           setState(() {});
                         }
                       });
                     });
-                    print('SELECTED  ==$categoryId');
                   });
                   setState(() {});
                 },
@@ -320,7 +313,6 @@ class _AddCardState extends State<AddCard> {
               SizedBox(
                 height: 20,
               ),
-              //==================================================SUBCATEGORY============================//
               DropdownButtonFormField(
                 decoration: InputDecoration(
                   icon: Icon(
@@ -334,6 +326,15 @@ class _AddCardState extends State<AddCard> {
                   setState(() {
                     subcategory = value;
                     print('SELECTED  ==$subcategory');
+                    firestoreInstance
+                        .collection("subCategories")
+                        .where("name", isEqualTo: subcategory)
+                        .get()
+                        .then((value) {
+                      value.docs.forEach((element) {
+                        subcatid = element.get("uniqid");
+                      });
+                    });
                   });
                   print(subcategorylist.length);
                 },
@@ -373,7 +374,7 @@ class _AddCardState extends State<AddCard> {
             cardNumber,
             cardVender,
             category,
-            subcategory,
+            subcatid,
             'NEW',
             t,
           ));

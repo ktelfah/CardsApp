@@ -1,4 +1,5 @@
 import 'package:cards_app/bloc/cards_bloc.dart';
+import 'package:cards_app/helper/pages.dart';
 import 'package:cards_app/repository/cards_api.dart';
 import 'package:cards_app/repository/cards_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,8 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-
-import 'mainscreen.dart';
 
 class CartList extends StatefulWidget {
   const CartList(
@@ -371,7 +370,7 @@ class _CartListState extends State<CartList> {
                                       builder: (_) => BlocProvider.value(
                                         value:
                                             BlocProvider.of<FirebaseBloc>(ctx),
-                                        child: MainScreen(),
+                                        child: Pages(),
                                       ),
                                     ),
                                   )

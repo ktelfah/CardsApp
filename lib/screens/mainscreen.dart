@@ -47,7 +47,6 @@ class _MainScreenState extends State<MainScreen> {
         .then((querySnapshot) {
       querySnapshot.docs.forEach((result) {
         amm = result.get('balance');
-        print(amm);
       });
     });
   }
@@ -80,8 +79,6 @@ class _MainScreenState extends State<MainScreen> {
           if (prepaids.isEmpty) {
             querySnapshot.docs.forEach((result) {
               prepaids.add(result.get('icon'));
-
-              print(prepaids);
             });
           } else {
             prepaids.clear();
@@ -89,7 +86,6 @@ class _MainScreenState extends State<MainScreen> {
               prepaids.add(result.get('icon'));
               prepaidvendorid.add(result.get('vendorId'));
               prepaidvendorname.add(result.get('name'));
-              print(prepaids);
             });
           }
         });
@@ -102,7 +98,6 @@ class _MainScreenState extends State<MainScreen> {
           if (directs.isEmpty) {
             querySnapshot.docs.forEach((result) {
               directs.add(result.get('icon'));
-              print(directs);
             });
           } else {
             directs.clear();
@@ -110,7 +105,6 @@ class _MainScreenState extends State<MainScreen> {
               directs.add(result.get('icon'));
               directvendorid.add(result.get('vendorId'));
               directvendorname.add(result.get('name'));
-              print(directs);
             });
           }
         });

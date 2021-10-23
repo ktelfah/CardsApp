@@ -4,6 +4,7 @@ import 'package:cards_app/bloc/cards_state.dart';
 import 'package:cards_app/models/categories.dart';
 import 'package:cards_app/screens/mainscreen.dart';
 import 'package:cards_app/screens/sub_category_list.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,9 +18,40 @@ class CategoryList extends StatefulWidget {
 }
 
 class _CategoryListState extends State<CategoryList> {
+  final firestoreInstance = FirebaseFirestore.instance;
+  var vendorname;
+  List categories = [];
+
+  @override
   void initState() {
+    getdata();
     super.initState();
     BlocProvider.of<FirebaseBloc>(context).add(ResetFetchCategory());
+  }
+
+  Future<void> getdata() async {
+    await firestoreInstance
+        .collection("vendors")
+        .where("vendorId", isEqualTo: getSelectedVendorId)
+        .get()
+        .then((querySnapshot) {
+      querySnapshot.docs.forEach((element) {
+        vendorname = element.get("name");
+        print("vendorname ========================== ${vendorname}");
+      });
+    }).then((value) async {
+      await firestoreInstance
+          .collection("cards")
+          .where("cardVender", isEqualTo: vendorname)
+          .get()
+          .then((value) {
+        value.docs.forEach((element) {
+          categories.add(element.get("category"));
+          print("categories ========================== ${categories}");
+        });
+      });
+      setState(() {});
+    });
   }
 
   @override
@@ -42,32 +74,34 @@ class _CategoryListState extends State<CategoryList> {
               },
               child: Icon(Icons.arrow_back)),
         ),
-        body:
-            BlocBuilder<FirebaseBloc, FirebaseState>(builder: (context, state) {
-          if (state is FetchCategoryEmpty) {
-            BlocProvider.of<FirebaseBloc>(context).add(FetchCategory());
-          }
+        body: BlocBuilder<FirebaseBloc, FirebaseState>(
+          builder: (context, state) {
+            if (state is FetchCategoryEmpty) {
+              BlocProvider.of<FirebaseBloc>(context).add(FetchCategory());
+            }
 
-          if (state is FetchCategoryError) {
+            if (state is FetchCategoryError) {
+              return Center(
+                child: Text("Failed to fetch data"),
+              );
+            }
+
+            if (state is FetchCategoryLoaded) {
+              var categoryList = state.category;
+              return body(categoryList);
+            }
+
             return Center(
-              child: Text("Failed to fetch data"),
+              child: CircularProgressIndicator(),
             );
-          }
-
-          if (state is FetchCategoryLoaded) {
-            var categoryList = state.category;
-            return body(categoryList);
-          }
-
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }),
+          },
+        ),
       ),
     );
   }
 
   Widget body(List<Category> categoryList) {
+    print("categoriesbody ========================== ${categories}");
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -86,7 +120,7 @@ class _CategoryListState extends State<CategoryList> {
                   childAspectRatio: MediaQuery.of(context).size.width /
                       (MediaQuery.of(context).size.height / 5.1),
                 ),
-                itemCount: categoryList.length,
+                itemCount: categories.length,
                 itemBuilder: (BuildContext context, int index) {
                   return GestureDetector(
                     onTap: () {
@@ -104,7 +138,8 @@ class _CategoryListState extends State<CategoryList> {
                           borderRadius: BorderRadius.all(Radius.circular(6))),
                       child: Center(
                         child: Text(
-                          categoryList[index].categoryName,
+                          categories[index],
+                          // categoryList[index].categoryName,
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 16),
                         ),
