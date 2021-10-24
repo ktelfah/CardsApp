@@ -10,7 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SubCategoryList extends StatefulWidget {
-  const SubCategoryList({Key key}) : super(key: key);
+  final String selectedCategory;
+  SubCategoryList({Key key, this.selectedCategory}) : super(key: key);
 
   @override
   _SubCategoryListState createState() => _SubCategoryListState();
@@ -40,13 +41,13 @@ class _SubCategoryListState extends State<SubCategoryList> {
         .then((querySnapshot) {
       querySnapshot.docs.forEach((element) {
         vendorname = element.get("name");
-        print("vendorname ========================== ${vendorname}");
+        // print("vendorname ========================== ${vendorname}");
       });
     }).then((value) async {
       await firestoreInstance
           .collection("cards")
           .where("cardVender", isEqualTo: vendorname)
-          .where("category", isEqualTo: "Internet")
+          .where("category", isEqualTo: widget.selectedCategory)
           .get()
           .then((value) {
         value.docs.forEach((element) {
@@ -54,15 +55,17 @@ class _SubCategoryListState extends State<SubCategoryList> {
           // print("subcategory ========================== ${subCategory}");
         });
       }).then((value) async {
-        print("subcategory ========================== ${subCategory}");
-        await firestoreInstance
-            .collection("subCategories")
-            .where("uniqid", isEqualTo: subCategory[0])
-            .get()
-            .then((value) {
-          value.docs.forEach((element) {
-            data.add(element.data());
-            print("======== DATA ==== ${data}");
+        // print("subcategory ========================== ${subCategory}");
+        List.generate(subCategory.length, (index) async {
+          await firestoreInstance
+              .collection("subCategories")
+              .where("uniqid", isEqualTo: subCategory[index])
+              .get()
+              .then((value) {
+            value.docs.forEach((element) {
+              data.add(element.data());
+              // print("======== DATA ==== ${data}");
+            });
           });
         });
         setState(() {

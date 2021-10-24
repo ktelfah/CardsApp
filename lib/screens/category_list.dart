@@ -128,7 +128,9 @@ class _CategoryListState extends State<CategoryList> {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (_) => BlocProvider.value(
                               value: BlocProvider.of<FirebaseBloc>(context),
-                              child: SubCategoryList())));
+                              child: SubCategoryList(
+                                selectedCategory: categories[index],
+                              ))));
                     },
                     child: Container(
                       decoration: BoxDecoration(

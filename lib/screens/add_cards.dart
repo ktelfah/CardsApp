@@ -22,21 +22,23 @@ class _AddCardState extends State<AddCard> {
   final formKey = GlobalKey<FormState>();
   final nameNode = FocusNode();
   final emailNode = FocusNode();
-  final passwordNode = FocusNode();
+  // final passwordNode = FocusNode();
   final phoneNode = FocusNode();
   num amount = 0;
   String cardNumber = "",
       cardVender = "",
-      category = "",
-      subcategory = "",
+      category = "Please Select",
+      subcategory = "Please Select",
       status = "NEW";
   var getAdminId;
   List dd = [];
   List ddd = [];
   List subcategorylist = [];
+  List select = [];
   String venid;
   String categoryId;
   String subcatid;
+  List<String> data = ['SelectCategory'];
   final firestoreInstance = FirebaseFirestore.instance;
 
   _AddCardState(this.adminIdget);
@@ -196,7 +198,7 @@ class _AddCardState extends State<AddCard> {
                 },
                 keyboardType: TextInputType.name,
                 focusNode: nameNode,
-                nextNode: passwordNode,
+                // nextNode: passwordNode,
                 textInputAction: TextInputAction.next,
                 validator: (String value) {
                   if (value.isEmpty) {
@@ -240,7 +242,7 @@ class _AddCardState extends State<AddCard> {
                   ),
                   hintText: "Vendor",
                 ),
-                focusNode: passwordNode,
+                // focusNode: passwordNode,
                 onChanged: (value) {
                   setState(() {
                     print('SELECTED  ==$value');
@@ -267,7 +269,13 @@ class _AddCardState extends State<AddCard> {
                   ),
                   hintText: "Category",
                 ),
-                focusNode: passwordNode,
+                // focusNode: passwordNode,
+                items: ddd.map((category) {
+                  return DropdownMenuItem<String>(
+                    value: category,
+                    child: Text(category),
+                  );
+                }).toList(),
                 onChanged: (value) {
                   setState(() {
                     category = value;
@@ -299,16 +307,11 @@ class _AddCardState extends State<AddCard> {
                         }
                       });
                     });
+                    print('Sub Cat ====== ${subcategorylist.isEmpty}');
                   });
                   setState(() {});
                 },
                 value: value,
-                items: ddd.map((category) {
-                  return DropdownMenuItem(
-                    value: category,
-                    child: Text(category),
-                  );
-                }).toList(),
               ),
               SizedBox(
                 height: 20,
@@ -321,7 +324,13 @@ class _AddCardState extends State<AddCard> {
                   ),
                   hintText: "SubCategory",
                 ),
-                focusNode: passwordNode,
+                //  focusNode: passwordNode,
+                items: subcategorylist.map((val) {
+                  return DropdownMenuItem<String>(
+                    value: val,
+                    child: Text(val),
+                  );
+                }).toList(growable: true),
                 onChanged: (value) {
                   setState(() {
                     subcategory = value;
@@ -336,15 +345,8 @@ class _AddCardState extends State<AddCard> {
                       });
                     });
                   });
-                  print(subcategorylist.length);
                 },
                 value: value,
-                items: subcategorylist.map((subCategory) {
-                  return DropdownMenuItem(
-                    value: subCategory,
-                    child: Text(subCategory),
-                  );
-                }).toList(),
               ),
               SizedBox(
                 height: 70,
