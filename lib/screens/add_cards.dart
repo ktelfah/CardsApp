@@ -25,11 +25,10 @@ class _AddCardState extends State<AddCard> {
   // final passwordNode = FocusNode();
   final phoneNode = FocusNode();
   num amount = 0;
-  String cardNumber = "",
-      cardVender = "",
-      category = "Please Select",
-      subcategory = "Please Select",
-      status = "NEW";
+  String cardNumber = "", cardVender = "Apple", status = "NEW";
+  String category = "Internet";
+  String subcategory = "Internet";
+  // String value;
   var getAdminId;
   List dd = [];
   List ddd = [];
@@ -177,8 +176,6 @@ class _AddCardState extends State<AddCard> {
   }
 
   form(BuildContext context, List<Vendors> vendorsList) {
-    print(dd);
-    var value;
     return Column(
       children: [
         Form(
@@ -245,12 +242,11 @@ class _AddCardState extends State<AddCard> {
                 // focusNode: passwordNode,
                 onChanged: (value) {
                   setState(() {
-                    print('SELECTED  ==$value');
                     cardVender = value;
                   });
                   print(dd.length);
                 },
-                value: value,
+                value: cardVender,
                 items: dd.map((category) {
                   return DropdownMenuItem(
                     value: category,
@@ -271,7 +267,7 @@ class _AddCardState extends State<AddCard> {
                 ),
                 // focusNode: passwordNode,
                 items: ddd.map((category) {
-                  return DropdownMenuItem<String>(
+                  return DropdownMenuItem(
                     value: category,
                     child: Text(category),
                   );
@@ -307,47 +303,50 @@ class _AddCardState extends State<AddCard> {
                         }
                       });
                     });
-                    print('Sub Cat ====== ${subcategorylist.isEmpty}');
+                    print('Sub Cat ====== ${subcategorylist}');
                   });
                   setState(() {});
                 },
-                value: value,
+                value: ddd[0],
               ),
               SizedBox(
                 height: 20,
               ),
-              DropdownButtonFormField(
-                decoration: InputDecoration(
-                  icon: Icon(
-                    Icons.person,
-                    size: 20,
-                  ),
-                  hintText: "SubCategory",
-                ),
-                //  focusNode: passwordNode,
-                items: subcategorylist.map((val) {
-                  return DropdownMenuItem<String>(
-                    value: val,
-                    child: Text(val),
-                  );
-                }).toList(growable: true),
-                onChanged: (value) {
-                  setState(() {
-                    subcategory = value;
-                    print('SELECTED  ==$subcategory');
-                    firestoreInstance
-                        .collection("subCategories")
-                        .where("name", isEqualTo: subcategory)
-                        .get()
-                        .then((value) {
-                      value.docs.forEach((element) {
-                        subcatid = element.get("uniqid");
-                      });
-                    });
-                  });
-                },
-                value: value,
-              ),
+              subcategorylist.isNotEmpty
+                  ? DropdownButtonFormField(
+                      decoration: InputDecoration(
+                        icon: Icon(
+                          Icons.person,
+                          size: 20,
+                        ),
+                        hintText: "SubCategory",
+                      ),
+                      //  focusNode: passwordNode,
+                      items: subcategorylist.map((val) {
+                        return DropdownMenuItem(
+                          value: val,
+                          child: Text(val),
+                        );
+                      }).toList(growable: true),
+                      onChanged: (value) {
+                        setState(() {
+                          subcategory = value;
+                          print('SELECTED D2 ONCHANGE==$subcategory');
+                          print('SELECTED D2 ONCHANGE==$value');
+                          firestoreInstance
+                              .collection("subCategories")
+                              .where("name", isEqualTo: subcategory)
+                              .get()
+                              .then((value) {
+                            value.docs.forEach((element) {
+                              subcatid = element.get("uniqid");
+                            });
+                          });
+                        });
+                      },
+                      value: subcategorylist[0],
+                    )
+                  : Container(),
               SizedBox(
                 height: 70,
               ),
