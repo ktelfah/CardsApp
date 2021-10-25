@@ -312,6 +312,7 @@ class _AddCardState extends State<AddCard> {
               SizedBox(
                 height: 20,
               ),
+              //
               subcategorylist.isNotEmpty
                   ? DropdownButtonFormField(
                       decoration: InputDecoration(
