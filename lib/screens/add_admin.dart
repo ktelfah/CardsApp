@@ -51,61 +51,65 @@ class _AddAdminState extends State<AddAdmin> {
           title: Text("Add Admin"),
         ),
         //body: body(context)
-        body:
-            BlocBuilder<FirebaseBloc, FirebaseState>(builder: (context, state) {
-          print("STATE:$state");
-          if (state is AddAdminEmpty) {
-            return Container(
-              child: body(context),
-            );
-          }
+        body: BlocBuilder<FirebaseBloc, FirebaseState>(
+          builder: (context, state) {
+            print("STATE:$state");
+            if (state is AddAdminEmpty) {
+              return Container(
+                child: body(context),
+              );
+            }
 
-          if (state is AddAdminError) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text(
-                  "Invalid Data",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      height: 3.0,
-                      fontSize: 20),
-                ),
-                backgroundColor: Colors.red,
-              ));
-            });
-            return Container(
-              child: body(context),
-            );
-          }
-
-          if (state is AddAdminLoaded) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                behavior: SnackBarBehavior.floating,
-                content: Text(
-                  "Admin Added Successfully",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.white,
+            if (state is AddAdminError) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(
+                    "Invalid Data",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        height: 3.0,
+                        fontSize: 20),
                   ),
-                ),
-                backgroundColor: Colors.black,
-              ));
-              Navigator.of(context).pop();
-              BlocProvider.of<FirebaseBloc>(context).add(ResetFetchCustomer());
-              // Navigator.of(context).push(MaterialPageRoute(
-              //     builder: (_) => BlocProvider.value(
-              //         value: BlocProvider.of<FirebaseBloc>(context),
-              //         child: AddAdminCustomerCards())));
-            });
-          }
+                  backgroundColor: Colors.red,
+                ));
+              });
+              return Container(
+                child: body(context),
+              );
+            }
 
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }),
+            if (state is AddAdminLoaded) {
+              WidgetsBinding.instance.addPostFrameCallback(
+                (_) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    behavior: SnackBarBehavior.floating,
+                    content: Text(
+                      "Admin Added Successfully",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.white,
+                      ),
+                    ),
+                    backgroundColor: Colors.black,
+                  ));
+                  Navigator.of(context).pop();
+                  BlocProvider.of<FirebaseBloc>(context)
+                      .add(ResetFetchCustomer());
+                  // Navigator.of(context).push(MaterialPageRoute(
+                  //     builder: (_) => BlocProvider.value(
+                  //         value: BlocProvider.of<FirebaseBloc>(context),
+                  //         child: AddAdminCustomerCards())));
+                },
+              );
+            }
+
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          },
+        ),
       ),
     );
   }

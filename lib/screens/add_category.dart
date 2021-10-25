@@ -92,12 +92,24 @@ class _AddCategoryState extends State<AddCategory> {
                                 data();
                               }
                             });
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              behavior: SnackBarBehavior.floating,
+                              content: Text(
+                                "Category Added Successfully",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              backgroundColor: Colors.black,
+                            ));
                           },
                           child: Text("Enter"),
                         ),
                         TextButton(
                           onPressed: () {
-                            Navigator.pop(context);
+                            Navigator.of(context).pop();
                           },
                           child: Text("Cancel"),
                         ),
